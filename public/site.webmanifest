@@ -1,0 +1,16 @@
+{
+  "name": "FlexiBerry",
+  "short_name": "FlexiBerry",
+  "description": "Pakistan's #1 Premium Installment Marketplace",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f5ef",
+  "theme_color": "#1a1812",
+  "icons": [
+    { "src": "/icon.svg",           "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/icon-light-32x32.png","sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-icon.png",      "sizes": "180x180", "type": "image/png" }
+  ],
+  "categories": ["shopping", "lifestyle"],
+  "lang": "en"
+}
