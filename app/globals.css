@@ -283,3 +283,157 @@
 .stat-card:hover {
   transform: translateY(-4px);
 }
+
+/* ── Enhanced Typography ─────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ── Focus States for Accessibility ──────────────────────────────────────── */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* ── Skip to main content (accessibility) ────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 8px 16px;
+  z-index: 100;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Enhanced Responsive Grid ────────────────────────────────────────────── */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 24px;
+}
+
+/* ── Better Touch Targets ────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ── Reduced Motion ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Print Styles ────────────────────────────────────────────────────────── */
+@media print {
+  .no-print,
+  header,
+  footer,
+  .chat-widget {
+    display: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+}
+
+/* ── Dark mode image handling ────────────────────────────────────────────── */
+.dark img {
+  filter: brightness(0.9) contrast(1.1);
+}
+
+/* ── Container queries for modern responsive design ──────────────────────── */
+@supports (container-type: inline-size) {
+  .container-query {
+    container-type: inline-size;
+  }
+  
+  @container (max-width: 400px) {
+    .container-sm\:flex-col {
+      flex-direction: column;
+    }
+  }
+}
+
+/* ── Enhanced form inputs ────────────────────────────────────────────────── */
+input, select, textarea {
+  font-size: 16px; /* Prevents zoom on iOS */
+}
+
+/* ── Loading skeleton ────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--secondary) 25%,
+    var(--muted) 50%,
+    var(--secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Better text selection ───────────────────────────────────────────────── */
+::selection {
+  background: oklch(0.65 0.15 60 / 0.3);
+  color: inherit;
+}
+
+/* ── Improved responsive breakpoints ─────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .lg\:hidden-custom { display: none; }
+}
+
+@media (max-width: 768px) {
+  .md\:stack {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .md\:full-width {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sm\:text-center {
+    text-align: center;
+  }
+  
+  .sm\:px-4 {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

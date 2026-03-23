@@ -4,24 +4,15 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout';
 
 export default function OrderSuccessPage() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId') || 'FLX-001236';
 
   return (
+    <FlexiLayout>
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/">
-              <h1 className="text-2xl font-serif font-bold text-foreground">FlexiBerry</h1>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Success Content */}
       <div className="max-w-2xl mx-auto px-4 py-20">
         <div className="text-center mb-12">
@@ -140,11 +131,12 @@ export default function OrderSuccessPage() {
         {/* Support */}
         <div className="mt-12 text-center">
           <p className="text-muted-foreground mb-2">Need help?</p>
-          <Link href="/support" className="text-accent hover:underline font-medium">
+          <Link href="/contact" className="text-accent hover:underline font-medium">
             Contact our support team
           </Link>
         </div>
       </div>
     </div>
+    </FlexiLayout>
   );
 }

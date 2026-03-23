@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
+import FlexiLayout, { CATEGORY_THEMES } from '@/components/layout/FlexiLayout/FlexiLayout'
 
 const allProducts = [
   { id: '1', name: 'Samsung 55" Smart TV', category: 'Electronics', price: 45000, downPayment: 9000, installment: 3750, rating: 4.8, reviews: 324, image: '📺', badge: 'Best Seller', inStock: true },
@@ -33,6 +33,17 @@ export default function ProductsPage() {
   const [wishlist, setWishlist] = useState<Set<string>>(new Set())
   const [addedToCart, setAddedToCart] = useState<Set<string>>(new Set())
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+
+  // Get category slug from URL for theming
+  const categorySlugMap: Record<string, string> = {
+    'Electronics': 'electronics',
+    'Vehicles': 'cars',
+    'Furniture': 'furniture',
+    'Energy': 'solar',
+    'Business': 'business',
+    'Appliances': 'appliances',
+  }
+  const categoryTheme = selectedCategory !== 'All' ? categorySlugMap[selectedCategory] || 'default' : 'default'
 
   const filtered = allProducts
     .filter(p => {
@@ -62,7 +73,7 @@ export default function ProductsPage() {
   }
 
   return (
-    <FlexiLayout>
+    <FlexiLayout categoryTheme={categoryTheme}>
       <div className="min-h-screen bg-background">
         {/* Header */}
         <div className="bg-gradient-to-br from-primary/5 to-accent/5 py-12 px-4 border-b border-border">

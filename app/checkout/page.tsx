@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout';
 
 // Mock cart data
 const cartTotal = 130000;
@@ -72,18 +73,8 @@ export default function CheckoutPage() {
   };
 
   return (
+    <FlexiLayout>
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/">
-              <h1 className="text-2xl font-serif font-bold text-foreground">FlexiBerry</h1>
-            </Link>
-            <Link href="/cart" className="text-accent hover:text-accent/80">← Back to Cart</Link>
-          </div>
-        </div>
-      </nav>
 
       {/* Progress */}
       <div className="bg-secondary/10 py-8 px-4 border-b border-border">
@@ -364,5 +355,6 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+    </FlexiLayout>
   );
 }
