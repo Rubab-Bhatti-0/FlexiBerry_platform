@@ -150,18 +150,15 @@
 // }
 
 
-
 'use client';
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-// ⚡ Force dynamic rendering to fix useSearchParams error
-export const dynamic = 'force-dynamic';
-
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId') || 'FLX-001236';
 
@@ -248,27 +245,34 @@ export default function OrderSuccessPage() {
           <h2 className="font-serif font-bold text-foreground mb-6">What's Next?</h2>
 
           <div className="space-y-4">
-            {[1, 2, 3, 4].map((step) => (
-              <div className="flex gap-4" key={step}>
-                <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                  {step}
-                </div>
-                <div>
-                  <p className="font-medium text-foreground">
-                    {step === 1 && 'Order Confirmation'}
-                    {step === 2 && 'Processing & Packing'}
-                    {step === 3 && 'Shipment'}
-                    {step === 4 && 'Delivery'}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {step === 1 && "You'll receive a confirmation email shortly with all details."}
-                    {step === 2 && 'Your items will be prepared for shipment within 24-48 hours.'}
-                    {step === 3 && 'Track your shipment in real-time from your dashboard.'}
-                    {step === 4 && 'Receive your items and start enjoying them!'}
-                  </p>
-                </div>
+            <div className="flex gap-4">
+              <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+              <div>
+                <p className="font-medium text-foreground">Order Confirmation</p>
+                <p className="text-sm text-muted-foreground">You'll receive a confirmation email shortly with all details.</p>
               </div>
-            ))}
+            </div>
+            <div className="flex gap-4">
+              <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+              <div>
+                <p className="font-medium text-foreground">Processing & Packing</p>
+                <p className="text-sm text-muted-foreground">Your items will be prepared for shipment within 24-48 hours.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+              <div>
+                <p className="font-medium text-foreground">Shipment</p>
+                <p className="text-sm text-muted-foreground">Track your shipment in real-time from your dashboard.</p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold flex-shrink-0">4</div>
+              <div>
+                <p className="font-medium text-foreground">Delivery</p>
+                <p className="text-sm text-muted-foreground">Receive your items and start enjoying them!</p>
+              </div>
+            </div>
           </div>
         </Card>
 
@@ -295,5 +299,13 @@ export default function OrderSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }
