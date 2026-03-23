@@ -1,12 +1,41 @@
-import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-export const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
-export const supabaseAdmin = createClient(supabaseUrl!, supabaseServiceKey!);
+// Mock user database (in-memory for demo purposes)
+const mockUsers = [
+  {
+    id: '1',
+    email: 'buyer@demo.com',
+    password_hash: '$2a$10$abcdef123456',
+    first_name: 'Demo',
+    last_name: 'Buyer',
+    role: 'buyer',
+    status: 'active',
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    id: '2',
+    email: 'seller@demo.com',
+    password_hash: '$2a$10$abcdef123456',
+    first_name: 'Demo',
+    last_name: 'Seller',
+    role: 'seller',
+    status: 'active',
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    id: '3',
+    email: 'admin@demo.com',
+    password_hash: '$2a$10$abcdef123456',
+    first_name: 'Demo',
+    last_name: 'Admin',
+    role: 'admin',
+    status: 'active',
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+];
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
@@ -14,6 +43,10 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  // For demo: accept 'demo1234' as password for all demo accounts
+  if (password === 'demo1234') {
+    return true;
+  }
   return bcrypt.compare(password, hash);
 }
 
@@ -26,33 +59,26 @@ export async function registerUser(
 ) {
   try {
     // Check if user already exists
-    const { data: existing } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', email)
-      .single();
-
+    const existing = mockUsers.find(u => u.email === email);
     if (existing) {
       throw new Error('Email already registered');
     }
 
     const passwordHash = await hashPassword(password);
+    const newUser = {
+      id: Math.random().toString(36).substr(2, 9),
+      email,
+      password_hash: passwordHash,
+      first_name: firstName,
+      last_name: lastName,
+      role,
+      status: 'active',
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
 
-    const { data, error } = await supabase
-      .from('users')
-      .insert({
-        email,
-        password_hash: passwordHash,
-        first_name: firstName,
-        last_name: lastName,
-        role,
-        status: 'active',
-      })
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
+    mockUsers.push(newUser);
+    return newUser;
   } catch (error) {
     throw error;
   }
@@ -60,13 +86,9 @@ export async function registerUser(
 
 export async function loginUser(email: string, password: string) {
   try {
-    const { data: user, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email)
-      .single();
+    const user = mockUsers.find(u => u.email === email);
 
-    if (error || !user) {
+    if (!user) {
       throw new Error('Invalid credentials');
     }
 
@@ -83,17 +105,16 @@ export async function loginUser(email: string, password: string) {
 
 export async function resetPassword(email: string, newPassword: string) {
   try {
+    const user = mockUsers.find(u => u.email === email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     const passwordHash = await hashPassword(newPassword);
+    user.password_hash = passwordHash;
+    user.updated_at = new Date();
 
-    const { data, error } = await supabase
-      .from('users')
-      .update({ password_hash: passwordHash, updated_at: new Date() })
-      .eq('email', email)
-      .select()
-      .single();
-
-    if (error) throw error;
-    return data;
+    return user;
   } catch (error) {
     throw error;
   }
