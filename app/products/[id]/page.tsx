@@ -1,349 +1,857 @@
-'use client';
+'use client'
 
-import { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout';
-import { 
-  Star, Heart, Share2, ShieldCheck, Truck, 
-  RotateCcw, CreditCard, ChevronRight, Info,
-  CheckCircle2, ShoppingCart, Zap
-} from 'lucide-react';
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
+import FlexiLayout, { CATEGORY_THEMES } from '@/components/layout/FlexiLayout/FlexiLayout'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 
-/* ─── Data ───────────────────────────────────────────── */
-const categories = [
-  { id: 'smartphones', name: 'Smartphones', e: '📱', bg: '#fff0f0', bd: '#fecdd3', theme: '#ef4444' },
-  { id: 'laptops',     name: 'Laptops',     e: '💻', bg: '#f5f3ff', bd: '#ddd6fe', theme: '#8b5cf6' },
-  { id: 'bikes',       name: 'Bikes',       e: '🏍️', bg: '#fff7ed', bd: '#fed7aa', theme: '#f97316' },
-  { id: 'appliances',  name: 'Appliances',  e: '🌀', bg: '#eff6ff', bd: '#bfdbfe', theme: '#3b82f6' },
-  { id: 'solar',       name: 'Solar',       e: '☀️', bg: '#fefce8', bd: '#fef08a', theme: '#eab308' },
-  { id: 'furniture',   name: 'Furniture',   e: '🛋️', bg: '#f0fdfa', bd: '#99f6e4', theme: '#14b8a6' },
-  { id: 'jahez',       name: 'Jahez',       e: '📦', bg: '#fdf2f8', bd: '#f9a8d4', theme: '#ec4899' },
-  { id: 'cars',        name: 'Cars',        e: '🚗', bg: '#ecfeff', bd: '#a5f3fc', theme: '#06b6d4' },
-  { id: 'business',    name: 'Business',    e: '🏭', bg: '#f0fdf4', bd: '#bbf7d0', theme: '#22c55e' },
-  { id: 'general',     name: 'General',     e: '🛒', bg: '#fffbeb', bd: '#fde68a', theme: '#f59e0b' },
-];
-
-const mockProductDetails = {
+// Extended mock product data with category-specific theming
+const PRODUCTS_DATA: Record<string, {
+  id: string
+  name: string
+  category: string
+  categorySlug: string
+  vendor: string
+  vendorVerified: boolean
+  vendorLocation: string
+  reference: string
+  price: number
+  originalPrice: number | null
+  discount: number | null
+  rating: number
+  reviewCount: number
+  images: string[]
+  description: string
+  features: string[]
+  specifications: Record<string, string>
+  colors: { name: string; hex: string }[]
+  variants: { label: string; options: string[] }[]
+  installmentPlans: { months: number; monthly: number }[]
+  inStock: boolean
+  stockCount: number
+  warranty: string
+  deliveryInfo: string
+  reviews: { id: string; name: string; initials: string; rating: number; date: string; comment: string }[]
+}> = {
   '1': {
     id: '1',
-    name: 'Samsung 55" Smart TV',
-    categoryId: 'appliances',
-    seller: 'ElectroHub Official',
-    price: 45000,
-    originalPrice: 50000,
-    downPayment: 9000,
+    name: 'Samsung Galaxy S24 Ultra',
+    category: 'Electronics',
+    categorySlug: 'smartphones',
+    vendor: 'TechZone Official Store',
+    vendorVerified: true,
+    vendorLocation: 'Lahore',
+    reference: 'SM-S928BZKQPK',
+    price: 449999,
+    originalPrice: 499999,
+    discount: 10,
     rating: 4.8,
-    reviewCount: 324,
-    image: '📺',
-    description: 'Experience stunning 4K picture quality with HDR support. Smart TV with built-in streaming apps, voice control, and seamless connectivity for all your devices.',
-    specifications: [
-      { label: 'Screen Size', value: '55 inches' },
-      { label: 'Resolution', value: '4K UHD (3840 x 2160)' },
-      { label: 'HDR Support', value: 'Yes, HDR10+' },
-      { label: 'Smart Features', value: 'Tizen OS, Built-in Apps' },
-      { label: 'Warranty', value: '2 Years Official' },
+    reviewCount: 234,
+    images: ['/assets/carousel-1.jpg', '/assets/carousel-1.jpg', '/assets/carousel-1.jpg', '/assets/carousel-1.jpg'],
+    description: 'Experience the ultimate flagship smartphone with AI-powered features, S Pen integration, and the most advanced camera system ever in a Galaxy device.',
+    features: [
+      'Top-grade materials and certified build quality',
+      'Manufacturer tested - shipped in original packaging',
+      'Compatible with all standard accessories',
+      'Energy-efficient modern design',
+      "Backed by FlexiBerry's 7-day return policy"
     ],
-    installmentOptions: [
-      { months: 6, monthly: 6000, total: 45000 },
-      { months: 12, monthly: 3750, total: 45000 },
+    specifications: {
+      'Display': '6.8" Dynamic AMOLED 2X, 120Hz',
+      'Processor': 'Snapdragon 8 Gen 3 for Galaxy',
+      'RAM': '12GB',
+      'Storage': '256GB / 512GB / 1TB',
+      'Camera': '200MP + 12MP + 50MP + 10MP',
+      'Battery': '5000mAh with 45W Fast Charging',
+    },
+    colors: [
+      { name: 'Titanium Black', hex: '#1a1a1a' },
+      { name: 'Titanium Gray', hex: '#7a7a7a' },
+      { name: 'Titanium Violet', hex: '#9d8ec9' },
+      { name: 'Titanium Yellow', hex: '#e8d084' },
+    ],
+    variants: [
+      { label: 'Storage', options: ['256GB', '512GB', '1TB'] }
+    ],
+    installmentPlans: [
+      { months: 6, monthly: 75000 },
+      { months: 12, monthly: 37500 },
     ],
     inStock: true,
+    stockCount: 15,
+    warranty: '1 Year Official Warranty',
+    deliveryInfo: 'Free delivery within 24-48 hours in all major cities',
+    reviews: [
+      { id: '1', name: 'Ahmed Raza', initials: 'AR', rating: 5, date: 'March 5, 2026', comment: 'Absolutely amazing product! Flexiberry delivered it next day and the installment plan was hassle-free. Build quality is exceptional and performance is unreal.' },
+      { id: '2', name: 'Fatima Sheikh', initials: 'FS', rating: 5, date: 'February 28, 2026', comment: 'Got it on 12-month installment - totally worth it. Packaging was perfect and support team was very helpful explaining all the features.' },
+      { id: '3', name: 'Hassan Ali', initials: 'HA', rating: 4, date: 'February 20, 2026', comment: 'Great phone, excellent camera quality. The S Pen is a game changer for productivity. Minor issue with delivery timing but overall satisfied.' },
+    ]
   },
   '2': {
     id: '2',
-    name: 'Honda City 2023',
-    categoryId: 'cars',
-    seller: 'Auto Motors Pk',
-    price: 3500000,
-    originalPrice: 3800000,
-    downPayment: 700000,
+    name: 'Honda City 2024 Aspire',
+    category: 'Vehicles',
+    categorySlug: 'cars',
+    vendor: 'AutoMart Pakistan',
+    vendorVerified: true,
+    vendorLocation: 'Karachi',
+    reference: 'HC-2024-ASP',
+    price: 4850000,
+    originalPrice: 5100000,
+    discount: 5,
     rating: 4.9,
-    reviewCount: 156,
-    image: '🚗',
-    description: 'Brand new Honda City 2023 model. Fuel efficient, reliable, and perfect for family use. Features advanced safety systems and premium interior comfort.',
-    specifications: [
-      { label: 'Engine', value: '1.5L i-VTEC Petrol' },
-      { label: 'Transmission', value: 'CVT Automatic' },
-      { label: 'Fuel Efficiency', value: '16-18 km/l' },
-      { label: 'Seating', value: '5 passengers' },
-      { label: 'Warranty', value: '5 Years / 100,000 km' },
+    reviewCount: 89,
+    images: ['/assets/carousel-8.jpg', '/assets/carousel-8.jpg', '/assets/carousel-8.jpg', '/assets/carousel-8.jpg'],
+    description: 'The all-new Honda City 2024 Aspire combines elegant design with powerful performance. Featuring the latest safety technologies and premium comfort features.',
+    features: [
+      'Honda Sensing safety suite included',
+      'Factory warranty with authorized service',
+      'Genuine Honda accessories package',
+      'Fuel-efficient 1.5L VTEC engine',
+      "Backed by FlexiBerry's 7-day return policy"
     ],
-    installmentOptions: [
-      { months: 12, monthly: 233333, total: 3500000 },
-      { months: 24, monthly: 116667, total: 3500000 },
+    specifications: {
+      'Engine': '1.5L i-VTEC',
+      'Transmission': 'CVT Automatic',
+      'Fuel Economy': '14-16 km/l',
+      'Seating': '5 passengers',
+      'Features': 'Sunroof, Leather Seats, Navigation',
+    },
+    colors: [
+      { name: 'Platinum White', hex: '#f5f5f5' },
+      { name: 'Crystal Black', hex: '#1a1a1a' },
+      { name: 'Lunar Silver', hex: '#c0c0c0' },
+      { name: 'Radiant Red', hex: '#c41e3a' },
+    ],
+    variants: [],
+    installmentPlans: [
+      { months: 6, monthly: 808334 },
+      { months: 12, monthly: 404167 },
     ],
     inStock: true,
+    stockCount: 3,
+    warranty: '3 Years / 100,000 km Warranty',
+    deliveryInfo: 'Vehicle registration and delivery within 7 days',
+    reviews: []
   },
-  '7': {
-    id: '7',
-    name: 'iPhone 15 Pro Max 256GB',
-    categoryId: 'smartphones',
-    seller: 'TechZone Official',
-    price: 320000,
-    originalPrice: 350000,
-    downPayment: 64000,
-    rating: 4.9,
-    reviewCount: 543,
-    image: '📱',
-    description: 'The ultimate iPhone. Titanium design, A17 Pro chip, customizable Action button, and the most powerful iPhone camera system ever.',
-    specifications: [
-      { label: 'Display', value: '6.7-inch Super Retina XDR' },
-      { label: 'Chip', value: 'A17 Pro chip' },
-      { label: 'Camera', value: '48MP Main | Ultra Wide | Telephoto' },
-      { label: 'Storage', value: '256GB' },
-      { label: 'Connector', value: 'USB-C (USB 3)' },
+  '3': {
+    id: '3',
+    name: 'Royal Bedroom Set',
+    category: 'Furniture',
+    categorySlug: 'furniture',
+    vendor: 'CraftHouse Furniture',
+    vendorVerified: true,
+    vendorLocation: 'Multan',
+    reference: '6-001',
+    price: 285000,
+    originalPrice: 320000,
+    discount: 11,
+    rating: 4.4,
+    reviewCount: 67,
+    images: ['/assets/carousel-6.jpg', '/assets/carousel-6.jpg', '/assets/carousel-6.jpg', '/assets/carousel-6.jpg'],
+    description: 'Complete bedroom furniture. Premium quality product with manufacturer warranty, fast nationwide delivery, and easy installment plans with 0% markup.',
+    features: [
+      'Top-grade materials and certified build quality',
+      'Manufacturer tested - shipped in original packaging',
+      'Compatible with all standard accessories',
+      'Energy-efficient modern design',
+      "Backed by FlexiBerry's 7-day return policy"
     ],
-    installmentOptions: [
-      { months: 6, monthly: 42667, total: 320000 },
-      { months: 12, monthly: 21333, total: 320000 },
+    specifications: {
+      'Material': 'Solid Sheesham Wood',
+      'Finish': 'Premium Lacquer',
+      'Bed Size': 'King Size (6x7 ft)',
+      'Includes': 'Bed, 2 Side Tables, Dresser, Mirror',
+      'Assembly': 'Free Professional Installation',
+    },
+    colors: [
+      { name: 'Natural Titanium', hex: '#c9b896' },
+      { name: 'Dark Walnut', hex: '#1a1a1a' },
+      { name: 'Oak White', hex: '#f5ebe0' },
+      { name: 'Teal Green', hex: '#2d7a7a' },
+    ],
+    variants: [],
+    installmentPlans: [
+      { months: 6, monthly: 47500 },
+      { months: 12, monthly: 23750 },
     ],
     inStock: true,
+    stockCount: 8,
+    warranty: '5 Years Manufacturer Warranty',
+    deliveryInfo: 'Free Home Delivery within 24-48 hours - All major cities covered',
+    reviews: []
+  },
+  '4': {
+    id: '4',
+    name: 'Complete Jahez Package Gold',
+    category: 'Jahez Packages',
+    categorySlug: 'jahez',
+    vendor: 'HomeKart Pakistan',
+    vendorVerified: true,
+    vendorLocation: 'Faisalabad',
+    reference: 'JP-GOLD-001',
+    price: 850000,
+    originalPrice: 950000,
+    discount: 11,
+    rating: 4.3,
+    reviewCount: 28,
+    images: ['/assets/carousel-7.jpg', '/assets/carousel-7.jpg', '/assets/carousel-7.jpg', '/assets/carousel-7.jpg'],
+    description: 'Complete wedding package including furniture, appliances, and electronics. Everything you need for your new home in one convenient bundle.',
+    features: [
+      'Complete 4-5 item bundle package',
+      'Premium quality products only',
+      'Free delivery and installation',
+      'Extended warranty on all items',
+      "Backed by FlexiBerry's 7-day return policy"
+    ],
+    specifications: {
+      'Bedroom Set': 'King Size Complete Set',
+      'Living Room': 'Sofa Set + Center Table',
+      'Appliances': 'LED TV 55" + AC 1.5 Ton + Refrigerator',
+      'Kitchen': 'Microwave + Oven',
+    },
+    colors: [],
+    variants: [],
+    installmentPlans: [
+      { months: 6, monthly: 141667 },
+      { months: 12, monthly: 70834 },
+    ],
+    inStock: true,
+    stockCount: 5,
+    warranty: 'Individual warranties on all items',
+    deliveryInfo: 'Scheduled delivery within 5-7 business days',
+    reviews: []
+  },
+  '5': {
+    id: '5',
+    name: '5KW Solar Panel System',
+    category: 'Solar Systems',
+    categorySlug: 'solar',
+    vendor: 'GreenPower Solutions',
+    vendorVerified: true,
+    vendorLocation: 'Islamabad',
+    reference: 'SP-5KW-001',
+    price: 650000,
+    originalPrice: null,
+    discount: null,
+    rating: 4.7,
+    reviewCount: 45,
+    images: ['/assets/carousel-4.jpg', '/assets/carousel-4.jpg', '/assets/carousel-4.jpg', '/assets/carousel-4.jpg'],
+    description: 'Complete 5KW on-grid solar system with premium panels, inverter, and professional installation. Start saving on electricity bills immediately.',
+    features: [
+      'Tier-1 solar panels with 25-year warranty',
+      'High-efficiency inverter included',
+      'Net metering assistance provided',
+      'Professional installation included',
+      "Backed by FlexiBerry's 7-day return policy"
+    ],
+    specifications: {
+      'Capacity': '5kW System',
+      'Panels': '10x 550W Mono PERC',
+      'Inverter': 'Hybrid 5kW',
+      'Average Generation': '20-25 units/day',
+      'Installation': 'Professional team, 2-3 days',
+    },
+    colors: [],
+    variants: [],
+    installmentPlans: [
+      { months: 6, monthly: 108334 },
+      { months: 12, monthly: 54167 },
+    ],
+    inStock: true,
+    stockCount: 10,
+    warranty: '25 Years Panel Warranty',
+    deliveryInfo: 'Installation within 7-10 business days',
+    reviews: []
   }
-};
-
-/* ─── Components ─────────────────────────────────────── */
-const StatBox = ({ icon: Icon, label, value, color }: any) => (
-  <div style={{
-    background: "white", padding: "16px", borderRadius: "16px",
-    border: "1.5px solid rgba(0,0,0,0.04)", flex: 1, minWidth: "140px",
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-  }}>
-    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
-      <div style={{
-        height: "28px", width: "28px", borderRadius: "8px",
-        background: `${color}10`, color: color,
-        display: "flex", alignItems: "center", justifyContent: "center",
-      }}>
-        <Icon size={14} strokeWidth={2.5} />
-      </div>
-      <span style={{ fontSize: "11px", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</span>
-    </div>
-    <div style={{ fontSize: "16px", fontWeight: 900, color: "#0f172a" }}>{value}</div>
-  </div>
-);
+}
 
 export default function ProductDetailPage() {
-  const params = useParams();
-  const productId = params.id as string;
-  const product = mockProductDetails[productId as keyof typeof mockProductDetails] || mockProductDetails['1'];
+  const params = useParams()
+  const productId = params.id as string
+  const product = PRODUCTS_DATA[productId] || PRODUCTS_DATA['1']
   
-  const [quantity, setQuantity] = useState(1);
-  const [selectedInstallment, setSelectedInstallment] = useState(product.installmentOptions[1]?.months || 12);
-  const [wish, setWish] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [selectedImg, setSelectedImg] = useState(0)
+  const [selectedColor, setSelectedColor] = useState(0)
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({})
+  const [selectedPlan, setSelectedPlan] = useState(product.installmentPlans[1]?.months || 6)
+  const [quantity, setQuantity] = useState(1)
+  const [addedToCart, setAddedToCart] = useState(false)
+  const [addedToWishlist, setAddedToWishlist] = useState(false)
+  const [activeTab, setActiveTab] = useState<'description' | 'specifications' | 'reviews'>('description')
 
-  const cat = useMemo(() => categories.find(c => c.id === product.categoryId) || categories[0], [product.categoryId]);
-  const selectedPlan = useMemo(() => product.installmentOptions.find(opt => opt.months === selectedInstallment), [selectedInstallment, product.installmentOptions]);
+  const theme = CATEGORY_THEMES[product.categorySlug] || CATEGORY_THEMES.general
+  const plan = product.installmentPlans.find(p => p.months === selectedPlan)
+
+  useEffect(() => {
+    // Initialize variants with first options
+    const initial: Record<string, string> = {}
+    product.variants.forEach(v => { initial[v.label] = v.options[0] })
+    setSelectedVariants(initial)
+  }, [product])
 
   const handleAddToCart = () => {
-    setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
-  };
+    setAddedToCart(true)
+    setTimeout(() => setAddedToCart(false), 3000)
+  }
 
   return (
     <FlexiLayout>
       <style>{`
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          background-color: #fcfcfd;
+          color: #1a1a1a;
         }
-        .product-main-grid {
+
+        .product-container {
+          max-width: 1300px;
+          margin: 0 auto;
+          padding: 40px 20px;
+        }
+
+        .breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 13px;
+          color: #6b7280;
+          margin-bottom: 32px;
+        }
+
+        .breadcrumb a {
+          color: inherit;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+
+        .breadcrumb a:hover {
+          color: ${theme.primary};
+        }
+
+        .product-grid {
           display: grid;
-          grid-template-columns: 1.2fr 1fr;
-          gap: 40px;
+          grid-template-columns: 1.1fr 0.9fr;
+          gap: 60px;
+          margin-bottom: 80px;
         }
-        @media (max-width: 992px) {
-          .product-main-grid { grid-template-columns: 1fr; }
+
+        @media (max-width: 1024px) {
+          .product-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+        }
+
+        .image-gallery {
+          position: sticky;
+          top: 100px;
+          align-self: flex-start;
+        }
+
+        .main-image {
+          width: 100%;
+          aspect-ratio: 1;
+          background: #fff;
+          border-radius: 24px;
+          border: 1px solid #f1f5f9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          margin-bottom: 20px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+
+        .main-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          transition: transform 0.5s ease;
+        }
+
+        .main-image:hover img {
+          transform: scale(1.05);
+        }
+
+        .thumbnails {
+          display: flex;
+          gap: 12px;
+          overflow-x: auto;
+          padding-bottom: 10px;
+        }
+
+        .thumbnail {
+          width: 80px;
+          height: 80px;
+          border-radius: 12px;
+          border: 2px solid transparent;
+          cursor: pointer;
+          overflow: hidden;
+          flex-shrink: 0;
+          background: #fff;
+          transition: all 0.2s;
+        }
+
+        .thumbnail.active {
+          border-color: ${theme.primary};
+        }
+
+        .thumbnail img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .product-info h1 {
+          font-size: 36px;
+          font-weight: 800;
+          line-height: 1.2;
+          margin-bottom: 16px;
+          letter-spacing: -0.02em;
+        }
+
+        .vendor-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          background: #f8fafc;
+          border-radius: 99px;
+          font-size: 13px;
+          font-weight: 600;
+          color: #475569;
+          margin-bottom: 24px;
+        }
+
+        .price-section {
+          margin-bottom: 32px;
+          padding-bottom: 32px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+
+        .current-price {
+          font-size: 42px;
+          font-weight: 800;
+          color: #111827;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .original-price {
+          font-size: 20px;
+          color: #94a3b8;
+          text-decoration: line-through;
+          font-weight: 500;
+        }
+
+        .discount-tag {
+          font-size: 14px;
+          font-weight: 700;
+          color: #ef4444;
+          background: #fef2f2;
+          padding: 4px 10px;
+          border-radius: 6px;
+        }
+
+        .installment-highlight {
+          margin-top: 12px;
+          font-size: 15px;
+          font-weight: 600;
+          color: ${theme.primary};
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .option-label {
+          font-size: 14px;
+          font-weight: 700;
+          color: #111827;
+          margin-bottom: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+
+        .color-options {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 32px;
+        }
+
+        .color-btn {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          border: 2px solid #fff;
+          box-shadow: 0 0 0 1px #e2e8f0;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .color-btn.active {
+          box-shadow: 0 0 0 2px ${theme.primary};
+        }
+
+        .plan-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 12px;
+          margin-bottom: 32px;
+        }
+
+        .plan-card {
+          padding: 16px;
+          border-radius: 16px;
+          border: 1.5px solid #f1f5f9;
+          background: #fff;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-align: center;
+        }
+
+        .plan-card.active {
+          border-color: ${theme.primary};
+          background: ${theme.bg};
+        }
+
+        .plan-card .months {
+          font-size: 13px;
+          color: #64748b;
+          margin-bottom: 4px;
+        }
+
+        .plan-card .amount {
+          font-size: 18px;
+          font-weight: 800;
+          color: #111827;
+        }
+
+        .action-buttons {
+          display: flex;
+          gap: 16px;
+          margin-bottom: 40px;
+        }
+
+        .qty-selector {
+          display: flex;
+          align-items: center;
+          background: #f8fafc;
+          border-radius: 14px;
+          padding: 4px;
+          border: 1px solid #f1f5f9;
+        }
+
+        .qty-btn {
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          background: none;
+          font-size: 20px;
+          color: #64748b;
+          cursor: pointer;
+        }
+
+        .qty-value {
+          width: 40px;
+          text-align: center;
+          font-weight: 700;
+        }
+
+        .buy-btn {
+          flex: 1;
+          height: 56px;
+          background: ${theme.gradient};
+          color: #fff;
+          border: none;
+          border-radius: 14px;
+          font-size: 16px;
+          font-weight: 700;
+          cursor: pointer;
+          box-shadow: 0 10px 25px ${theme.primary}33;
+          transition: all 0.3s;
+        }
+
+        .buy-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 15px 30px ${theme.primary}44;
+        }
+
+        .tabs-section {
+          border-top: 1px solid #f1f5f9;
+          padding-top: 60px;
+        }
+
+        .tabs-header {
+          display: flex;
+          gap: 40px;
+          margin-bottom: 40px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+
+        .tab-btn {
+          padding: 16px 0;
+          font-size: 16px;
+          font-weight: 700;
+          color: #94a3b8;
+          background: none;
+          border: none;
+          border-bottom: 2px solid transparent;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+          color: #111827;
+          border-bottom-color: ${theme.primary};
+        }
+
+        .spec-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 24px;
+        }
+
+        .spec-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 16px;
+          background: #f8fafc;
+          border-radius: 12px;
+        }
+
+        .spec-label {
+          color: #64748b;
+          font-weight: 600;
+        }
+
+        .spec-value {
+          color: #111827;
+          font-weight: 700;
         }
       `}</style>
 
-      <div style={{ background: "#f8faff", minHeight: "100vh", paddingBottom: "80px", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-        
-        {/* Breadcrumb */}
-        <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "20px 16px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", fontWeight: 600, color: "#94a3b8" }}>
-            <Link href="/" style={{ color: "#64748b", textDecoration: "none" }}>Home</Link>
-            <ChevronRight size={14} />
-            <Link href="/products" style={{ color: "#64748b", textDecoration: "none" }}>Products</Link>
-            <ChevronRight size={14} />
-            <Link href={`/products?category=${cat.id}`} style={{ color: cat.theme, textDecoration: "none" }}>{cat.name}</Link>
-            <ChevronRight size={14} />
-            <span style={{ color: "#0f172a", fontWeight: 800 }}>{product.name}</span>
-          </div>
+      <div className="product-container">
+        <div className="breadcrumb">
+          <Link href="/">Home</Link>
+          <span>/</span>
+          <Link href="/products">Products</Link>
+          <span>/</span>
+          <Link href={`/products?category=${product.categorySlug}`} style={{ color: theme.primary }}>{product.category}</Link>
+          <span>/</span>
+          <span style={{ color: '#111827', fontWeight: 700 }}>{product.name}</span>
         </div>
 
-        <div style={{ maxWidth: "1300px", margin: "0 auto", padding: "0 16px" }}>
-          <div className="product-main-grid">
-            
-            {/* Left Column: Visuals */}
-            <div style={{ animation: "slideUp 0.6s ease both" }}>
-              <div style={{
-                background: "white", borderRadius: "32px", padding: "40px",
-                border: "1.5px solid rgba(0,0,0,0.04)", boxShadow: "0 10px 40px rgba(0,0,0,0.02)",
-                position: "relative", marginBottom: "24px",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                minHeight: "500px", background: `linear-gradient(135deg, white 0%, ${cat.bg} 100%)`,
-              }}>
-                <span style={{ fontSize: "200px", userSelect: "none" }}>{product.image}</span>
-                
-                {/* Floating Actions */}
-                <div style={{ position: "absolute", top: "24px", right: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
-                  <button onClick={() => setWish(!wish)} style={{
-                    height: "44px", width: "44px", borderRadius: "14px", background: "white",
-                    border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", cursor: "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center", transition: "all 0.2s",
-                  }}>
-                    <Heart size={20} fill={wish ? "#ef4444" : "none"} color={wish ? "#ef4444" : "#94a3b8"} strokeWidth={2.5} />
-                  </button>
-                  <button style={{
-                    height: "44px", width: "44px", borderRadius: "14px", background: "white",
-                    border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.08)", cursor: "pointer",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    <Share2 size={20} color="#94a3b8" strokeWidth={2.5} />
-                  </button>
+        <div className="product-grid">
+          {/* Left: Images */}
+          <div className="image-gallery">
+            <div className="main-image">
+              <span style={{ fontSize: 200 }}>{product.image || '📦'}</span>
+            </div>
+            <div className="thumbnails">
+              {[0, 1, 2, 3].map(i => (
+                <div 
+                  key={i} 
+                  className={`thumbnail ${selectedImg === i ? 'active' : ''}`}
+                  onClick={() => setSelectedImg(i)}
+                >
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 40 }}>
+                    {product.image || '📦'}
+                  </div>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Badge */}
-                <div style={{
-                  position: "absolute", top: "24px", left: "24px",
-                  padding: "8px 16px", borderRadius: "12px", background: "white",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.08)", display: "flex", alignItems: "center", gap: "8px",
-                }}>
-                  <div style={{ height: "8px", width: "8px", borderRadius: "50%", background: "#22c55e" }} />
-                  <span style={{ fontSize: "12px", fontWeight: 800, color: "#0f172a" }}>In Stock & Ready to Ship</span>
-                </div>
+          {/* Right: Info */}
+          <div className="product-info">
+            <div className="vendor-badge">
+              <span style={{ color: '#22c55e' }}>●</span>
+              {product.vendor}
+              {product.vendorVerified && <span title="Verified Vendor">✅</span>}
+            </div>
+
+            <h1>{product.name}</h1>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
+              <div style={{ display: 'flex', gap: 2 }}>
+                {[1, 2, 3, 4, 5].map(s => (
+                  <span key={s} style={{ color: s <= Math.floor(product.rating) ? '#f59e0b' : '#e2e8f0', fontSize: 18 }}>★</span>
+                ))}
               </div>
+              <span style={{ fontSize: 14, fontWeight: 700, color: '#111827' }}>{product.rating}</span>
+              <span style={{ fontSize: 14, color: '#94a3b8' }}>({product.reviewCount} reviews)</span>
+            </div>
 
-              {/* Stats Row */}
-              <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-                <StatBox icon={ShieldCheck} label="Warranty" value="2 Years Official" color="#2563eb" />
-                <StatBox icon={Truck} label="Delivery" value="Free Nationwide" color="#059669" />
-                <StatBox icon={RotateCcw} label="Returns" value="7 Days Easy" color="#7c3aed" />
+            <div className="price-section">
+              <div className="current-price">
+                PKR {product.price.toLocaleString()}
+                {product.originalPrice && (
+                  <>
+                    <span className="original-price">PKR {product.originalPrice.toLocaleString()}</span>
+                    <span className="discount-tag">-{product.discount}%</span>
+                  </>
+                )}
+              </div>
+              <div className="installment-highlight">
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Available from PKR {plan?.monthly.toLocaleString()}/month - 0% markup
               </div>
             </div>
 
-            {/* Right Column: Details */}
-            <div style={{ animation: "slideUp 0.6s 0.1s ease both" }}>
-              <div style={{ marginBottom: "32px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
-                  <span style={{
-                    padding: "4px 12px", borderRadius: "8px", background: `${cat.theme}15`,
-                    color: cat.theme, fontSize: "12px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em"
-                  }}>{cat.name}</span>
-                  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                    <Star size={16} fill="#f59e0b" color="#f59e0b" />
-                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#0f172a" }}>{product.rating}</span>
-                    <span style={{ fontSize: "14px", color: "#94a3b8" }}>({product.reviewCount} reviews)</span>
-                  </div>
-                </div>
-                
-                <h1 style={{ fontSize: "36px", fontWeight: 900, color: "#0f172a", margin: "0 0 12px", letterSpacing: "-0.03em", lineHeight: 1.1 }}>
-                  {product.name}
-                </h1>
-                <p style={{ fontSize: "14px", fontWeight: 700, color: "#64748b", margin: "0 0 20px" }}>
-                  Sold by <span style={{ color: "#2563eb", cursor: "pointer" }}>{product.seller}</span>
-                </p>
-                <p style={{ fontSize: "16px", color: "#64748b", lineHeight: 1.6, margin: 0 }}>
-                  {product.description}
-                </p>
-              </div>
+            <p style={{ fontSize: 16, color: '#475569', lineHeight: 1.7, marginBottom: 32 }}>
+              {product.description}
+            </p>
 
-              {/* Pricing Card */}
-              <div style={{
-                background: "white", borderRadius: "24px", padding: "24px",
-                border: "1.5px solid rgba(0,0,0,0.04)", boxShadow: "0 10px 30px rgba(0,0,0,0.03)",
-                marginBottom: "24px",
-              }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-                  <div>
-                    <span style={{ fontSize: "12px", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", display: "block", marginBottom: "4px" }}>Full Price</span>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-                      <span style={{ fontSize: "32px", fontWeight: 900, color: "#0f172a" }}>₨{product.price.toLocaleString()}</span>
-                      {product.originalPrice && (
-                        <span style={{ fontSize: "16px", color: "#94a3b8", textDecoration: "line-through" }}>₨{product.originalPrice.toLocaleString()}</span>
-                      )}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <span style={{ fontSize: "12px", fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", display: "block", marginBottom: "4px" }}>Down Payment</span>
-                    <span style={{ fontSize: "20px", fontWeight: 900, color: "#059669" }}>₨{product.downPayment.toLocaleString()}</span>
-                  </div>
-                </div>
-
-                <div style={{ height: "1px", background: "#f1f5f9", margin: "0 0 20px" }} />
-
-                <div style={{ marginBottom: "20px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-                    <CreditCard size={16} color="#2563eb" />
-                    <span style={{ fontSize: "14px", fontWeight: 800, color: "#0f172a" }}>Flexible Installment Plans</span>
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-                    {product.installmentOptions.map(opt => (
-                      <button
-                        key={opt.months}
-                        onClick={() => setSelectedInstallment(opt.months)}
-                        style={{
-                          padding: "16px", borderRadius: "16px", cursor: "pointer",
-                          border: `2.5px solid ${selectedInstallment === opt.months ? "#2563eb" : "#f1f5f9"}`,
-                          background: selectedInstallment === opt.months ? "rgba(37,99,235,0.03)" : "white",
-                          textAlign: "left", transition: "all 0.2s",
-                        }}
-                      >
-                        <div style={{ fontSize: "16px", fontWeight: 900, color: "#0f172a", marginBottom: "4px" }}>{opt.months} Months</div>
-                        <div style={{ fontSize: "14px", fontWeight: 700, color: "#2563eb" }}>₨{opt.monthly.toLocaleString()}/mo</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quantity & CTA */}
-                <div style={{ display: "flex", gap: "12px" }}>
-                  <div style={{
-                    display: "flex", alignItems: "center", background: "#f8fafc",
-                    borderRadius: "14px", padding: "4px", border: "1.5px solid #f1f5f9",
-                  }}>
-                    <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ width: "36px", height: "36px", border: "none", background: "none", cursor: "pointer", fontSize: "18px", fontWeight: 700, color: "#64748b" }}>−</button>
-                    <span style={{ width: "30px", textAlign: "center", fontSize: "14px", fontWeight: 800, color: "#0f172a" }}>{quantity}</span>
-                    <button onClick={() => setQuantity(quantity + 1)} style={{ width: "36px", height: "36px", border: "none", background: "none", cursor: "pointer", fontSize: "18px", fontWeight: 700, color: "#64748b" }}>+</button>
-                  </div>
-                  <button
-                    onClick={handleAddToCart}
-                    style={{
-                      flex: 1, height: "52px", borderRadius: "14px", border: "none",
-                      background: added ? "#059669" : "linear-gradient(135deg, #2563eb, #7c3aed)",
-                      color: "white", fontSize: "15px", fontWeight: 800, cursor: "pointer",
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: "10px",
-                      boxShadow: "0 8px 20px rgba(37,99,235,0.25)", transition: "all 0.3s",
-                    }}
-                  >
-                    {added ? <CheckCircle2 size={20} /> : <ShoppingCart size={20} />}
-                    {added ? "Added to Cart" : "Add to Cart"}
-                  </button>
-                </div>
-              </div>
-
-              {/* Specifications */}
-              <div style={{
-                background: "white", borderRadius: "24px", padding: "24px",
-                border: "1.5px solid rgba(0,0,0,0.04)",
-              }}>
-                <h3 style={{ fontSize: "18px", fontWeight: 900, color: "#0f172a", margin: "0 0 16px" }}>Specifications</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {product.specifications.map((spec, i) => (
-                    <div key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
-                      <span style={{ fontWeight: 700, color: "#94a3b8" }}>{spec.label}</span>
-                      <span style={{ fontWeight: 800, color: "#0f172a" }}>{spec.value}</span>
-                    </div>
+            {product.colors.length > 0 && (
+              <div>
+                <div className="option-label">Color: <span style={{ color: '#64748b' }}>{product.colors[selectedColor].name}</span></div>
+                <div className="color-options">
+                  {product.colors.map((c, i) => (
+                    <button 
+                      key={i} 
+                      className={`color-btn ${selectedColor === i ? 'active' : ''}`}
+                      style={{ background: c.hex }}
+                      onClick={() => setSelectedColor(i)}
+                    />
                   ))}
                 </div>
               </div>
+            )}
+
+            <div>
+              <div className="option-label">Installment Plan</div>
+              <div className="plan-grid">
+                {product.installmentPlans.map(p => (
+                  <div 
+                    key={p.months} 
+                    className={`plan-card ${selectedPlan === p.months ? 'active' : ''}`}
+                    onClick={() => setSelectedPlan(p.months)}
+                  >
+                    <div className="months">{p.months} Months</div>
+                    <div className="amount">PKR {p.monthly.toLocaleString()}</div>
+                  </div>
+                ))}
+              </div>
             </div>
 
+            <div className="action-buttons">
+              <div className="qty-selector">
+                <button className="qty-btn" onClick={() => setQuantity(Math.max(1, quantity - 1))}>−</button>
+                <div className="qty-value">{quantity}</div>
+                <button className="qty-btn" onClick={() => setQuantity(quantity + 1)}>+</button>
+              </div>
+              <button className="buy-btn" onClick={handleAddToCart}>
+                {addedToCart ? '✓ Added to Cart' : 'Buy on Installment'}
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', gap: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#64748b' }}>
+                <span style={{ color: theme.primary }}>🛡️</span> {product.warranty}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#64748b' }}>
+                <span style={{ color: theme.primary }}>🚚</span> {product.deliveryInfo}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="tabs-section">
+          <div className="tabs-header">
+            <button 
+              className={`tab-btn ${activeTab === 'description' ? 'active' : ''}`}
+              onClick={() => setActiveTab('description')}
+            >
+              Description
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'specifications' ? 'active' : ''}`}
+              onClick={() => setActiveTab('specifications')}
+            >
+              Specifications
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
+              onClick={() => setActiveTab('reviews')}
+            >
+              Reviews ({product.reviewCount})
+            </button>
+          </div>
+
+          <div className="tab-content">
+            {activeTab === 'description' && (
+              <div style={{ maxWidth: 800 }}>
+                <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20 }}>Product Overview</h3>
+                <p style={{ fontSize: 16, color: '#475569', lineHeight: 1.8, marginBottom: 32 }}>{product.description}</p>
+                <ul style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 0, listStyle: 'none' }}>
+                  {product.features.map((f, i) => (
+                    <li key={i} style={{ display: 'flex', gap: 12, fontSize: 15, color: '#334155' }}>
+                      <span style={{ color: theme.primary }}>✓</span> {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {activeTab === 'specifications' && (
+              <div className="spec-grid">
+                {Object.entries(product.specifications).map(([key, val]) => (
+                  <div key={key} className="spec-item">
+                    <span className="spec-label">{key}</span>
+                    <span className="spec-value">{val}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'reviews' && (
+              <div>
+                {product.reviews.length > 0 ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                    {product.reviews.map(r => (
+                      <div key={r.id} style={{ paddingBottom: 32, borderBottom: '1px solid #f1f5f9' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div style={{ width: 44, height: 44, borderRadius: '50%', background: theme.bg, color: theme.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+                              {r.initials}
+                            </div>
+                            <div>
+                              <div style={{ fontWeight: 700 }}>{r.name}</div>
+                              <div style={{ fontSize: 12, color: '#94a3b8' }}>{r.date}</div>
+                            </div>
+                          </div>
+                          <div style={{ display: 'flex', gap: 2 }}>
+                            {[1, 2, 3, 4, 5].map(s => (
+                              <span key={s} style={{ color: s <= r.rating ? '#f59e0b' : '#e2e8f0', fontSize: 14 }}>★</span>
+                            ))}
+                          </div>
+                        </div>
+                        <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>{r.comment}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '40px 0', color: '#94a3b8' }}>
+                    No reviews yet for this product.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </FlexiLayout>
-  );
+  )
 }

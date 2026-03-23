@@ -4,6 +4,19 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+export const CATEGORY_THEMES: Record<string, { primary: string; bg: string; gradient: string }> = {
+  smartphones: { primary: '#ef4444', bg: '#fff1f2', gradient: 'linear-gradient(135deg, #ef4444, #be123c)' },
+  laptops:     { primary: '#8b5cf6', bg: '#f5f3ff', gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' },
+  bikes:       { primary: '#f97316', bg: '#fff7ed', gradient: 'linear-gradient(135deg, #f97316, #c2410c)' },
+  appliances:  { primary: '#3b82f6', bg: '#eff6ff', gradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' },
+  solar:       { primary: '#eab308', bg: '#fefce8', gradient: 'linear-gradient(135deg, #eab308, #a16207)' },
+  furniture:   { primary: '#14b8a6', bg: '#f0fdfa', gradient: 'linear-gradient(135deg, #14b8a6, #0f766e)' },
+  jahez:       { primary: '#ec4899', bg: '#fdf2f8', gradient: 'linear-gradient(135deg, #ec4899, #be185d)' },
+  cars:        { primary: '#06b6d4', bg: '#ecfeff', gradient: 'linear-gradient(135deg, #06b6d4, #0e7490)' },
+  business:    { primary: '#22c55e', bg: '#f0fdf4', gradient: 'linear-gradient(135deg, #22c55e, #15803d)' },
+  general:     { primary: '#f59e0b', bg: '#fffbeb', gradient: 'linear-gradient(135deg, #f59e0b, #b45309)' },
+}
+
 const CATS = [
   { name: 'Smartphones',    e: '📱', slug: 'smartphones' },
   { name: 'Laptops',        e: '💻', slug: 'laptops'     },
