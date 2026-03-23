@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import FlexiLayout from '@/components/layout/FlexiLayout'
+import FlexiLayout from "@/components/layout/FlexiLayout/FlexiLayout";
 
 const allProducts = [
   { id: '1', name: 'Samsung 55" Smart TV', category: 'Electronics', price: 45000, downPayment: 9000, installment: 3750, rating: 4.8, reviews: 324, image: '📺', badge: 'Best Seller', inStock: true },
