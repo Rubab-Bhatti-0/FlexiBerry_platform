@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { resetPasswordSchema, type ResetPasswordInput } from '@/lib/schemas';
+import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout';
 
 export default function ForgotPasswordPage() {
   const [formData, setFormData] = useState<ResetPasswordInput>({
@@ -52,7 +53,8 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 px-4">
+    <FlexiLayout>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/20 px-4 py-16">
       <Card className="w-full max-w-md shadow-lg">
         <div className="p-8">
           <div className="mb-8 text-center">
@@ -121,5 +123,6 @@ export default function ForgotPasswordPage() {
         </div>
       </Card>
     </div>
+    </FlexiLayout>
   );
 }
