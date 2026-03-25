@@ -387,6 +387,7 @@ export default function HomePage() {
             </div>
 
             <Link href="/" className="nav-lnk">🏠 Home</Link>
+            <Link href="/shops" className="nav-lnk">🛍️ All Shops</Link>
             <Link href="/products?sale=true" className="nav-lnk">⚡ Flash Sale</Link>
             <Link href="/products?sort=new"  className="nav-lnk">✨ New Arrivals</Link>
 
