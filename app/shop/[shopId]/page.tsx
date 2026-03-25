@@ -165,7 +165,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
         * { box-sizing: border-box }
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0 }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
-        .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; animation: fadeIn 0.4s ease }
+        .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; animation: fadeIn 0.4s ease }
         @media (max-width: 768px) { .prod-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px } }
       `}</style>
 
@@ -176,27 +176,31 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
             <ArrowLeft size={18} />
             Back to Shops
           </Link>
-          <div style={{ flex: 1 }}></div>
-          <Link href="/" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none' }}>
-            Home
-          </Link>
-          <Link href="/products" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none' }}>
-            All Products
-          </Link>
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <Link href="/" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none', transition: 'color .2s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.color = shop.themeColor} onMouseOut={e => (e.currentTarget as HTMLElement).style.color = '#6b7280'}>
+              Home
+            </Link>
+            <Link href="/shops" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none', transition: 'color .2s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.color = shop.themeColor} onMouseOut={e => (e.currentTarget as HTMLElement).style.color = '#6b7280'}>
+              All Shops
+            </Link>
+            <Link href="/products" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none', transition: 'color .2s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.color = shop.themeColor} onMouseOut={e => (e.currentTarget as HTMLElement).style.color = '#6b7280'}>
+              Products
+            </Link>
+          </div>
         </div>
       </header>
 
       {/* ─────────────── SHOP HERO ─────────────── */}
-      <div style={{ background: shop.bannerGrad, color: '#fff', padding: '40px 20px', textAlign: 'center' }}>
+      <div style={{ background: shop.bannerGrad, color: '#fff', padding: '50px 20px', textAlign: 'center' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <div style={{ fontSize: '60px', marginBottom: '16px' }}>{shop.emoji}</div>
-          <h1 style={{ fontSize: '40px', fontWeight: 900, margin: '0 0 12px 0', letterSpacing: '-1px' }}>
+          <div style={{ fontSize: '70px', marginBottom: '20px', display: 'inline-block', animation: 'bounce 2s ease-in-out infinite' }}>{shop.emoji}</div>
+          <h1 style={{ fontSize: '44px', fontWeight: 900, margin: '0 0 12px 0', letterSpacing: '-1px' }}>
             {shop.name}
           </h1>
-          <p style={{ fontSize: '16px', opacity: 0.95, margin: '0 0 24px 0', maxWidth: '600px', margin: '0 auto 24px' }}>
+          <p style={{ fontSize: '17px', opacity: 0.95, margin: '0 0 28px 0', maxWidth: '700px', margin: '0 auto 28px' }}>
             {shop.description}
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '32px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '40px', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px' }}>
               <Star size={18} fill="#fff" /> {shop.rating} ({shop.reviews.toLocaleString()} reviews)
             </div>
@@ -213,29 +217,32 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
         </div>
       </div>
 
-      {/* ─────────────── SHOP DETAILS ─────────────── */}
-      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '60px' }}>
-          <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: `1px solid ${shop.categoryBg}` }}>
-            <div style={{ fontSize: '28px', marginBottom: '8px' }}>📊</div>
-            <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>SHOP STATISTICS</div>
-            <div style={{ fontSize: '18px', fontWeight: 700, color: shop.themeColor }}>
-              ⭐ {shop.rating} Rating
-            </div>
+      {/* ─────────────── SHOP DETAILS CARDS ─────────────── */}
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px 20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '48px' }}>
+          <div style={{ background: '#fff', padding: '28px 20px', borderRadius: '14px', border: `2px solid ${shop.categoryBg}`, textAlign: 'center', transition: 'all .3s', cursor: 'pointer' }} onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 10px 25px rgba(0,0,0,.08)' }} onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>⭐</div>
+            <div style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '6px', textTransform: 'uppercase' }}>Rating</div>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: shop.themeColor, marginBottom: '4px' }}>{shop.rating}</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>Based on {shop.reviews.toLocaleString()} reviews</div>
           </div>
-          <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: `1px solid ${shop.categoryBg}` }}>
-            <div style={{ fontSize: '28px', marginBottom: '8px' }}>🏢</div>
-            <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>ESTABLISHED</div>
-            <div style={{ fontSize: '18px', fontWeight: 700, color: shop.themeColor }}>
-              {shop.established}
-            </div>
+          <div style={{ background: '#fff', padding: '28px 20px', borderRadius: '14px', border: `2px solid ${shop.categoryBg}`, textAlign: 'center', transition: 'all .3s', cursor: 'pointer' }} onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 10px 25px rgba(0,0,0,.08)' }} onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>📦</div>
+            <div style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '6px', textTransform: 'uppercase' }}>Products</div>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: shop.themeColor, marginBottom: '4px' }}>{shop.products}</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>Available on kisti</div>
           </div>
-          <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: `1px solid ${shop.categoryBg}` }}>
-            <div style={{ fontSize: '28px', marginBottom: '8px' }}>{shop.installments ? '✅' : '❌'}</div>
-            <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>INSTALLMENTS</div>
-            <div style={{ fontSize: '18px', fontWeight: 700, color: shop.themeColor }}>
-              {shop.installments ? 'Available' : 'Not Available'}
-            </div>
+          <div style={{ background: '#fff', padding: '28px 20px', borderRadius: '14px', border: `2px solid ${shop.categoryBg}`, textAlign: 'center', transition: 'all .3s', cursor: 'pointer' }} onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 10px 25px rgba(0,0,0,.08)' }} onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>🏢</div>
+            <div style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '6px', textTransform: 'uppercase' }}>Est. Since</div>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: shop.themeColor, marginBottom: '4px' }}>{shop.established}</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>{shop.city}</div>
+          </div>
+          <div style={{ background: '#fff', padding: '28px 20px', borderRadius: '14px', border: `2px solid ${shop.categoryBg}`, textAlign: 'center', transition: 'all .3s', cursor: 'pointer' }} onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-4px)'; el.style.boxShadow = '0 10px 25px rgba(0,0,0,.08)' }} onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>{shop.verified ? '✅' : '⏳'}</div>
+            <div style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '6px', textTransform: 'uppercase' }}>Status</div>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: shop.verified ? shop.themeColor : '#f97316', marginBottom: '4px' }}>{shop.verified ? 'Verified' : 'Pending'}</div>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>Trusted seller</div>
           </div>
         </div>
 
