@@ -49,9 +49,9 @@ const PRODUCTS = [
 ]
 
 const VENDORS = [
-  { name:'TechZone Electronics', cat:'Electronics',    catC:'#4f46e5', catBg:'#eef2ff', desc:'Premium electronics & gadgets',   rat:4.8, prods:156, g1:'#6366f1', g2:'#4f46e5', e:'⚡', bar:'#6366f1' },
-  { name:'HomeKart Pakistan',    cat:'Home & Living',  catC:'#059669', catBg:'#ecfdf5', desc:'Appliances, furniture & packages', rat:4.6, prods:243, g1:'#10b981', g2:'#0d9488', e:'🏠', bar:'#10b981' },
-  { name:'MegaDeal Motors',      cat:'Motors & Energy',catC:'#7c3aed', catBg:'#f5f3ff', desc:'Vehicles, solar & heavy items',    rat:4.7, prods:89,  g1:'#8b5cf6', g2:'#6d28d9', e:'🚗', bar:'#8b5cf6' },
+  { id:'techzone', name:'TechZone Electronics', cat:'Electronics',    catC:'#4f46e5', catBg:'#eef2ff', desc:'Premium electronics & gadgets',   rat:4.8, prods:156, g1:'#6366f1', g2:'#4f46e5', e:'⚡', bar:'#6366f1' },
+  { id:'homekart', name:'HomeKart Pakistan',    cat:'Home & Living',  catC:'#059669', catBg:'#ecfdf5', desc:'Appliances, furniture & packages', rat:4.6, prods:243, g1:'#10b981', g2:'#0d9488', e:'🏠', bar:'#10b981' },
+  { id:'megadeal', name:'MegaDeal Motors',      cat:'Motors & Energy',catC:'#7c3aed', catBg:'#f5f3ff', desc:'Vehicles, solar & heavy items',    rat:4.7, prods:89,  g1:'#8b5cf6', g2:'#6d28d9', e:'🚗', bar:'#8b5cf6' },
 ]
 
 const FAQS = [
@@ -638,61 +638,61 @@ export default function HomePage() {
               </h2>
               <p style={{ color:'#9ca3af', fontSize:13.5, marginTop:4 }}>Trusted sellers with verified products</p>
             </div>
-            <Link href="/shop" className="btn-ind" style={{ padding:'11px 22px', fontSize:13.5, textDecoration:'none' }}>
+            <Link href="/shops" className="btn-ind" style={{ padding:'11px 22px', fontSize:13.5, textDecoration:'none' }}>
               View All Shops →
             </Link>
           </div>
           <div className="vg" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20 }}>
             {VENDORS.map(v => (
-              <div key={v.name} className="vc" style={{ borderTop:`3px solid ${v.bar}` }}>
-                <div style={{ padding:24 }}>
-                  <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:14 }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <Link key={v.id} href={`/shop/${v.id}`} style={{ textDecoration:'none' }}>
+                <div className="vc" style={{ borderTop:`3px solid ${v.bar}`, height:'100%' }}>
+                  <div style={{ padding:24 }}>
+                    <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:14 }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                        <div style={{
+                          width:50, height:50, borderRadius:14, flexShrink:0,
+                          background:`linear-gradient(135deg,${v.g1},${v.g2})`,
+                          display:'flex', alignItems:'center', justifyContent:'center',
+                          fontSize:24, boxShadow:`0 6px 20px ${v.g1}44`,
+                        }}>{v.e}</div>
+                        <div>
+                          <h3 style={{ fontSize:15, fontWeight:900, color:'#111827', letterSpacing:-.2 }}>{v.name}</h3>
+                          <span style={{
+                            display:'inline-block', padding:'3px 10px', borderRadius:999,
+                            fontSize:11, fontWeight:700, color:v.catC, background:v.catBg, marginTop:4,
+                          }}>{v.cat}</span>
+                        </div>
+                      </div>
                       <div style={{
-                        width:50, height:50, borderRadius:14, flexShrink:0,
-                        background:`linear-gradient(135deg,${v.g1},${v.g2})`,
-                        display:'flex', alignItems:'center', justifyContent:'center',
-                        fontSize:24, boxShadow:`0 6px 20px ${v.g1}44`,
-                      }}>{v.e}</div>
-                      <div>
-                        <h3 style={{ fontSize:15, fontWeight:900, color:'#111827', letterSpacing:-.2 }}>{v.name}</h3>
-                        <span style={{
-                          display:'inline-block', padding:'3px 10px', borderRadius:999,
-                          fontSize:11, fontWeight:700, color:v.catC, background:v.catBg, marginTop:4,
-                        }}>{v.cat}</span>
+                        width:34, height:34, borderRadius:10, border:'1.5px solid #e5e7eb',
+                        background:'#fff', display:'flex', alignItems:'center', justifyContent:'center',
+                        color:'#9ca3af', transition:'all .15s', flexShrink:0,
+                      }}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
+                        </svg>
                       </div>
                     </div>
-                    <button style={{
-                      width:34, height:34, borderRadius:10, border:'1.5px solid #e5e7eb',
-                      background:'#fff', display:'flex', alignItems:'center', justifyContent:'center',
-                      cursor:'pointer', color:'#9ca3af', transition:'all .15s', flexShrink:0,
-                    }}
-                    onMouseOver={e => { const el=e.currentTarget as HTMLElement; el.style.borderColor='#6366f1'; el.style.color='#6366f1'; el.style.background='#f5f3ff' }}
-                    onMouseOut={e  => { const el=e.currentTarget as HTMLElement; el.style.borderColor='#e5e7eb'; el.style.color='#9ca3af'; el.style.background='#fff' }}>
-                      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
-                      </svg>
-                    </button>
-                  </div>
-                  <p style={{ fontSize:13.5, color:'#6b7280', marginBottom:18, lineHeight:1.65 }}>{v.desc}</p>
-                  <div style={{ display:'flex', alignItems:'center', gap:16, flexWrap:'wrap' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:13 }}>
-                      <span style={{ color:'#facc15', fontSize:15 }}>★</span>
-                      <span style={{ fontWeight:900, color:'#111827' }}>{v.rat}</span>
-                      <span style={{ color:'#9ca3af' }}>rating</span>
-                    </div>
-                    <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:13 }}>
-                      <span style={{ fontSize:15 }}>🧩</span>
-                      <span style={{ fontWeight:900, color:'#111827' }}>{v.prods}</span>
-                      <span style={{ color:'#9ca3af' }}>Products</span>
-                    </div>
-                    <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:12, fontWeight:700, color:'#059669' }}>
-                      <div style={{ width:7, height:7, borderRadius:'50%', background:'#10b981' }} />
-                      Verified
+                    <p style={{ fontSize:13.5, color:'#6b7280', marginBottom:18, lineHeight:1.65 }}>{v.desc}</p>
+                    <div style={{ display:'flex', alignItems:'center', gap:16, flexWrap:'wrap' }}>
+                      <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:13 }}>
+                        <span style={{ color:'#facc15', fontSize:15 }}>★</span>
+                        <span style={{ fontWeight:900, color:'#111827' }}>{v.rat}</span>
+                        <span style={{ color:'#9ca3af' }}>rating</span>
+                      </div>
+                      <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:13 }}>
+                        <span style={{ fontSize:15 }}>🧩</span>
+                        <span style={{ fontWeight:900, color:'#111827' }}>{v.prods}</span>
+                        <span style={{ color:'#9ca3af' }}>Products</span>
+                      </div>
+                      <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:12, fontWeight:700, color:'#059669' }}>
+                        <div style={{ width:7, height:7, borderRadius:'50%', background:'#10b981' }} />
+                        Verified
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
