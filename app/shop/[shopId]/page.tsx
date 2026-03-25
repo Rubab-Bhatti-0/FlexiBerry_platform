@@ -140,7 +140,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
   const { shopId } = use(params)
   const shop = VENDORS[shopId]
   const [selectedSubcat, setSelectedSubcat] = useState('All')
-  const products = generateProducts(params.shopId, shop?.category)
+  const products = generateProducts(shopId, shop?.category)
 
   if (!shop) {
     return (

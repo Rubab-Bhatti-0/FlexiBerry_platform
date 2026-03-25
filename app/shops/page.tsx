@@ -436,7 +436,20 @@ const ShopCard = ({ vendor, view }: { vendor: typeof VENDORS[0]; view: 'grid' | 
 export default function ShopsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedCity, setSelectedCity] = useState('All Cities')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [view, setView] = useState<'grid' | 'list'>('grid')
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const filtered = useMemo(() => {
+    return VENDORS.filter(v => {
+      const matchCat = selectedCategory === 'All' || v.category === selectedCategory
+      const matchCity = selectedCity === 'All Cities' || v.city === selectedCity
+      const matchSearch = v.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         v.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         v.description.toLowerCase().includes(searchTerm.toLowerCase())
+      return matchCat && matchCity && matchSearch
+    })
+  }, [selectedCategory, selectedCity, searchTerm])
 
   return (
     <div style={{ background: '#f8f9fd', minHeight: '100vh' }}>
