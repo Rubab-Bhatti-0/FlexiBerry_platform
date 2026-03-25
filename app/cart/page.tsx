@@ -39,37 +39,47 @@ export default function CartPage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid lg:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               {items.length > 0 ? (
                 <div className="space-y-4">
                   {items.map(item => (
-                    <Card key={item.id} className="p-6">
-                      <div className="flex gap-6">
-                        <div className="bg-gradient-to-br from-accent/20 to-primary/20 rounded-lg w-32 h-32 flex items-center justify-center text-5xl flex-shrink-0">
+                    <Card key={item.id} className="p-4 md:p-6">
+                      <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+                        <div className="bg-gradient-to-br from-accent/20 to-primary/20 rounded-lg w-full sm:w-32 h-32 flex items-center justify-center text-5xl flex-shrink-0">
                           {item.image}
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-serif font-bold text-foreground mb-1">{item.productName}</h3>
+                          <div className="flex justify-between items-start mb-1">
+                            <h3 className="font-serif font-bold text-foreground">{item.productName}</h3>
+                            <button onClick={() => handleRemove(item.id)} className="sm:hidden text-destructive hover:text-destructive/80">
+                              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                            </button>
+                          </div>
                           <p className="text-sm text-muted-foreground mb-4">by {item.seller}</p>
                           <div className="grid grid-cols-2 gap-4 mb-4">
                             <div>
-                              <p className="text-muted-foreground text-sm mb-1">Unit Price</p>
-                              <p className="font-bold text-foreground">₨{item.price.toLocaleString()}</p>
+                              <p className="text-muted-foreground text-xs md:text-sm mb-1">Unit Price</p>
+                              <p className="font-bold text-foreground text-sm md:text-base">₨{item.price.toLocaleString()}</p>
                             </div>
                             <div>
-                              <p className="text-muted-foreground text-sm mb-1">Installment</p>
-                              <p className="font-bold text-accent">{item.installmentDuration} months</p>
+                              <p className="text-muted-foreground text-xs md:text-sm mb-1">Installment</p>
+                              <p className="font-bold text-accent text-sm md:text-base">{item.installmentDuration} months</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <button onClick={() => handleQty(item.id, item.quantity - 1)} className="w-8 h-8 border border-border rounded-lg hover:bg-secondary/50 transition flex items-center justify-center">−</button>
-                            <Input type="number" value={item.quantity} onChange={e => handleQty(item.id, parseInt(e.target.value) || 1)} className="w-16 text-center h-8" min="1" />
-                            <button onClick={() => handleQty(item.id, item.quantity + 1)} className="w-8 h-8 border border-border rounded-lg hover:bg-secondary/50 transition flex items-center justify-center">+</button>
+                          <div className="flex items-center justify-between sm:justify-start gap-3">
+                            <div className="flex items-center gap-2">
+                              <button onClick={() => handleQty(item.id, item.quantity - 1)} className="w-8 h-8 border border-border rounded-lg hover:bg-secondary/50 transition flex items-center justify-center">−</button>
+                              <Input type="number" value={item.quantity} onChange={e => handleQty(item.id, parseInt(e.target.value) || 1)} className="w-12 md:w-16 text-center h-8" min="1" />
+                              <button onClick={() => handleQty(item.id, item.quantity + 1)} className="w-8 h-8 border border-border rounded-lg hover:bg-secondary/50 transition flex items-center justify-center">+</button>
+                            </div>
+                            <div className="sm:hidden text-right">
+                              <p className="text-lg font-bold text-foreground">₨{(item.price * item.quantity).toLocaleString()}</p>
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right">
+                        <div className="hidden sm:block text-right">
                           <p className="text-muted-foreground text-sm mb-4">Total</p>
                           <p className="text-2xl font-bold text-foreground mb-8">₨{(item.price * item.quantity).toLocaleString()}</p>
                           <button onClick={() => handleRemove(item.id)} className="text-destructive hover:text-destructive/80 text-sm font-medium">Remove</button>

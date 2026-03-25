@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
 
 /* ── DATA ───────────────────────────────────────────────────────────────── */
 const TICKER = [
@@ -114,12 +115,11 @@ export default function HomePage() {
   const S = SLIDES[slide]
 
   return (
-    <>
+    <FlexiLayout>
     <style>{`
       /* ── Reset & base ─────────────────────────────── */
       *, *::before, *::after { box-sizing:border-box; margin:0; padding:0 }
       html { scroll-behavior:smooth }
-      body { font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif; background:#f4f5fb; color:#111827 }
 
       /* ── Ticker ───────────────────────────────────── */
       @keyframes tick{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
@@ -258,219 +258,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ── HEADER ────────────────────────────────────────────────────── */}
-      <header style={{
-        position:'sticky', top:0, zIndex:100,
-        background:'rgba(255,255,255,.97)', backdropFilter:'blur(14px)',
-        borderBottom:`1px solid ${scrolled?'#e5e7eb':'transparent'}`,
-        boxShadow: scrolled?'0 2px 20px rgba(0,0,0,.06)':'none',
-        transition:'all .25s',
-      }}>
-        <div style={{ maxWidth:1340, margin:'0 auto', padding:'0 16px' }}>
-
-          {/* Row 1 */}
-          <div style={{ display:'flex', alignItems:'center', gap:12, height:64 }}>
-
-            {/* Logo */}
-            <Link href="/" style={{ display:'flex', alignItems:'center', gap:10, textDecoration:'none', flexShrink:0 }}>
-              <div style={{
-                width:40, height:40, borderRadius:12, flexShrink:0, display:'flex',
-                alignItems:'center', justifyContent:'center',
-                background:'linear-gradient(135deg,#6366f1,#4338ca)',
-                boxShadow:'0 4px 14px rgba(99,102,241,.35)',
-              }}>
-                <span style={{ color:'#fff', fontWeight:900, fontSize:14, letterSpacing:-0.5 }}>FB</span>
-              </div>
-              <div>
-                <div style={{ fontWeight:900, fontSize:18.5, color:'#111827', lineHeight:1, letterSpacing:-.6 }}>
-                  Flexi<span style={{ color:'#6366f1' }}>Berry</span>
-                </div>
-                <div style={{ fontSize:9, color:'#9ca3af', letterSpacing:'0.14em', textTransform:'uppercase', marginTop:2 }}>
-                  Shop · Pay · Smile
-                </div>
-              </div>
-            </Link>
-
-            {/* Search */}
-            <div className="srch hide-sm" style={{ flex:1, maxWidth:520, margin:'0 14px' }}>
-              <input type="text" placeholder="Search products, brands and categories..." />
-              <button aria-label="Search">
-                <svg width="16" height="16" fill="none" stroke="#fff" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                </svg>
-              </button>
-            </div>
-
-            {/* Actions */}
-            <div style={{ display:'flex', alignItems:'center', gap:8, marginLeft:'auto' }}>
-              <Link href="/auth/login" className="nav-lnk hide-sm" style={{ height:38, padding:'0 14px' }}>
-                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                </svg>
-                Login
-              </Link>
-              <button className="hide-sm" aria-label="Wishlist" style={{
-                width:38, height:38, borderRadius:10, border:'1.5px solid #e5e7eb', background:'#fff',
-                display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer',
-                color:'#9ca3af', transition:'all .15s',
-              }}
-              onMouseOver={e => { const el=e.currentTarget as HTMLElement; el.style.borderColor='#6366f1'; el.style.color='#6366f1' }}
-              onMouseOut={e  => { const el=e.currentTarget as HTMLElement; el.style.borderColor='#e5e7eb'; el.style.color='#9ca3af' }}>
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-                </svg>
-              </button>
-              <Link href="/cart" className="btn-ind" style={{ padding:'9px 18px', fontSize:13.5, textDecoration:'none', position:'relative' }}>
-                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-                </svg>
-                <span className="hide-sm">Cart</span>
-                {cartQty > 0 && (
-                  <span style={{
-                    position:'absolute', top:-7, right:-7, minWidth:18, height:18, padding:'0 4px',
-                    background:'#ef4444', color:'#fff', borderRadius:999, fontSize:10, fontWeight:900,
-                    display:'flex', alignItems:'center', justifyContent:'center', border:'2.5px solid #fff',
-                  }}>{cartQty}</span>
-                )}
-              </Link>
-              <button className="show-sm" onClick={() => setMenuOpen(!menuOpen)}
-                      style={{ display:'none', width:38, height:38, borderRadius:10,
-                               border:'1.5px solid #e5e7eb', background:'#fff', alignItems:'center',
-                               justifyContent:'center', cursor:'pointer' }} aria-label="Menu">
-                <svg width="18" height="18" fill="none" stroke="#374151" strokeWidth="2.2" viewBox="0 0 24 24">
-                  <path d={menuOpen?"M6 18L18 6M6 6l12 12":"M3 6h18M3 12h18M3 18h18"}/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Row 2 — Nav */}
-          <div className="hide-sm" style={{ display:'flex', alignItems:'center', height:46, borderTop:'1px solid #f3f4f6', gap:2 }}>
-
-            {/* All Categories */}
-            <div data-dd style={{ position:'relative', flexShrink:0 }}>
-              <button onClick={() => { setCatOpen(!catOpen); setVendOpen(false) }}
-                      style={{
-                        display:'flex', alignItems:'center', gap:8, height:46, padding:'0 18px',
-                        background: catOpen?'#4338ca':'#6366f1', color:'#fff', border:'none',
-                        cursor:'pointer', fontSize:13.5, fontWeight:700, fontFamily:'inherit',
-                        transition:'background .15s',
-                      }}>
-                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-                All Categories
-                <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"
-                     style={{ transform:catOpen?'rotate(180deg)':'none', transition:'transform .2s' }}>
-                  <path d="M19 9l-7 7-7-7"/>
-                </svg>
-              </button>
-              {catOpen && (
-                <div className="dd-menu" style={{ width:290 }}>
-                  <div style={{ maxHeight:380, overflowY:'auto' }}>
-                    {CATS.map(c => (
-                      <Link key={c.slug} href={`/products?category=${c.slug}`} className="dd-row"
-                            onClick={() => setCatOpen(false)}>
-                        <div style={{ width:36, height:36, borderRadius:10, background:c.bg, border:`1px solid ${c.bd}`,
-                                       display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, flexShrink:0 }}>
-                          {c.e}
-                        </div>
-                        <div>
-                          <div style={{ fontSize:13.5, fontWeight:700, color:'#111827' }}>{c.name}</div>
-                          <div style={{ fontSize:11.5, color:'#9ca3af', marginTop:1 }}>{c.sub}</div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <Link href="/" className="nav-lnk">🏠 Home</Link>
-            <Link href="/products?sale=true" className="nav-lnk">⚡ Flash Sale</Link>
-            <Link href="/products?sort=new"  className="nav-lnk">✨ New Arrivals</Link>
-
-            {/* Sell as Vendor */}
-            <div data-dd style={{ position:'relative', marginLeft:4 }}>
-              <button onClick={() => { setVendOpen(!vendOpen); setCatOpen(false) }}
-                      style={{
-                        display:'flex', alignItems:'center', gap:6, height:34, padding:'0 14px',
-                        border:'1.5px solid #e5e7eb', borderRadius:10, background:'#fff',
-                        cursor:'pointer', fontSize:13.5, fontWeight:700, color:'#374151',
-                        fontFamily:'inherit', transition:'all .15s',
-                      }}
-                      onMouseOver={e => { const el=e.currentTarget as HTMLElement; el.style.borderColor='#6366f1'; el.style.color='#6366f1' }}
-                      onMouseOut={e  => { const el=e.currentTarget as HTMLElement; el.style.borderColor='#e5e7eb'; el.style.color='#374151' }}>
-                🏪 Sell as Vendor
-                <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"
-                     style={{ transform:vendOpen?'rotate(180deg)':'none', transition:'transform .2s' }}>
-                  <path d="M19 9l-7 7-7-7"/>
-                </svg>
-              </button>
-              {vendOpen && (
-                <div className="dd-menu" style={{ width:205 }}>
-                  {[['Register as Vendor','/auth/register?type=seller'],['Vendor Dashboard','/vendor/dashboard'],['How to Sell','#how-it-works']].map(([lbl,href]) => (
-                    <Link key={lbl} href={href} onClick={() => setVendOpen(false)}
-                          style={{ display:'block', padding:'11px 16px', fontSize:13.5, fontWeight:600,
-                                   color:'#374151', textDecoration:'none', transition:'all .12s' }}
-                          onMouseOver={e => { const el=e.currentTarget as HTMLElement; el.style.background='#f5f3ff'; el.style.color='#6366f1' }}
-                          onMouseOut={e  => { const el=e.currentTarget as HTMLElement; el.style.background='transparent'; el.style.color='#374151' }}>
-                      {lbl}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Shop Now */}
-            <div style={{ marginLeft:'auto' }}>
-              <Link href="/products" className="btn-ind" style={{ padding:'8px 18px', fontSize:13, textDecoration:'none' }}>
-                <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                </svg>
-                Shop Now · Pay in Installments
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile drawer */}
-        {menuOpen && (
-          <div style={{ background:'#fff', borderTop:'1px solid #f3f4f6', padding:'14px 16px' }}>
-            <div className="srch" style={{ marginBottom:14 }}>
-              <input type="text" placeholder="Search products..." />
-              <button aria-label="Search">
-                <svg width="14" height="14" fill="none" stroke="#fff" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                </svg>
-              </button>
-            </div>
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:14 }}>
-              {CATS.map(c => (
-                <Link key={c.slug} href={`/products?category=${c.slug}`} onClick={() => setMenuOpen(false)}
-                      style={{ display:'flex', alignItems:'center', gap:8, padding:'10px 12px',
-                               borderRadius:10, background:c.bg, border:`1px solid ${c.bd}`, textDecoration:'none' }}>
-                  <span style={{ fontSize:18 }}>{c.e}</span>
-                  <span style={{ fontSize:12.5, fontWeight:700, color:'#374151' }}>{c.name}</span>
-                </Link>
-              ))}
-            </div>
-            <div style={{ display:'flex', gap:8 }}>
-              <Link href="/auth/login" onClick={() => setMenuOpen(false)}
-                    style={{ flex:1, textAlign:'center', padding:'11px', borderRadius:12,
-                             border:'1.5px solid #e5e7eb', fontSize:14, fontWeight:700,
-                             color:'#374151', textDecoration:'none' }}>
-                Login
-              </Link>
-              <Link href="/auth/register" onClick={() => setMenuOpen(false)}
-                    className="btn-ind" style={{ flex:1, justifyContent:'center', padding:'11px', borderRadius:12,
-                                                 fontSize:14, textDecoration:'none' }}>
-                Get Started
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+      {/* ── HEADER REMOVED - USING FLEXILAYOUT ── */}
 
       {/* ── HERO CAROUSEL ─────────────────────────────────────────────── */}
       <section className="carousel-wrap" style={{ position:'relative', height:460, overflow:'hidden', background:'#07040f' }}>
@@ -1048,6 +836,6 @@ export default function HomePage() {
       </footer>
 
     </div>
-    </>
+    </FlexiLayout>
   )
 }

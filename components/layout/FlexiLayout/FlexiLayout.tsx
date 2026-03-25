@@ -185,7 +185,18 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
                 </svg>
                 Login
               </Link>
-              <Link href="/cart" className="flexi-btn-ind" style={{ padding: '9px 18px', fontSize: 13.5 }}>
+              <button className="flexi-hide-sm" aria-label="Wishlist" style={{
+                width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                color: '#9ca3af', transition: 'all .15s',
+              }}
+              onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#6366f1'; el.style.color = '#6366f1' }}
+              onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor = '#e5e7eb'; el.style.color = '#9ca3af' }}>
+                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>
+              </button>
+              <Link href="/cart" className="flexi-btn-ind" style={{ padding: '9px 18px', fontSize: 13.5, textDecoration: 'none' }}>
                 <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
                   <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
                 </svg>
@@ -249,7 +260,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
             </div>
 
             <Link href="/" className="flexi-nav-lnk">🏠 Home</Link>
-            <Link href="/products?sale=true" className="flexi-nav-lnk">⚡ Flash Sale</Link>
+            <Link href="/flash-sale" className="flexi-nav-lnk">⚡ Flash Sale</Link>
             <Link href="/products?sort=new" className="flexi-nav-lnk">✨ New Arrivals</Link>
             <Link href="/about" className="flexi-nav-lnk">About</Link>
             <Link href="/contact" className="flexi-nav-lnk">Contact</Link>
@@ -328,7 +339,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
               ))}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
-              {[['🏠 Home', '/'], ['⚡ Flash Sale', '/products?sale=true'], ['About', '/about'], ['Contact', '/contact']].map(([label, href]) => (
+              {[['🏠 Home', '/'], ['⚡ Flash Sale', '/flash-sale'], ['About', '/about'], ['Contact', '/contact']].map(([label, href]) => (
                 <Link key={href} href={href} onClick={() => setMenuOpen(false)}
                   style={{ padding: '10px 12px', borderRadius: 10, background: '#f9fafb', textDecoration: 'none', fontSize: 14, fontWeight: 600, color: '#374151' }}>
                   {label}
