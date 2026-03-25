@@ -323,12 +323,9 @@
 // }
 
 
-'use client';
+'use client'; // mark the page itself as client
 
-import dynamic from 'next/dynamic';
-
-// Dynamically import the client component, disable SSR
-const OrderSuccessContent = dynamic(() => import('./OrderSuccessContent'), { ssr: false });
+import OrderSuccessContent from './OrderSuccessContent';
 
 export default function OrderSuccessPage() {
   return <OrderSuccessContent />;
