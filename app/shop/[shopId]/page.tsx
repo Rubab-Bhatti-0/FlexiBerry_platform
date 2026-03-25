@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { use } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Star, MapPin, BadgeCheck, ShoppingCart, Heart, Share2, Search, ChevronDown, Zap, Package, TrendingUp } from 'lucide-react'
+import { ArrowLeft, Star, MapPin, BadgeCheck, ShoppingCart, Heart, Flame, TrendingUp, Package } from 'lucide-react'
 
-/* ─────────────── VENDOR & CATEGORY DATA ─────────────── */
+/* ─────────────── VENDOR & PRODUCT DATA ─────────────── */
 const VENDORS: Record<string, any> = {
   techzone: {
     id: 'techzone',
@@ -26,6 +27,7 @@ const VENDORS: Record<string, any> = {
     emoji: '⚡',
     bannerGrad: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)',
     joined: '2022',
+    established: 'Since 2022',
     subCategories: [
       { name: 'Smartphones', count: 120, icon: '📱' },
       { name: 'Laptops', count: 85, icon: '💻' },
@@ -53,6 +55,7 @@ const VENDORS: Record<string, any> = {
     emoji: '🛋️',
     bannerGrad: 'linear-gradient(135deg, #78350f 0%, #b45309 100%)',
     joined: '2023',
+    established: 'Since 2023',
     subCategories: [
       { name: 'Bedroom Furniture', count: 50, icon: '🛏️' },
       { name: 'Living Room', count: 60, icon: '🛋️' },
@@ -80,6 +83,7 @@ const VENDORS: Record<string, any> = {
     emoji: '🎁',
     bannerGrad: 'linear-gradient(135deg, #9d174d 0%, #ec4899 100%)',
     joined: '2021',
+    established: 'Since 2021',
     subCategories: [
       { name: 'Gold Packages', count: 35, icon: '💎' },
       { name: 'Silver Packages', count: 40, icon: '✨' },
@@ -98,304 +102,326 @@ const VENDORS: Record<string, any> = {
     themeBgLight: '#f0fdfa',
     city: 'Rawalpindi',
     description: 'Honda, Yamaha & electric bikes — all models on installments.',
-    rating: 4.4,
-    reviews: 670,
-    products: 87,
+    rating: 4.6,
+    reviews: 512,
+    products: 98,
     verified: true,
-    featured: false,
+    featured: true,
     installments: true,
     emoji: '🏍️',
-    bannerGrad: 'linear-gradient(135deg, #0e7490 0%, #06b6d4 100%)',
-    joined: '2022',
-    subCategories: [
-      { name: 'Standard Bikes', count: 30, icon: '🏍️' },
-      { name: 'Electric Bikes', count: 20, icon: '⚡' },
-      { name: 'Scooters', count: 25, icon: '🛵' },
-      { name: 'Accessories', count: 12, icon: '🔧' },
-    ],
-  },
-  solarpk: {
-    id: 'solarpk',
-    name: 'SolarPK Solutions',
-    category: 'Solar & Energy',
-    categoryColor: '#d97706',
-    categoryBg: 'rgba(217,119,6,0.10)',
-    themeColor: '#d97706',
-    themeBg: '#fffbeb',
-    themeBgLight: '#fef3c7',
-    city: 'Lahore',
-    description: 'Go green with premium solar panels & energy systems.',
-    rating: 4.9,
-    reviews: 420,
-    products: 68,
-    verified: true,
-    featured: false,
-    installments: true,
-    emoji: '☀️',
-    bannerGrad: 'linear-gradient(135deg, #b45309 0%, #f59e0b 100%)',
+    bannerGrad: 'linear-gradient(135deg, #0d9488 0%, #14b8a6 100%)',
     joined: '2023',
+    established: 'Since 2023',
     subCategories: [
-      { name: 'Solar Panels', count: 25, icon: '☀️' },
-      { name: 'Inverters', count: 15, icon: '🔋' },
-      { name: 'Batteries', count: 20, icon: '🔌' },
-      { name: 'Accessories', count: 8, icon: '🔧' },
+      { name: 'Honda Bikes', count: 30, icon: '🏍️' },
+      { name: 'Yamaha', count: 25, icon: '🏍️' },
+      { name: 'Electric Bikes', count: 20, icon: '⚡' },
+      { name: 'Accessories', count: 23, icon: '🔧' },
     ],
   },
 }
 
-const SAMPLE_PRODUCTS = [
-  { id: 1, name: 'Premium Product 1', price: 45000, mo: 3750, rating: 4.8, reviews: 234 },
-  { id: 2, name: 'Premium Product 2', price: 35000, mo: 2917, rating: 4.7, reviews: 156 },
-  { id: 3, name: 'Premium Product 3', price: 55000, mo: 4583, rating: 4.9, reviews: 340 },
-  { id: 4, name: 'Premium Product 4', price: 28000, mo: 2333, rating: 4.5, reviews: 89 },
-  { id: 5, name: 'Premium Product 5', price: 65000, mo: 5417, rating: 4.8, reviews: 245 },
-  { id: 6, name: 'Premium Product 6', price: 42000, mo: 3500, rating: 4.6, reviews: 178 },
-]
+/* Mock Product Data */
+const generateProducts = (shopId: string, category: string) => {
+  const products = [
+    { id: '1', name: 'Premium Flagship Phone', price: 549999, original: 599999, discount: -8, rating: 4.8, reviews: 234, featured: true, sale: true, mo: 45834 },
+    { id: '2', name: 'Ultra Slim Laptop 15"', price: 429999, original: null, discount: -6, rating: 4.9, reviews: 156, featured: true, sale: false, mo: 35834 },
+    { id: '3', name: 'Wireless Earbuds Pro', price: 24999, original: 29999, discount: -17, rating: 4.5, reviews: 89, featured: false, sale: true, mo: 2083 },
+    { id: '4', name: 'Smart Watch Series X', price: 34999, original: 39999, discount: -13, rating: 4.7, reviews: 123, featured: false, sale: true, mo: 2917 },
+    { id: '5', name: 'Tablet 12" Display', price: 149999, original: 179999, discount: -17, rating: 4.6, reviews: 201, featured: true, sale: false, mo: 12500 },
+    { id: '6', name: 'Phone Camera Lens', price: 8999, original: 10999, discount: -18, rating: 4.4, reviews: 67, featured: false, sale: true, mo: 750 },
+    { id: '7', name: 'Portable Charger 50K', price: 6999, original: null, discount: null, rating: 4.5, reviews: 45, featured: false, sale: false, mo: 583 },
+    { id: '8', name: 'Gaming Laptop RTX 4090', price: 799999, original: 899999, discount: -11, rating: 4.9, reviews: 189, featured: true, sale: true, mo: 66667 },
+  ]
+  return products
+}
 
-/* ─────────────── MAIN PAGE ─────────────── */
-export default function ShopPage({ params }: { params: { shopId: string } }) {
-  const shop = VENDORS[params.shopId]
-  const [selectedSubCat, setSelectedSubCat] = useState(shop?.subCategories[0]?.name || 'All')
-  const [view, setView] = useState<'grid' | 'list'>('grid')
-  const [sortBy, setSortBy] = useState('featured')
-  const [wishlist, setWishlist] = useState<Set<number>>(new Set())
+export default function SoloShopPage({ params }: { params: Promise<{ shopId: string }> }) {
+  const { shopId } = use(params)
+  const shop = VENDORS[shopId]
+  const [selectedSubcat, setSelectedSubcat] = useState('All')
+  const products = generateProducts(params.shopId, shop?.category)
 
   if (!shop) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8f9fd' }}>
         <div style={{ textAlign: 'center' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a' }}>Shop not found</h1>
-          <Link href="/shops" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}>
-            Back to all shops
+          <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#111827' }}>Shop Not Found</h1>
+          <Link href="/shops" style={{ color: '#6366f1', textDecoration: 'none', marginTop: '16px', display: 'inline-block' }}>
+            Back to All Shops
           </Link>
         </div>
       </div>
     )
   }
 
-  const toggleWish = (id: number) => {
-    const newWish = new Set(wishlist)
-    newWish.has(id) ? newWish.delete(id) : newWish.add(id)
-    setWishlist(newWish)
-  }
+  const featured = products.filter(p => p.featured)
+  const sale = products.filter(p => p.sale)
+  const filtered = selectedSubcat === 'All' ? products : products.filter((_, i) => i % 2 === 0)
 
   return (
     <div style={{ background: shop.themeBgLight, minHeight: '100vh' }}>
       <style>{`
         * { box-sizing: border-box }
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0 }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px }
-        @media (max-width: 768px) {
-          .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
+        .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; animation: fadeIn 0.4s ease }
+        @media (max-width: 768px) { .prod-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px } }
       `}</style>
 
-      {/* Header */}
-      <header style={{ background: shop.bannerGrad, padding: '20px', position: 'sticky', top: 0, zIndex: 50, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Link href="/shops" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.2)', width: '40px', height: '40px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.2s', color: 'white' }}>
-            <ArrowLeft size={20} />
+      {/* ─────────────── NAVBAR ─────────────── */}
+      <header style={{ background: '#fff', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, zIndex: 1000 }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', height: '70px', gap: '16px' }}>
+          <Link href="/shops" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', borderRadius: '8px', color: shop.themeColor, cursor: 'pointer', textDecoration: 'none', fontSize: '14px', fontWeight: 600, transition: 'all .2s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.background = shop.categoryBg} onMouseOut={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}>
+            <ArrowLeft size={18} />
+            Back to Shops
           </Link>
-          <div style={{ flex: 1 }}>
-            <h1 style={{ fontSize: '20px', fontWeight: 800, color: 'white', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '28px' }}>{shop.emoji}</span> {shop.name}
-            </h1>
-            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <MapPin size={12} /> {shop.city} • ★{shop.rating}
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '40px', height: '40px', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Search size={18} />
-            </button>
-            <button style={{ background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '40px', height: '40px', borderRadius: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Share2 size={18} />
-            </button>
-          </div>
+          <div style={{ flex: 1 }}></div>
+          <Link href="/" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none' }}>
+            Home
+          </Link>
+          <Link href="/products" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none' }}>
+            All Products
+          </Link>
         </div>
       </header>
 
-      {/* Info Bar */}
-      <div style={{ background: 'white', borderBottom: '1px solid #e5e7eb', padding: '16px 20px' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap', fontSize: '13px', fontWeight: 600 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Star size={16} fill={shop.themeColor} color={shop.themeColor} />
-            <span>{shop.rating} ({shop.reviews.toLocaleString()} reviews)</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Package size={16} color={shop.themeColor} />
-            <span>{shop.products} Products</span>
-          </div>
-          {shop.verified && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: shop.themeColor }}>
-              <BadgeCheck size={16} />
-              <span>Verified Seller</span>
+      {/* ─────────────── SHOP HERO ─────────────── */}
+      <div style={{ background: shop.bannerGrad, color: '#fff', padding: '40px 20px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <div style={{ fontSize: '60px', marginBottom: '16px' }}>{shop.emoji}</div>
+          <h1 style={{ fontSize: '40px', fontWeight: 900, margin: '0 0 12px 0', letterSpacing: '-1px' }}>
+            {shop.name}
+          </h1>
+          <p style={{ fontSize: '16px', opacity: 0.95, margin: '0 0 24px 0', maxWidth: '600px', margin: '0 auto 24px' }}>
+            {shop.description}
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '32px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px' }}>
+              <Star size={18} fill="#fff" /> {shop.rating} ({shop.reviews.toLocaleString()} reviews)
             </div>
-          )}
-          {shop.installments && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: shop.themeColor }}>
-              <Zap size={16} />
-              <span>Kisti Available</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px' }}>
+              <Package size={18} /> {shop.products} Products
             </div>
-          )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '15px' }}>
+              <MapPin size={18} /> {shop.city}
+            </div>
+            {shop.verified && <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '15px' }}>
+              <BadgeCheck size={18} /> Verified Seller
+            </div>}
+          </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '20px' }}>
-        {/* Subcategories */}
-        <div style={{ marginBottom: '24px', overflowX: 'auto', paddingBottom: '8px' }}>
-          <div style={{ display: 'flex', gap: '12px', minWidth: 'min-content' }}>
-            {shop.subCategories.map((subCat: any) => (
-              <button
-                key={subCat.name}
-                onClick={() => setSelectedSubCat(subCat.name)}
-                style={{
-                  padding: '10px 16px',
-                  borderRadius: '99px',
-                  border: `2px solid ${selectedSubCat === subCat.name ? shop.themeColor : '#e5e7eb'}`,
-                  background: selectedSubCat === subCat.name ? shop.themeBg : 'white',
-                  color: selectedSubCat === subCat.name ? shop.themeColor : '#64748b',
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  transition: 'all 0.2s',
-                  whiteSpace: 'nowrap',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-              >
-                <span style={{ fontSize: '16px' }}>{subCat.icon}</span>
-                {subCat.name}
-                <span style={{ background: shop.themeColor, color: 'white', borderRadius: '99px', padding: '0 6px', fontSize: '11px', fontWeight: 700 }}>
-                  {subCat.count}
-                </span>
-              </button>
+      {/* ─────────────── SHOP DETAILS ─────────────── */}
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '60px' }}>
+          <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: `1px solid ${shop.categoryBg}` }}>
+            <div style={{ fontSize: '28px', marginBottom: '8px' }}>📊</div>
+            <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>SHOP STATISTICS</div>
+            <div style={{ fontSize: '18px', fontWeight: 700, color: shop.themeColor }}>
+              ⭐ {shop.rating} Rating
+            </div>
+          </div>
+          <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: `1px solid ${shop.categoryBg}` }}>
+            <div style={{ fontSize: '28px', marginBottom: '8px' }}>🏢</div>
+            <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>ESTABLISHED</div>
+            <div style={{ fontSize: '18px', fontWeight: 700, color: shop.themeColor }}>
+              {shop.established}
+            </div>
+          </div>
+          <div style={{ background: '#fff', padding: '24px', borderRadius: '12px', border: `1px solid ${shop.categoryBg}` }}>
+            <div style={{ fontSize: '28px', marginBottom: '8px' }}>{shop.installments ? '✅' : '❌'}</div>
+            <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '4px' }}>INSTALLMENTS</div>
+            <div style={{ fontSize: '18px', fontWeight: 700, color: shop.themeColor }}>
+              {shop.installments ? 'Available' : 'Not Available'}
+            </div>
+          </div>
+        </div>
+
+        {/* ─────────────── FEATURED PRODUCTS ─────────────── */}
+        <div style={{ marginBottom: '60px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <TrendingUp size={24} style={{ color: shop.themeColor }} />
+            <h2 style={{ fontSize: '28px', fontWeight: 900, margin: 0, color: '#111827' }}>
+              Featured Products
+            </h2>
+          </div>
+          <div className="prod-grid">
+            {featured.map(p => (
+              <div key={p.id} style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', border: `2px solid ${shop.categoryBg}`, transition: 'all .3s', cursor: 'pointer' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)'} onMouseOut={e => (e.currentTarget as HTMLElement).style.transform = 'none'}>
+                <div style={{ background: shop.themeBg, height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', position: 'relative' }}>
+                  📦
+                  {p.sale && (
+                    <div style={{ position: 'absolute', top: '8px', right: '8px', background: '#ef4444', color: '#fff', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: 700 }}>
+                      SALE
+                    </div>
+                  )}
+                </div>
+                <div style={{ padding: '12px' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827', marginBottom: '8px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {p.name}
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 800, color: shop.themeColor }}>
+                      Rs. {(p.price / 1000).toFixed(0)}K
+                    </div>
+                    {p.discount && (
+                      <div style={{ fontSize: '12px', background: '#fecaca', color: '#dc2626', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                        {p.discount}%
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#6b7280', marginBottom: '8px' }}>
+                    <Star size={14} fill="#fbbf24" style={{ color: '#fbbf24' }} /> {p.rating} ({p.reviews})
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                    From Rs. {(p.mo).toLocaleString()}/mo
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* Toolbar */}
-        <div style={{ background: 'white', borderRadius: '12px', padding: '16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', border: `1px solid ${shop.categoryBg}` }}>
-          <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748b' }}>
-            {SAMPLE_PRODUCTS.length} products
-          </span>
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              style={{
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: `1px solid #e5e7eb`,
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                background: 'white',
-                color: shop.themeColor,
-              }}
-            >
-              <option value="featured">Featured</option>
-              <option value="newest">Newest</option>
-              <option value="popular">Most Popular</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="rating">Top Rated</option>
-            </select>
+        {/* ─────────────── SALE ITEMS ─────────────── */}
+        {sale.length > 0 && (
+          <div style={{ marginBottom: '60px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+              <Flame size={24} style={{ color: '#ef4444' }} />
+              <h2 style={{ fontSize: '28px', fontWeight: 900, margin: 0, color: '#111827' }}>
+                Hot Deals
+              </h2>
+            </div>
+            <div className="prod-grid">
+              {sale.map(p => (
+                <div key={p.id} style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', border: `1px solid #fed7aa`, transition: 'all .3s', cursor: 'pointer', position: 'relative' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)'} onMouseOut={e => (e.currentTarget as HTMLElement).style.transform = 'none'}>
+                  <div style={{ position: 'absolute', top: '8px', left: '8px', background: '#ef4444', color: '#fff', padding: '4px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 700, zIndex: 10 }}>
+                    FLASH SALE
+                  </div>
+                  <div style={{ background: 'linear-gradient(135deg, #fef3c7, #fef08a)', height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px' }}>
+                    🔥
+                  </div>
+                  <div style={{ padding: '12px' }}>
+                    <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827', marginBottom: '8px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {p.name}
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#ef4444' }}>
+                        Rs. {(p.price / 1000).toFixed(0)}K
+                      </div>
+                      {p.discount && (
+                        <div style={{ fontSize: '12px', background: '#fecaca', color: '#dc2626', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                          {p.discount}%
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#6b7280', marginBottom: '8px' }}>
+                      <Star size={14} fill="#fbbf24" style={{ color: '#fbbf24' }} /> {p.rating} ({p.reviews})
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                      From Rs. {(p.mo).toLocaleString()}/mo
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ─────────────── ALL PRODUCTS BY SUBCATEGORY ─────────────── */}
+        <div>
+          <h2 style={{ fontSize: '28px', fontWeight: 900, margin: '0 0 24px 0', color: '#111827' }}>
+            All Products
+          </h2>
+
+          {/* Subcategory Filter */}
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', overflowX: 'auto', paddingBottom: '8px' }}>
+            <button onClick={() => setSelectedSubcat('All')} style={{
+              padding: '10px 16px', borderRadius: '8px', border: 'none', background: selectedSubcat === 'All' ? shop.themeColor : '#e5e7eb',
+              color: selectedSubcat === 'All' ? '#fff' : '#111827', fontWeight: 600, fontSize: '13px', cursor: 'pointer', transition: 'all .2s', whiteSpace: 'nowrap'
+            }} onMouseOver={e => (e.currentTarget as HTMLElement).style.transform = selectedSubcat === 'All' ? 'none' : 'scale(1.05)'} onMouseOut={e => (e.currentTarget as HTMLElement).style.transform = 'none'}>
+              All Products
+            </button>
+            {shop.subCategories.map(sc => (
+              <button key={sc.name} onClick={() => setSelectedSubcat(sc.name)} style={{
+                padding: '10px 16px', borderRadius: '8px', border: 'none', background: selectedSubcat === sc.name ? shop.themeColor : '#e5e7eb',
+                color: selectedSubcat === sc.name ? '#fff' : '#111827', fontWeight: 600, fontSize: '13px', cursor: 'pointer', transition: 'all .2s', whiteSpace: 'nowrap'
+              }} onMouseOver={e => (e.currentTarget as HTMLElement).style.transform = selectedSubcat === sc.name ? 'none' : 'scale(1.05)'} onMouseOut={e => (e.currentTarget as HTMLElement).style.transform = 'none'}>
+                {sc.icon} {sc.name} ({sc.count})
+              </button>
+            ))}
+          </div>
+
+          {/* Product Grid */}
+          <div className="prod-grid">
+            {filtered.map(p => (
+              <div key={p.id} style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', border: `1px solid #e5e7eb`, transition: 'all .3s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)'} onMouseOut={e => (e.currentTarget as HTMLElement).style.transform = 'none'}>
+                <div style={{ background: shop.themeBg, height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px' }}>
+                  📦
+                </div>
+                <div style={{ padding: '12px' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#111827', marginBottom: '8px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {p.name}
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', alignItems: 'center' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 800, color: shop.themeColor }}>
+                      Rs. {(p.price / 1000).toFixed(0)}K
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#6b7280', marginBottom: '8px' }}>
+                    <Star size={14} fill="#fbbf24" style={{ color: '#fbbf24' }} /> {p.rating}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '8px' }}>
+                    From Rs. {(p.mo).toLocaleString()}/mo
+                  </div>
+                  <button style={{
+                    width: '100%', padding: '8px', borderRadius: '6px', border: 'none', background: shop.themeColor, color: '#fff',
+                    fontSize: '12px', fontWeight: 700, cursor: 'pointer', transition: 'all .2s'
+                  }} onMouseOver={e => (e.currentTarget as HTMLElement).style.opacity = '0.9'} onMouseOut={e => (e.currentTarget as HTMLElement).style.opacity = '1'}>
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Products Grid */}
-        <div className="product-grid">
-          {SAMPLE_PRODUCTS.map(product => (
-            <div
-              key={product.id}
-              style={{
-                background: 'white',
-                borderRadius: '14px',
-                overflow: 'hidden',
-                border: `1.5px solid ${shop.categoryBg}`,
-                transition: 'all 0.2s',
-                cursor: 'pointer',
-              }}
-            >
-              {/* Image placeholder */}
-              <div style={{
-                height: '160px',
-                background: `linear-gradient(135deg, ${shop.themeColor}22 0%, ${shop.themeColor}11 100%)`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '48px',
-                position: 'relative',
-              }}>
-                <span style={{ opacity: 0.5 }}>📦</span>
-                <button
-                  onClick={() => toggleWish(product.id)}
-                  style={{
-                    position: 'absolute',
-                    top: '8px',
-                    right: '8px',
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    background: 'white',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  }}
-                >
-                  <Heart size={18} fill={wishlist.has(product.id) ? shop.themeColor : 'none'} color={wishlist.has(product.id) ? shop.themeColor : '#cbd5e1'} />
-                </button>
-              </div>
-
-              {/* Product info */}
-              <div style={{ padding: '12px' }}>
-                <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', margin: '0 0 6px', lineHeight: 1.3 }}>
-                  {product.name}
-                </h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
-                  <Star size={12} fill={shop.themeColor} color={shop.themeColor} />
-                  <span style={{ fontSize: '11px', fontWeight: 700, color: shop.themeColor }}>{product.rating}</span>
-                  <span style={{ fontSize: '10px', color: '#94a3b8' }}>({product.reviews})</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '16px', fontWeight: 900, color: shop.themeColor }}>
-                    PKR {product.price.toLocaleString()}
-                  </span>
-                  {product.mo && (
-                    <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>
-                      ({product.mo.toLocaleString()}/mo)
-                    </span>
-                  )}
-                </div>
-                <button style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  background: shop.themeColor,
-                  color: 'white',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontWeight: 700,
-                  fontSize: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s',
-                }}>
-                  <ShoppingCart size={14} /> Add to Cart
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
+
+      {/* ─────────────── FOOTER ─────────────── */}
+      <footer style={{ background: '#1f2937', color: '#fff', marginTop: '60px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '40px' }}>
+            <div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 16, color: '#fff', letterSpacing: -0.5 }}>
+                FlexiBerry
+              </h3>
+              <p style={{ color: '#9ca3af', fontSize: 13.5, lineHeight: 1.6 }}>
+                Buy now, pay later on installments. Shop from 1000s of products.
+              </p>
+            </div>
+            <div>
+              <h4 style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 16 }}>Quick Links</h4>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <li><Link href="/" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: 13.5 }}>Home</Link></li>
+                <li><Link href="/shops" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: 13.5 }}>All Shops</Link></li>
+                <li><Link href="/products" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: 13.5 }}>Products</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 16 }}>Support</h4>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <li><a href="#" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: 13.5 }}>Help Center</a></li>
+                <li><a href="#" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: 13.5 }}>Contact Us</a></li>
+                <li><a href="#" style={{ color: '#9ca3af', textDecoration: 'none', fontSize: 13.5 }}>Returns</a></li>
+              </ul>
+            </div>
+          </div>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 22, textAlign: 'center', color: '#6b7280', fontSize: 13 }}>
+            © 2026 FlexiBerry. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
