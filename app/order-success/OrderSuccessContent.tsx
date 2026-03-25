@@ -82,19 +82,24 @@ export default function OrderSuccessContent() {
         <Card className="p-8 bg-secondary/10 border-border mb-8">
           <h2 className="font-serif font-bold text-foreground mb-6">What's Next?</h2>
           <div className="space-y-4">
-            {[
-              { step: 1, title: 'Order Confirmation', desc: "You'll receive a confirmation email shortly with all details." },
-              { step: 2, title: 'Processing & Packing', desc: 'Your items will be prepared for shipment within 24-48 hours.' },
-              { step: 3, title: 'Shipment', desc: 'Track your shipment in real-time from your dashboard.' },
-              { step: 4, title: 'Delivery', desc: 'Receive your items and start enjoying them!' },
-            ].map(({ step, title, desc }) => (
+            {[1, 2, 3, 4].map((step) => (
               <div key={step} className="flex gap-4">
                 <div className="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold flex-shrink-0">
                   {step}
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">{title}</p>
-                  <p className="text-sm text-muted-foreground">{desc}</p>
+                  <p className="font-medium text-foreground">
+                    {step === 1 && 'Order Confirmation'}
+                    {step === 2 && 'Processing & Packing'}
+                    {step === 3 && 'Shipment'}
+                    {step === 4 && 'Delivery'}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {step === 1 && "You'll receive a confirmation email shortly with all details."}
+                    {step === 2 && 'Your items will be prepared for shipment within 24-48 hours.'}
+                    {step === 3 && 'Track your shipment in real-time from your dashboard.'}
+                    {step === 4 && 'Receive your items and start enjoying them!'}
+                  </p>
                 </div>
               </div>
             ))}
