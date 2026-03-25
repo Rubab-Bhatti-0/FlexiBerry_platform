@@ -638,7 +638,7 @@ export default function HomePage() {
               </h2>
               <p style={{ color:'#9ca3af', fontSize:13.5, marginTop:4 }}>Trusted sellers with verified products</p>
             </div>
-            <Link href="/vendors" className="btn-ind" style={{ padding:'11px 22px', fontSize:13.5, textDecoration:'none' }}>
+            <Link href="/shop" className="btn-ind" style={{ padding:'11px 22px', fontSize:13.5, textDecoration:'none' }}>
               View All Shops →
             </Link>
           </div>
