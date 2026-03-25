@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
+import { VENDORS } from '@/lib/vendors'
 
 /* ── DATA ───────────────────────────────────────────────────────────────── */
 const TICKER = [
@@ -48,13 +49,7 @@ const PRODUCTS = [
   { id:'5', img:'/assets/carousel-4.jpg', vendor:'GreenPower Solutions',    name:'5KW Solar Panel System',      price:650000, orig:null,    mo:54167, rat:4.7, rv:45,  disc:null },
 ]
 
-const VENDORS = [
-  { id:'techzone', name:'TechZone Electronics', cat:'Electronics',    catC:'#4f46e5', catBg:'#eef2ff', desc:'Premium electronics & gadgets',   rat:4.8, prods:156, g1:'#6366f1', g2:'#4f46e5', e:'⚡', bar:'#6366f1' },
-  { id:'homekart', name:'HomeKart Pakistan',    cat:'Home & Living',  catC:'#059669', catBg:'#ecfdf5', desc:'Appliances, furniture & packages', rat:4.6, prods:243, g1:'#10b981', g2:'#0d9488', e:'🏠', bar:'#10b981' },
-  { id:'megadeal', name:'MegaDeal Motors',      cat:'Motors & Energy',catC:'#7c3aed', catBg:'#f5f3ff', desc:'Vehicles, solar & heavy items',    rat:4.7, prods:89,  g1:'#8b5cf6', g2:'#6d28d9', e:'🚗', bar:'#8b5cf6' },
-]
-
-const FAQS = [
+/* ── COMPONENT ──────────────────────────────────────────────────────── */
   { q:'How do installment plans work on FlexiBerry?',    a:'Choose any product, select 6 or 12 month plan, pay a small down payment today, and the rest splits into equal monthly installments. No hidden charges, no credit card needed.' },
   { q:'What documents are needed for KYC verification?', a:'You need your CNIC (front & back), a clear selfie, and a salary slip or bank statement. Verification usually takes 3–5 business days.' },
   { q:'Is there any interest on installment plans?',     a:'Selected items are 0% interest. For others, a small markup may apply depending on the product category. All charges are shown clearly before checkout.' },
