@@ -49,7 +49,7 @@ const PRODUCTS = [
   { id:'5', img:'/assets/carousel-4.jpg', vendor:'GreenPower Solutions',    name:'5KW Solar Panel System',      price:650000, orig:null,    mo:54167, rat:4.7, rv:45,  disc:null },
 ]
 
-/* ── COMPONENT ──────────────────────────────────────────────────────── */
+const FAQS = [
   { q:'How do installment plans work on FlexiBerry?',    a:'Choose any product, select 6 or 12 month plan, pay a small down payment today, and the rest splits into equal monthly installments. No hidden charges, no credit card needed.' },
   { q:'What documents are needed for KYC verification?', a:'You need your CNIC (front & back), a clear selfie, and a salary slip or bank statement. Verification usually takes 3–5 business days.' },
   { q:'Is there any interest on installment plans?',     a:'Selected items are 0% interest. For others, a small markup may apply depending on the product category. All charges are shown clearly before checkout.' },
