@@ -1,188 +1,177 @@
 'use client'
 
-import * as React from 'react'
+import { useEffect, useCallback, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const slides = [
   {
-    image: "/assets/carousel-1.jpg",
-    titleLine1: "Buy Smart,",
-    titleLine2: "Pay Easy",
-    description: "Latest iPhones & Samsung Galaxy with easy installment plans.",
-    cta: "Shop Smartphones",
-    link: "/category/smartphones",
-    accent: "#3b82f6",
-    bg: "#04091a",
-    tag: "Smartphones",
+    image: '/assets/carousel-1.jpg',
+    titleLine1: 'Buy Smart,',
+    titleLine2: 'Pay Easy',
+    description: 'Latest iPhones & Samsung Galaxy with 6–12 month installment plans.',
+    cta: 'Shop Smartphones',
+    link: '/category/smartphones',
+    accent: '#FF6B6B',
+    bg: '#1a0a0a',
   },
   {
-    image: "/assets/carousel-2.jpg",
-    titleLine1: "Power Up",
-    titleLine2: "Your Work",
-    description: "MacBooks, Gaming Laptops & more.",
-    cta: "Shop Laptops",
-    link: "/category/laptops",
-    accent: "#7c3aed",
-    bg: "#0a0515",
-    tag: "Laptops",
+    image: '/assets/carousel-2.jpg',
+    titleLine1: 'Power Up',
+    titleLine2: 'Your Work',
+    description: 'MacBooks, Gaming Laptops & more.',
+    cta: 'Shop Laptops',
+    link: '/category/laptops',
+    accent: '#A78BFA',
+    bg: '#0f0a1e',
   },
 ]
 
-export default function HeroEmbla() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
-  const [index, setIndex] = React.useState(0)
-  const [prev, setPrev] = React.useState<number | null>(null)
-  const [direction, setDirection] = React.useState<1 | -1>(1)
-  const [animating, setAnimating] = React.useState(false)
+export default function HeroSection() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, speed: 8 })
 
-  const onSelect = React.useCallback(() => {
+  const [current, setCurrent] = useState(0)
+  const [prev, setPrev] = useState<number | null>(null)
+  const [direction, setDirection] = useState<1 | -1>(1)
+
+  const onSelect = useCallback(() => {
     if (!emblaApi) return
     const newIndex = emblaApi.selectedScrollSnap()
 
-    if (newIndex !== index) {
-      setDirection(newIndex > index ? 1 : -1)
-      setPrev(index)
-      setAnimating(true)
-      setIndex(newIndex)
+    if (newIndex !== current) {
+      setDirection(newIndex > current ? 1 : -1)
+      setPrev(current)
+      setCurrent(newIndex)
     }
-  }, [emblaApi, index])
+  }, [emblaApi, current])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!emblaApi) return
     emblaApi.on('select', onSelect)
+    onSelect()
   }, [emblaApi, onSelect])
 
-  React.useEffect(() => {
-    if (!animating) return
-    const t = setTimeout(() => {
-      setPrev(null)
-      setAnimating(false)
-    }, 700)
-    return () => clearTimeout(t)
-  }, [animating])
-
-  React.useEffect(() => {
+  // autoplay
+  useEffect(() => {
     if (!emblaApi) return
-    const id = setInterval(() => emblaApi.scrollNext(), 5000)
+    const id = setInterval(() => emblaApi.scrollNext(), 5500)
     return () => clearInterval(id)
   }, [emblaApi])
 
+  const next = () => emblaApi?.scrollNext()
+  const prevSlide = () => emblaApi?.scrollPrev()
+
+  const slide = slides[current]
+
   return (
-    <section style={{ position: 'relative', overflow: 'hidden', height: '520px' }}>
-      <div ref={emblaRef} className="overflow-hidden h-full">
+    <section
+      className="relative overflow-hidden"
+      style={{
+        height: 'clamp(400px, 52vw, 560px)',
+        backgroundColor: slide.bg,
+        transition: 'background-color 0.9s ease',
+      }}
+    >
+      {/* EMBLA VIEWPORT */}
+      <div ref={emblaRef} className="absolute inset-0 overflow-hidden">
         <div className="flex h-full">
-          {slides.map((s, i) => {
-            const isActive = i === index
-            const isPrev = i === prev
+          {slides.map((s, i) => (
+            <div key={i} className="min-w-full h-full" />
+          ))}
+        </div>
+      </div>
 
-            let textClass = ''
-            if (isActive) {
-              textClass = direction === 1 ? 'hero-text-enter-fwd' : 'hero-text-enter-back'
-            } else if (isPrev) {
-              textClass = direction === 1 ? 'hero-text-exit-fwd' : 'hero-text-exit-back'
-            }
+      {/* BACKGROUND IMAGE (Framer Motion controlled) */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={current + '-bg'}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          className="absolute inset-0"
+          style={{ zIndex: 1 }}
+        >
+          <div className="absolute top-0 right-0 h-full w-[62%]">
+            <Image src={slide.image} alt="" fill priority style={{ objectFit: 'cover' }} />
+          </div>
 
-            return (
-              <div key={i} className="min-w-full relative">
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(
+                to right,
+                ${slide.bg} 0%,
+                ${slide.bg} 36%,
+                ${slide.bg}f0 45%,
+                ${slide.bg}bb 52%,
+                ${slide.bg}66 60%,
+                ${slide.bg}22 72%,
+                transparent 85%
+              )`,
+            }}
+          />
+        </motion.div>
+      </AnimatePresence>
 
-                {/* IMAGE */}
-                <Image
-                  src={s.image}
-                  alt=""
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className={isActive ? 'hero-img-enter' : isPrev ? 'hero-img-exit' : ''}
-                />
+      {/* TEXT */}
+      <div className="relative h-full flex items-center z-10">
+        <div className="px-8 max-w-xl">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, x: direction * -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction * 30 }}
+              transition={{ duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <h1 className="text-white text-5xl font-black">{slide.titleLine1}</h1>
+              <h1 className="text-5xl font-black" style={{ color: slide.accent }}>
+                {slide.titleLine2}
+              </h1>
 
-                {/* OVERLAY */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: `linear-gradient(to right, ${s.bg}, transparent)`
-                  }}
-                />
+              <p className="text-gray-400 mt-4">{slide.description}</p>
 
-                {/* CONTENT */}
-                <div className="relative z-10 p-16 max-w-xl">
-                  <div className={textClass}>
-
-                    <span style={{ color: s.accent }}>{s.tag}</span>
-
-                    <h1 style={{ color: '#fff', fontSize: '48px' }}>
-                      {s.titleLine1}
-                    </h1>
-                    <h1 style={{ color: s.accent, fontSize: '48px' }}>
-                      {s.titleLine2}
-                    </h1>
-
-                    <p style={{ color: '#aaa' }}>{s.description}</p>
-
-                    <Link href={s.link}>
-                      <button
-                        style={{
-                          background: s.accent,
-                          padding: '10px 20px',
-                          borderRadius: '999px',
-                          color: '#fff'
-                        }}
-                      >
-                        {s.cta} <ArrowRight size={14} />
-                      </button>
-                    </Link>
-
-                  </div>
-                </div>
-              </div>
-            )
-          })}
+              <Link href={slide.link}>
+                <button
+                  className="mt-6 px-6 py-3 rounded-full text-white flex items-center gap-2"
+                  style={{ background: slide.accent }}
+                >
+                  {slide.cta} <ArrowRight size={14} />
+                </button>
+              </Link>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
       {/* ARROWS */}
-      <button onClick={() => emblaApi?.scrollPrev()} className="absolute left-4 top-1/2">
+      <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 z-20">
         <ChevronLeft />
       </button>
 
-      <button onClick={() => emblaApi?.scrollNext()} className="absolute right-4 top-1/2">
+      <button onClick={next} className="absolute right-4 top-1/2 -translate-y-1/2 z-20">
         <ChevronRight />
       </button>
 
       {/* DOTS */}
-      <div className="absolute bottom-4 left-1/2 flex gap-2">
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => emblaApi?.scrollTo(i)}
+            className="rounded-full transition-all"
             style={{
-              width: i === index ? 24 : 6,
-              height: 6,
-              background: i === index ? slides[index].accent : '#555'
+              width: i === current ? 26 : 6,
+              height: 5,
+              background: i === current ? slide.accent : 'rgba(255,255,255,0.3)',
             }}
           />
         ))}
       </div>
-
-      <style>{`
-        @keyframes slideInRight  { from { opacity:0; transform:translateX(32px) } to { opacity:1; transform:translateX(0) } }
-        @keyframes slideInLeft   { from { opacity:0; transform:translateX(-32px) } to { opacity:1; transform:translateX(0) } }
-        @keyframes slideOutRight { from { opacity:1 } to { opacity:0; transform:translateX(32px) } }
-        @keyframes slideOutLeft  { from { opacity:1 } to { opacity:0; transform:translateX(-32px) } }
-
-        .hero-text-enter-fwd  { animation: slideInRight .5s ease both }
-        .hero-text-enter-back { animation: slideInLeft  .5s ease both }
-        .hero-text-exit-fwd   { animation: slideOutLeft  .4s ease both }
-        .hero-text-exit-back  { animation: slideOutRight .4s ease both }
-
-        @keyframes imgIn  { from { opacity:0; transform:scale(1.06) } to { opacity:1; transform:scale(1) } }
-        @keyframes imgOut { from { opacity:1 } to { opacity:0 } }
-
-        .hero-img-enter { animation: imgIn .7s ease both }
-        .hero-img-exit  { animation: imgOut .4s ease both }
-      `}</style>
     </section>
   )
 }
