@@ -8,13 +8,135 @@ import {
 } from 'lucide-react'
 import { VENDORS } from '@/lib/vendors'
 
+// Derive CATEGORIES and CITIES from VENDORS
+const CATEGORIES = ['All', ...Array.from(new Set(VENDORS.map(v => v.category)))]
+const CITIES = ['All Cities', ...Array.from(new Set(VENDORS.map(v => v.city)))]
+
+/* ─────────────── SHOP CARD COMPONENT ─────────────── */
+function ShopCard({ vendor, view }: { vendor: typeof VENDORS[0], view: 'grid' | 'list' }) {
+  const isGrid = view === 'grid'
+
+  return (
+    <Link 
+      href={`/shop/${vendor.id}`}
+      style={{ 
+        textDecoration: 'none',
+        display: 'block',
+        background: 'white',
+        borderRadius: '16px',
+        border: '1px solid #e5e7eb',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+        height: '100%',
+        position: 'relative'
+      }}
+      onMouseOver={e => {
+        e.currentTarget.style.transform = 'translateY(-4px)'
+        e.currentTarget.style.boxShadow = '0 12px 24px -8px rgba(0,0,0,0.1)'
+        e.currentTarget.style.borderColor = '#6366f1'
+      }}
+      onMouseOut={e => {
+        e.currentTarget.style.transform = 'none'
+        e.currentTarget.style.boxShadow = 'none'
+        e.currentTarget.style.borderColor = '#e5e7eb'
+      }}
+    >
+      <div style={{ 
+        display: isGrid ? 'block' : 'flex',
+        height: '100%'
+      }}>
+        {/* Banner/Image Area */}
+        <div style={{ 
+          width: isGrid ? '100%' : '240px',
+          height: isGrid ? '140px' : 'auto',
+          background: vendor.bannerGrad || '#6366f1',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '48px',
+          position: 'relative'
+        }}>
+          {vendor.emoji || '🏪'}
+          {vendor.verified && (
+            <div style={{
+              position: 'absolute',
+              top: '12px',
+              right: '12px',
+              background: 'white',
+              borderRadius: '50%',
+              padding: '4px',
+              display: 'flex',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+              <BadgeCheck size={16} color="#6366f1" fill="#6366f1" stroke="white" />
+            </div>
+          )}
+        </div>
+
+        {/* Content Area */}
+        <div style={{ 
+          padding: '20px',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+            <span style={{ 
+              fontSize: '11px', 
+              fontWeight: 700, 
+              textTransform: 'uppercase', 
+              letterSpacing: '0.5px',
+              color: vendor.categoryColor || '#6366f1',
+              background: vendor.categoryBg || 'rgba(99, 102, 241, 0.1)',
+              padding: '4px 8px',
+              borderRadius: '6px'
+            }}>
+              {vendor.category}
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>
+              <Star size={14} fill="#f59e0b" color="#f59e0b" />
+              {vendor.rating}
+            </div>
+          </div>
+
+          <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
+            {vendor.name}
+          </h3>
+          
+          <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 16px 0', lineHeight: 1.5, flex: 1 }}>
+            {vendor.description}
+          </p>
+
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '16px', 
+            paddingTop: '16px', 
+            borderTop: '1px solid #f3f4f6',
+            fontSize: '13px',
+            color: '#64748b'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <MapPin size={14} />
+              {vendor.city}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Package size={14} />
+              {vendor.products} Products
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 /* ─────────────── MAIN PAGE ─────────────── */
 export default function ShopsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedCity, setSelectedCity] = useState('All Cities')
   const [searchTerm, setSearchTerm] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
-  const [menuOpen, setMenuOpen] = useState(false)
 
   const filtered = useMemo(() => {
     return VENDORS.filter(v => {
@@ -51,20 +173,20 @@ export default function ShopsPage() {
 
           {/* Nav Links */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: '24px', marginLeft: '40px' }}>
-            <Link href="/" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none', transition: 'color .2s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.color = '#6366f1'} onMouseOut={e => (e.currentTarget as HTMLElement).style.color = '#6b7280'}>
+            <Link href="/" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none', transition: 'color .2s' }}>
               Home
             </Link>
             <Link href="/shops" style={{ fontSize: '14px', fontWeight: 600, color: '#6366f1', textDecoration: 'none' }}>
               All Shops
             </Link>
-            <Link href="/products" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none', transition: 'color .2s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.color = '#6366f1'} onMouseOut={e => (e.currentTarget as HTMLElement).style.color = '#6b7280'}>
+            <Link href="/products" style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280', textDecoration: 'none', transition: 'color .2s' }}>
               Products
             </Link>
           </nav>
 
           {/* CTA */}
           <div style={{ marginLeft: 'auto' }}>
-            <Link href="/products" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 18px', borderRadius: '8px', background: '#6366f1', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 700, transition: 'all .2s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.background = '#4f46e5'} onMouseOut={e => (e.currentTarget as HTMLElement).style.background = '#6366f1'}>
+            <Link href="/products" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 18px', borderRadius: '8px', background: '#6366f1', color: '#fff', textDecoration: 'none', fontSize: '13px', fontWeight: 700, transition: 'all .2s' }}>
               <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
               </svg>
@@ -232,19 +354,6 @@ export default function ShopsPage() {
               <p style={{ color: '#9ca3af', fontSize: 13.5, lineHeight: 1.6, marginBottom: 20 }}>
                 Buy now, pay later on installments. Shop from 1000s of products with 0% markup.
               </p>
-              <div style={{ display: 'flex', gap: 12 }}>
-                {['f', 't', 'in', 'ig'].map((ic) => (
-                  <a key={ic} href="#" style={{
-                    width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    borderRadius: 8, background: 'rgba(255,255,255,.07)', fontSize: 13, color: 'rgba(255,255,255,.55)',
-                    textDecoration: 'none', transition: 'all .18s',
-                  }}
-                    onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.background = '#6366f1'; el.style.color = '#fff'; el.style.transform = 'translateY(-2px)' }}
-                    onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.background = 'rgba(255,255,255,.07)'; el.style.color = 'rgba(255,255,255,.55)'; el.style.transform = 'none' }}>
-                    {ic}
-                  </a>
-                ))}
-              </div>
             </div>
 
             {[
@@ -256,12 +365,10 @@ export default function ShopsPage() {
                 <h4 style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 16, letterSpacing: -0.2 }}>
                   {col.h}
                 </h4>
-                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, padding: 0 }}>
                   {col.links.map(l => (
                     <li key={l}>
-                      <a href="#" style={{ color: '#6b7280', fontSize: 13.5, textDecoration: 'none', transition: 'color .15s' }}
-                        onMouseOver={e => (e.currentTarget as HTMLElement).style.color = '#a5b4fc'}
-                        onMouseOut={e => (e.currentTarget as HTMLElement).style.color = '#6b7280'}>
+                      <a href="#" style={{ color: '#6b7280', fontSize: 13.5, textDecoration: 'none', transition: 'color .15s' }}>
                         {l}
                       </a>
                     </li>
@@ -275,9 +382,7 @@ export default function ShopsPage() {
             <p style={{ color: '#4b5563', fontSize: 13 }}>© 2026 FlexiBerry. All rights reserved.</p>
             <div style={{ display: 'flex', gap: 20 }}>
               {['Privacy Policy', 'Terms of Service'].map(l => (
-                <a key={l} href="#" style={{ color: '#4b5563', fontSize: 13, textDecoration: 'none', transition: 'color .15s' }}
-                  onMouseOver={e => (e.currentTarget as HTMLElement).style.color = '#a5b4fc'}
-                  onMouseOut={e => (e.currentTarget as HTMLElement).style.color = '#4b5563'}>
+                <a key={l} href="#" style={{ color: '#4b5563', fontSize: 13, textDecoration: 'none', transition: 'color .15s' }}>
                   {l}
                 </a>
               ))}

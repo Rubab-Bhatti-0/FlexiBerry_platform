@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,12 @@ import { Card } from '@/components/ui/card';
 export default function OrderSuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId') || 'FLX-001236';
+
+  const [orderDate, setOrderDate] = React.useState<string>('');
+
+  React.useEffect(() => {
+    setOrderDate(new Date().toLocaleDateString());
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,7 +50,7 @@ export default function OrderSuccessContent() {
             </div>
             <div>
               <p className="text-muted-foreground text-sm mb-1">Order Date</p>
-              <p className="text-xl font-medium text-foreground">{new Date().toLocaleDateString()}</p>
+              <p className="text-xl font-medium text-foreground">{orderDate || '...'}</p>
             </div>
           </div>
           <div className="space-y-4">
