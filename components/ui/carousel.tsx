@@ -7,7 +7,108 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ─────────────────────────────────────────────────────────────
-// TYPES
+// SINGLE SOURCE OF TRUTH — all category colors live here.
+// FlexiLayout.tsx imports CATEGORY_THEMES from this file.
+// ─────────────────────────────────────────────────────────────
+export const CATEGORY_THEMES: Record<
+  string,
+  { primary: string; alt: string; bg: string; glow: string; glowOp: number; tint: string; darkBg: string }
+> = {
+  smartphones: {
+    primary:  "#FF3B5C",
+    alt:      "#FF8C69",
+    bg:       "#fff1f2",
+    glow:     "#FF3B5C",
+    glowOp:   0.18,
+    tint:     "rgba(255,59,92,0.12)",
+    darkBg:   "#0d0608",
+  },
+  laptops: {
+    primary:  "#7C3AED",
+    alt:      "#A78BFA",
+    bg:       "#f5f3ff",
+    glow:     "#6D28D9",
+    glowOp:   0.22,
+    tint:     "rgba(109,40,217,0.15)",
+    darkBg:   "#05050f",
+  },
+  bikes: {
+    primary:  "#F97316",
+    alt:      "#FDBA74",
+    bg:       "#fff7ed",
+    glow:     "#EA580C",
+    glowOp:   0.20,
+    tint:     "rgba(234,88,12,0.10)",
+    darkBg:   "#0e0700",
+  },
+  appliances: {
+    primary:  "#C026D3",
+    alt:      "#E879F9",
+    bg:       "#fdf4ff",
+    glow:     "#A21CAF",
+    glowOp:   0.18,
+    tint:     "rgba(192,38,211,0.12)",
+    darkBg:   "#08030a",
+  },
+  solar: {
+    primary:  "#EAB308",
+    alt:      "#FDE68A",
+    bg:       "#fefce8",
+    glow:     "#CA8A04",
+    glowOp:   0.22,
+    tint:     "rgba(202,138,4,0.12)",
+    darkBg:   "#080700",
+  },
+  jahez: {
+    primary:  "#EC4899",
+    alt:      "#F9A8D4",
+    bg:       "#fdf2f8",
+    glow:     "#DB2777",
+    glowOp:   0.18,
+    tint:     "rgba(219,39,119,0.12)",
+    darkBg:   "#09020a",
+  },
+  furniture: {
+    primary:  "#10B981",
+    alt:      "#6EE7B7",
+    bg:       "#f0fdfa",
+    glow:     "#059669",
+    glowOp:   0.20,
+    tint:     "rgba(5,150,105,0.10)",
+    darkBg:   "#010b07",
+  },
+  cars: {
+    primary:  "#0EA5E9",
+    alt:      "#7DD3FC",
+    bg:       "#ecfeff",
+    glow:     "#0284C7",
+    glowOp:   0.20,
+    tint:     "rgba(2,132,199,0.12)",
+    darkBg:   "#010a10",
+  },
+  business: {
+    primary:  "#84CC16",
+    alt:      "#BEF264",
+    bg:       "#f7fee7",
+    glow:     "#65A30D",
+    glowOp:   0.20,
+    tint:     "rgba(101,163,13,0.10)",
+    darkBg:   "#050900",
+  },
+  general: {
+    primary:  "#F59E0B",
+    alt:      "#FCD34D",
+    bg:       "#fffbeb",
+    glow:     "#D97706",
+    glowOp:   0.18,
+    tint:     "rgba(217,119,6,0.10)",
+    darkBg:   "#0a0700",
+  },
+};
+
+// ─────────────────────────────────────────────────────────────
+// SLIDE DEFINITIONS
+// image filenames must match what's actually in /public/
 // ─────────────────────────────────────────────────────────────
 interface Slide {
   image: string;
@@ -16,204 +117,117 @@ interface Slide {
   description: string;
   cta: string;
   link: string;
-  bg: string;
-  accent: string;
-  accentAlt: string;
+  themeKey: keyof typeof CATEGORY_THEMES;
   gradientStops: string;
   gradientOpacities: string;
-  glowColor: string;
-  glowOpacity: number;
-  imageTint: string;
-  vignetteColor: string;
 }
 
-// ─────────────────────────────────────────────────────────────
-// PER-SLIDE DESIGN TOKENS
-// Each slide gets: bg, accent, accentAlt, gradient stops,
-// glow, image tint overlay, vignette colour.
-// ─────────────────────────────────────────────────────────────
 const slides: Slide[] = [
   {
-    // ── SMARTPHONES ──────────────────────────────────────────
-    image: "/carousel-1.jpg",
-    titleLine1: "Buy Smart,",
-    titleLine2: "Pay Easy",
-    description:
-      "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
-    cta: "Shop Smartphones",
-    link: "/category/smartphones",
-    bg: "#0d0608",
-    accent: "#FF3B5C",
-    accentAlt: "#FF8C69",
-    gradientStops: "0%,38%,50%,62%,76%,88%",
-    gradientOpacities: "ff,f5,d0,99,44,00",
-    glowColor: "#FF3B5C",
-    glowOpacity: 0.18,
-    imageTint: "rgba(255,59,92,0.12)",
-    vignetteColor: "#0d0608",
+    image:           "/carousel-1.jpg",
+    titleLine1:      "Buy Smart,",
+    titleLine2:      "Pay Easy",
+    description:     "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
+    cta:             "Shop Smartphones",
+    link:            "/products?category=smartphones",
+    themeKey:        "smartphones",
+    gradientStops:   "0%,38%,50%,62%,76%,88%",
+    gradientOpacities:"ff,f5,d0,99,44,00",
   },
   {
-    // ── LAPTOPS ──────────────────────────────────────────────
-    image: "/carousel-2.jpg",
-    titleLine1: "Power Up",
-    titleLine2: "Your Work",
-    description:
-      "MacBooks, Gaming Laptops & more on easy installment plans for every budget.",
-    cta: "Shop Laptops",
-    link: "/category/laptops",
-    bg: "#05050f",
-    accent: "#7C3AED",
-    accentAlt: "#A78BFA",
-    gradientStops: "0%,40%,52%,64%,78%,90%",
-    gradientOpacities: "ff,f8,cc,88,33,00",
-    glowColor: "#6D28D9",
-    glowOpacity: 0.22,
-    imageTint: "rgba(109,40,217,0.15)",
-    vignetteColor: "#05050f",
+    image:           "/carousel-2.jpg",
+    titleLine1:      "Work Smarter,",
+    titleLine2:      "Pay Later",
+    description:     "MacBooks, Dell, HP & more — premium laptops on easy monthly plans.",
+    cta:             "Shop Laptops",
+    link:            "/products?category=laptops",
+    themeKey:        "laptops",
+    gradientStops:   "0%,40%,52%,64%,78%,90%",
+    gradientOpacities:"ff,f8,cc,88,33,00",
   },
   {
-    // ── MOTORCYCLES ──────────────────────────────────────────
-    image: "/carousel-3.jpg",
-    titleLine1: "Ride Your",
-    titleLine2: "Dream Bike",
-    description:
-      "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
-    cta: "Shop Motorcycles",
-    link: "/category/bikes",
-    bg: "#0e0700",
-    accent: "#F97316",
-    accentAlt: "#FDBA74",
-    gradientStops: "0%,36%,48%,60%,74%,88%",
-    gradientOpacities: "ff,f2,cc,88,33,00",
-    glowColor: "#EA580C",
-    glowOpacity: 0.2,
-    imageTint: "rgba(234,88,12,0.10)",
-    vignetteColor: "#0e0700",
+    image:           "/carousel-3.jpg",
+    titleLine1:      "Ride Your",
+    titleLine2:      "Dream Bike",
+    description:     "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
+    cta:             "Shop Bikes",
+    link:            "/products?category=bikes",
+    themeKey:        "bikes",
+    gradientStops:   "0%,36%,48%,60%,74%,88%",
+    gradientOpacities:"ff,f2,cc,88,33,00",
   },
   {
-    // ── APPLIANCES ───────────────────────────────────────────
-    image: "/carousel-4.jpg",
-    titleLine1: "Home",
-    titleLine2: "Essentials",
-    description:
-      "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
-    cta: "Shop Appliances",
-    link: "/category/appliances",
-    bg: "#08030a",
-    accent: "#C026D3",
-    accentAlt: "#E879F9",
-    gradientStops: "0%,38%,50%,62%,76%,90%",
-    gradientOpacities: "ff,f5,d0,88,33,00",
-    glowColor: "#A21CAF",
-    glowOpacity: 0.18,
-    imageTint: "rgba(192,38,211,0.12)",
-    vignetteColor: "#08030a",
+    image:           "/carousel-4.jpg",
+    titleLine1:      "Home",
+    titleLine2:      "Essentials",
+    description:     "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
+    cta:             "Shop Appliances",
+    link:            "/products?category=appliances",
+    themeKey:        "appliances",
+    gradientStops:   "0%,38%,50%,62%,76%,90%",
+    gradientOpacities:"ff,f5,d0,88,33,00",
   },
   {
-    // ── SOLAR ────────────────────────────────────────────────
-    image: "/carousel-5.jpg",
-    titleLine1: "Go",
-    titleLine2: "Solar",
-    description:
-      "Complete Solar Panel Systems — save on electricity bills with easy installments.",
-    cta: "Shop Solar",
-    link: "/category/solar",
-    bg: "#080700",
-    accent: "#EAB308",
-    accentAlt: "#FDE68A",
-    gradientStops: "0%,38%,50%,62%,76%,90%",
-    gradientOpacities: "ff,f5,d5,88,33,00",
-    glowColor: "#CA8A04",
-    glowOpacity: 0.22,
-    imageTint: "rgba(202,138,4,0.12)",
-    vignetteColor: "#080700",
+    image:           "/carousel-5.jpg",
+    titleLine1:      "Go",
+    titleLine2:      "Solar",
+    description:     "Complete Solar Panel Systems — save on electricity bills with easy installments.",
+    cta:             "Shop Solar",
+    link:            "/products?category=solar",
+    themeKey:        "solar",
+    gradientStops:   "0%,38%,50%,62%,76%,90%",
+    gradientOpacities:"ff,f5,d5,88,33,00",
   },
   {
-    // ── JAHEZ / BUNDLES ──────────────────────────────────────
-    image: "/carousel-6.jpg",
-    titleLine1: "Complete",
-    titleLine2: "Jahez Package",
-    description:
-      "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
-    cta: "Shop Bundles",
-    link: "/category/jahez",
-    bg: "#09020a",
-    accent: "#EC4899",
-    accentAlt: "#F9A8D4",
-    gradientStops: "0%,38%,50%,62%,76%,90%",
-    gradientOpacities: "ff,f5,cc,88,33,00",
-    glowColor: "#DB2777",
-    glowOpacity: 0.18,
-    imageTint: "rgba(219,39,119,0.12)",
-    vignetteColor: "#09020a",
+    image:           "/carousel-6.jpg",
+    titleLine1:      "Complete",
+    titleLine2:      "Jahez Package",
+    description:     "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
+    cta:             "Shop Jahez",
+    link:            "/products?category=jahez",
+    themeKey:        "jahez",
+    gradientStops:   "0%,38%,50%,62%,76%,90%",
+    gradientOpacities:"ff,f5,cc,88,33,00",
   },
   {
-    // ── FURNITURE ────────────────────────────────────────────
-    image: "/carousel-7.jpg",
-    titleLine1: "Furnish Your",
-    titleLine2: "Dream Home",
-    description:
-      "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
-    cta: "Shop Furniture",
-    link: "/category/furniture",
-    bg: "#010b07",
-    accent: "#10B981",
-    accentAlt: "#6EE7B7",
-    gradientStops: "0%,38%,50%,62%,76%,90%",
-    gradientOpacities: "ff,f5,cc,88,33,00",
-    glowColor: "#059669",
-    glowOpacity: 0.2,
-    imageTint: "rgba(5,150,105,0.10)",
-    vignetteColor: "#010b07",
+    image:           "/carousel-7.jpg",
+    titleLine1:      "Furnish Your",
+    titleLine2:      "Dream Home",
+    description:     "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
+    cta:             "Shop Furniture",
+    link:            "/products?category=furniture",
+    themeKey:        "furniture",
+    gradientStops:   "0%,38%,50%,62%,76%,90%",
+    gradientOpacities:"ff,f5,cc,88,33,00",
   },
   {
-    // ── CARS ─────────────────────────────────────────────────
-    image: "/carousel-8.jpg",
-    titleLine1: "Drive Your",
-    titleLine2: "Dream Car",
-    description:
-      "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
-    cta: "Shop Cars",
-    link: "/category/cars",
-    bg: "#010a10",
-    accent: "#0EA5E9",
-    accentAlt: "#7DD3FC",
-    gradientStops: "0%,38%,50%,62%,76%,90%",
-    gradientOpacities: "ff,f5,cc,88,33,00",
-    glowColor: "#0284C7",
-    glowOpacity: 0.2,
-    imageTint: "rgba(2,132,199,0.12)",
-    vignetteColor: "#010a10",
+    image:           "/carousel-8.jpg",
+    titleLine1:      "Drive Your",
+    titleLine2:      "Dream Car",
+    description:     "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
+    cta:             "Shop Cars",
+    link:            "/products?category=cars",
+    themeKey:        "cars",
+    gradientStops:   "0%,38%,50%,62%,76%,90%",
+    gradientOpacities:"ff,f5,cc,88,33,00",
   },
   {
-    // ── B2B / RAW MATERIALS ──────────────────────────────────
-    image: "/carousel-9.jpg",
-    titleLine1: "Grow Your",
-    titleLine2: "Business",
-    description:
-      "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
-    cta: "Shop B2B",
-    link: "/category/raw-materials",
-    bg: "#050900",
-    accent: "#84CC16",
-    accentAlt: "#BEF264",
-    gradientStops: "0%,38%,50%,62%,76%,90%",
-    gradientOpacities: "ff,f5,cc,88,33,00",
-    glowColor: "#65A30D",
-    glowOpacity: 0.2,
-    imageTint: "rgba(101,163,13,0.10)",
-    vignetteColor: "#050900",
+    image:           "/carousel-9.jpg",
+    titleLine1:      "Grow Your",
+    titleLine2:      "Business",
+    description:     "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
+    cta:             "Shop B2B",
+    link:            "/products?category=business",
+    themeKey:        "business",
+    gradientStops:   "0%,38%,50%,62%,76%,90%",
+    gradientOpacities:"ff,f5,cc,88,33,00",
   },
 ];
 
 // ─────────────────────────────────────────────────────────────
 // Helper: build per-slide horizontal fade gradient
 // ─────────────────────────────────────────────────────────────
-function buildHorizontalGradient(
-  bg: string,
-  stops: string,
-  opacities: string
-): string {
+function buildHorizontalGradient(bg: string, stops: string, opacities: string): string {
   const s = stops.split(",");
   const o = opacities.split(",");
   return s.map((stop, i) => `${bg}${o[i] ?? "00"} ${stop}`).join(", ");
@@ -223,7 +237,7 @@ function buildHorizontalGradient(
 // Component
 // ─────────────────────────────────────────────────────────────
 export default function HeroSection() {
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent]   = useState(0);
   const [direction, setDirection] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -237,34 +251,28 @@ export default function HeroSection() {
     setCurrent((p) => (p - 1 + slides.length) % slides.length);
   }, []);
 
-  // Pause on hover
   useEffect(() => {
     if (isHovered) return;
     const timer = setInterval(next, 5500);
     return () => clearInterval(timer);
   }, [next, isHovered]);
 
-  const slide = slides[current];
-  const hGradient = buildHorizontalGradient(
-    slide.bg,
-    slide.gradientStops,
-    slide.gradientOpacities
-  );
+  const slide  = slides[current];
+  const theme  = CATEGORY_THEMES[slide.themeKey];
+  const hGradient = buildHorizontalGradient(theme.darkBg, slide.gradientStops, slide.gradientOpacities);
 
   return (
     <section
       className="relative overflow-hidden select-none"
       style={{
         height: "clamp(400px, 52vw, 580px)",
-        backgroundColor: slide.bg,
+        backgroundColor: theme.darkBg,
         transition: "background-color 0.85s cubic-bezier(0.4,0,0.2,1)",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* ══════════════════════════════════════════
-          LAYER 1 — Full-bleed image + masks
-          ══════════════════════════════════════════ */}
+      {/* LAYER 1 — Full-bleed image + masks */}
       <AnimatePresence>
         <motion.div
           key={`bg-${current}`}
@@ -275,7 +283,6 @@ export default function HeroSection() {
           className="absolute inset-0"
           style={{ zIndex: 1 }}
         >
-          {/* next/image — right 62% of banner */}
           <div className="absolute top-0 right-0 h-full w-[62%]">
             <Image
               src={slide.image}
@@ -285,79 +292,57 @@ export default function HeroSection() {
               sizes="62vw"
               className="object-cover object-center"
             />
-            {/* Per-slide colour tint blended over photo */}
             <div
               className="absolute inset-0"
-              style={{
-                background: slide.imageTint,
-                mixBlendMode: "color",
-              }}
+              style={{ background: theme.tint, mixBlendMode: "color" }}
             />
           </div>
 
-          {/* Horizontal bg→transparent mask */}
+          {/* Horizontal fade */}
           <div
             className="absolute inset-0"
-            style={{
-              background: `linear-gradient(to right, ${hGradient})`,
-            }}
+            style={{ background: `linear-gradient(to right, ${hGradient})` }}
           />
-
           {/* Top vignette */}
           <div
             className="absolute inset-0"
-            style={{
-              background: `linear-gradient(to bottom, ${slide.vignetteColor}99 0%, transparent 18%)`,
-            }}
+            style={{ background: `linear-gradient(to bottom, ${theme.darkBg}99 0%, transparent 18%)` }}
           />
-
           {/* Bottom vignette */}
           <div
             className="absolute inset-0"
-            style={{
-              background: `linear-gradient(to top, ${slide.vignetteColor}ee 0%, transparent 22%)`,
-            }}
+            style={{ background: `linear-gradient(to top, ${theme.darkBg}ee 0%, transparent 22%)` }}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* ══════════════════════════════════════════
-          LAYER 2 — Atmospheric glow blobs
-          ══════════════════════════════════════════ */}
+      {/* LAYER 2 — Glow blobs */}
       <motion.div
         key={`glow1-${current}`}
-        animate={{ opacity: slide.glowOpacity }}
+        animate={{ opacity: theme.glowOp }}
         transition={{ duration: 1 }}
         className="absolute rounded-full pointer-events-none"
         style={{
-          zIndex: 2,
-          width: "44%",
-          aspectRatio: "1",
-          top: "-28%",
-          left: "-6%",
-          background: `radial-gradient(circle, ${slide.glowColor} 0%, transparent 70%)`,
+          zIndex: 2, width: "44%", aspectRatio: "1",
+          top: "-28%", left: "-6%",
+          background: `radial-gradient(circle, ${theme.glow} 0%, transparent 70%)`,
           filter: "blur(80px)",
         }}
       />
       <motion.div
         key={`glow2-${current}`}
-        animate={{ opacity: slide.glowOpacity * 0.55 }}
+        animate={{ opacity: theme.glowOp * 0.55 }}
         transition={{ duration: 1.2 }}
         className="absolute rounded-full pointer-events-none"
         style={{
-          zIndex: 2,
-          width: "30%",
-          aspectRatio: "1",
-          bottom: "-15%",
-          right: "10%",
-          background: `radial-gradient(circle, ${slide.accentAlt} 0%, transparent 70%)`,
+          zIndex: 2, width: "30%", aspectRatio: "1",
+          bottom: "-15%", right: "10%",
+          background: `radial-gradient(circle, ${theme.alt} 0%, transparent 70%)`,
           filter: "blur(100px)",
         }}
       />
 
-      {/* ══════════════════════════════════════════
-          LAYER 3 — Subtle grid texture
-          ══════════════════════════════════════════ */}
+      {/* LAYER 3 — Grid texture */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -370,9 +355,7 @@ export default function HeroSection() {
         }}
       />
 
-      {/* ══════════════════════════════════════════
-          LAYER 4 — Left accent line
-          ══════════════════════════════════════════ */}
+      {/* LAYER 4 — Left accent line */}
       <motion.div
         key={`line-${current}`}
         initial={{ scaleY: 0 }}
@@ -380,20 +363,13 @@ export default function HeroSection() {
         transition={{ duration: 0.55, ease: "easeOut" }}
         className="absolute left-0 pointer-events-none"
         style={{
-          zIndex: 4,
-          top: "10%",
-          width: 3,
-          height: "80%",
-          background: `linear-gradient(to bottom, transparent, ${slide.accent}, transparent)`,
-          borderRadius: 2,
-          transformOrigin: "top",
-          opacity: 0.7,
+          zIndex: 4, top: "10%", width: 3, height: "80%",
+          background: `linear-gradient(to bottom, transparent, ${theme.primary}, transparent)`,
+          borderRadius: 2, transformOrigin: "top", opacity: 0.7,
         }}
       />
 
-      {/* ══════════════════════════════════════════
-          LAYER 5 — Text content
-          ══════════════════════════════════════════ */}
+      {/* LAYER 5 — Text content */}
       <div className="relative h-full flex items-center" style={{ zIndex: 10 }}>
         <div className="w-full px-6 md:px-12 lg:px-16">
           <div style={{ maxWidth: 520 }}>
@@ -407,17 +383,13 @@ export default function HeroSection() {
                 className="space-y-5"
               >
                 {/* Category pill */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                >
+                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
                   <span
                     className="inline-flex items-center text-[0.65rem] font-black tracking-[0.18em] uppercase px-3 py-1 rounded-full"
                     style={{
-                      background: `${slide.accent}22`,
-                      color: slide.accent,
-                      border: `1px solid ${slide.accent}44`,
+                      background: `${theme.primary}22`,
+                      color: theme.primary,
+                      border: `1px solid ${theme.primary}44`,
                     }}
                   >
                     {slide.cta}
@@ -431,11 +403,7 @@ export default function HeroSection() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.14 }}
                     className="font-black text-white"
-                    style={{
-                      fontSize: "clamp(2.1rem, 5vw, 4.6rem)",
-                      lineHeight: 1.03,
-                      letterSpacing: "-0.02em",
-                    }}
+                    style={{ fontSize: "clamp(2.1rem, 5vw, 4.6rem)", lineHeight: 1.03, letterSpacing: "-0.02em" }}
                   >
                     {slide.titleLine1}
                   </motion.h1>
@@ -449,8 +417,8 @@ export default function HeroSection() {
                       fontSize: "clamp(2.1rem, 5vw, 4.6rem)",
                       lineHeight: 1.03,
                       letterSpacing: "-0.02em",
-                      color: slide.accent,
-                      textShadow: `0 0 20px ${slide.accent}88, 0 0 60px ${slide.accent}33`,
+                      color: theme.primary,
+                      textShadow: `0 0 20px ${theme.primary}88, 0 0 60px ${theme.primary}33`,
                       transition: "color 0.5s, text-shadow 0.5s",
                     }}
                   >
@@ -473,7 +441,7 @@ export default function HeroSection() {
                   {slide.description}
                 </motion.p>
 
-                {/* CTA Button */}
+                {/* CTA */}
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -488,18 +456,14 @@ export default function HeroSection() {
                       <span
                         className="absolute inset-0"
                         style={{
-                          background: `linear-gradient(135deg, ${slide.accent}, ${slide.accentAlt})`,
-                          boxShadow: `0 8px 32px ${slide.accent}55`,
+                          background: `linear-gradient(135deg, ${theme.primary}, ${theme.alt})`,
+                          boxShadow: `0 8px 32px ${theme.primary}55`,
                           transition: "opacity 0.3s",
                         }}
                       />
-                      {/* Hover shine sweep */}
                       <span
                         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                          background:
-                            "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)",
-                        }}
+                        style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)" }}
                       />
                       <span className="relative z-10 flex items-center gap-2">
                         {slide.cta}
@@ -522,12 +486,10 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ══════════════════════════════════════════
-          LAYER 6 — Prev / Next arrows
-          ══════════════════════════════════════════ */}
+      {/* LAYER 6 — Prev / Next arrows */}
       {(
         [
-          { fn: prev, Icon: ChevronLeft, pos: "left-3" },
+          { fn: prev, Icon: ChevronLeft,  pos: "left-3"  },
           { fn: next, Icon: ChevronRight, pos: "right-3" },
         ] as const
       ).map(({ fn, Icon, pos }) => (
@@ -549,62 +511,46 @@ export default function HeroSection() {
         </button>
       ))}
 
-      {/* ══════════════════════════════════════════
-          LAYER 7 — Dot navigation
-          ══════════════════════════════════════════ */}
-      <div
-        className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 items-center"
-        style={{ zIndex: 20 }}
-      >
+      {/* LAYER 7 — Dot navigation */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 items-center" style={{ zIndex: 20 }}>
         {slides.map((_, i) => (
           <button
             key={i}
             type="button"
             aria-label={`Go to slide ${i + 1}`}
-            onClick={() => {
-              setDirection(i > current ? 1 : -1);
-              setCurrent(i);
-            }}
+            onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i); }}
             className="rounded-full transition-all duration-300"
             style={{
               height: 5,
               width: i === current ? 28 : 5,
-              background:
-                i === current
-                  ? `linear-gradient(90deg, ${slide.accent}, ${slide.accentAlt})`
-                  : "rgba(255,255,255,0.18)",
-              boxShadow:
-                i === current ? `0 0 10px ${slide.accent}99` : "none",
+              background: i === current
+                ? `linear-gradient(90deg, ${theme.primary}, ${theme.alt})`
+                : "rgba(255,255,255,0.18)",
+              boxShadow: i === current ? `0 0 10px ${theme.primary}99` : "none",
             }}
           />
         ))}
       </div>
 
-      {/* ══════════════════════════════════════════
-          LAYER 8 — Slide counter
-          ══════════════════════════════════════════ */}
+      {/* LAYER 8 — Slide counter */}
       <div
         className="absolute bottom-5 right-5 flex items-center gap-1 text-[10px] font-bold tabular-nums"
         style={{ zIndex: 20, color: "rgba(255,255,255,0.25)" }}
       >
-        <span style={{ color: slide.accent, fontSize: 11 }}>
-          {String(current + 1).padStart(2, "0")}
-        </span>
+        <span style={{ color: theme.primary, fontSize: 11 }}>{String(current + 1).padStart(2, "0")}</span>
         <span>/</span>
         <span>{String(slides.length).padStart(2, "0")}</span>
       </div>
 
-      {/* ══════════════════════════════════════════
-          LAYER 9 — Auto-play progress bar
-          ══════════════════════════════════════════ */}
+      {/* LAYER 9 — Auto-play progress bar */}
       {!isHovered && (
         <motion.div
           key={`progress-${current}`}
           className="absolute bottom-0 left-0 h-[2px]"
           style={{
             zIndex: 20,
-            background: `linear-gradient(90deg, ${slide.accent}, ${slide.accentAlt})`,
-            boxShadow: `0 0 8px ${slide.accent}88`,
+            background: `linear-gradient(90deg, ${theme.primary}, ${theme.alt})`,
+            boxShadow: `0 0 8px ${theme.primary}88`,
           }}
           initial={{ width: "0%" }}
           animate={{ width: "100%" }}
