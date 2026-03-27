@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
+import HeroCarousel from '@/components/HeroCarousel'
 import { VENDORS } from '@/lib/vendors'
 
 /* ── DATA ───────────────────────────────────────────────────────────────── */
@@ -246,93 +247,7 @@ export default function HomePage() {
       {/* ── HEADER REMOVED - USING FLEXILAYOUT ── */}
 
       {/* ── HERO CAROUSEL ─────────────────────────────────────────────── */}
-      <section className="carousel-wrap" style={{ position:'relative', height:460, overflow:'hidden', background:'#07040f' }}>
-        {SLIDES.map((sl, i) => (
-          <div key={sl.id} style={{
-            position:'absolute', inset:0, opacity: i===slide?1:0,
-            transition:'opacity .75s ease', pointerEvents: i===slide?'auto':'none',
-          }}>
-            <div style={{ position:'absolute', inset:0 }}>
-              <Image src={sl.img} alt={sl.h} fill style={{ objectFit:'cover', objectPosition:'center' }}
-                     priority={i===0} sizes="100vw"
-                     onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
-              <div style={{ position:'absolute', inset:0,
-                background:'linear-gradient(90deg,rgba(7,4,15,.88) 0%,rgba(7,4,15,.58) 48%,rgba(7,4,15,.12) 100%)' }} />
-              <div style={{ position:'absolute', bottom:0, left:0, right:0, height:120,
-                background:'linear-gradient(to top,rgba(7,4,15,.55),transparent)' }} />
-            </div>
-
-            {i === slide && (
-              <div style={{ position:'relative', zIndex:2, maxWidth:1340, margin:'0 auto',
-                             padding:'0 24px', height:'100%', display:'flex', alignItems:'center' }}>
-                <div style={{ maxWidth:510 }}>
-                  <span className="c-in-1" style={{
-                    display:'inline-flex', alignItems:'center', gap:6, padding:'7px 16px', marginBottom:18,
-                    borderRadius:999, background:'rgba(255,255,255,.12)', backdropFilter:'blur(8px)',
-                    border:'1.5px solid rgba(255,255,255,.22)', color:'#fff', fontSize:12.5, fontWeight:700,
-                  }}>{sl.badge}</span>
-
-                  <h1 className="hero-h c-in-2" style={{
-                    fontSize:'clamp(30px,4.5vw,54px)', fontWeight:900, color:'#fff',
-                    lineHeight:1.1, letterSpacing:-1, marginBottom:0,
-                  }}>{sl.h}</h1>
-                  <h1 className="hero-h c-in-2" style={{
-                    fontSize:'clamp(30px,4.5vw,54px)', fontWeight:900, color:'#fb923c',
-                    lineHeight:1.1, letterSpacing:-1, marginBottom:16,
-                  }}>{sl.a}</h1>
-
-                  <p className="c-in-3" style={{
-                    color:'rgba(255,255,255,.72)', fontSize:'clamp(13px,1.8vw,15px)',
-                    lineHeight:1.75, marginBottom:28, maxWidth:390,
-                  }}>{sl.sub}</p>
-
-                  <Link href={sl.href} className="btn-ora c-in-4"
-                        style={{ padding:'13px 28px', fontSize:14.5, textDecoration:'none' }}>
-                    {sl.cta}
-                    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            <div style={{ position:'absolute', bottom:16, right:20, color:'rgba(255,255,255,.3)',
-                           fontSize:11, fontFamily:'monospace', letterSpacing:2, zIndex:2 }}>
-              {String(i+1).padStart(2,'0')} / {String(SLIDES.length).padStart(2,'0')}
-            </div>
-          </div>
-        ))}
-
-        {/* Arrows */}
-        {[{fn:prev, d:'M15 19l-7-7 7-7', pos:{left:16}}, {fn:next, d:'M9 5l7 7-7 7', pos:{right:16}}].map((btn,i) => (
-          <button key={i} onClick={btn.fn} aria-label={i===0?'Prev':'Next'} style={{
-            position:'absolute', top:'50%', ...btn.pos, transform:'translateY(-50%)', zIndex:10,
-            width:44, height:44, borderRadius:'50%', border:'1.5px solid rgba(255,255,255,.22)',
-            background:'rgba(255,255,255,.1)', backdropFilter:'blur(8px)',
-            display:'flex', alignItems:'center', justifyContent:'center',
-            cursor:'pointer', color:'#fff', transition:'all .2s',
-          }}
-          onMouseOver={e => { const el=e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,.22)'; el.style.transform='translateY(-50%) scale(1.1)' }}
-          onMouseOut={e  => { const el=e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,.1)';  el.style.transform='translateY(-50%) scale(1)' }}>
-            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-              <path d={btn.d}/>
-            </svg>
-          </button>
-        ))}
-
-        {/* Dots */}
-        <div style={{ position:'absolute', bottom:18, left:'50%', transform:'translateX(-50%)',
-                       zIndex:10, display:'flex', gap:6, alignItems:'center' }}>
-          {SLIDES.map((_,i) => (
-            <button key={i} onClick={() => goTo(i)} aria-label={`Slide ${i+1}`} style={{
-              borderRadius:999, border:'none', cursor:'pointer', transition:'all .3s ease',
-              width: i===slide?28:8, height:8,
-              background: i===slide?'#fb923c':'rgba(255,255,255,.35)',
-            }} />
-          ))}
-        </div>
-      </section>
+      <HeroCarousel />
 
       {/* ── CATEGORIES ────────────────────────────────────────────────── */}
       <section style={{ padding:'52px 16px', background:'#fff' }}>
