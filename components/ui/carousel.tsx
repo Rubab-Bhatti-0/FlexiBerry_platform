@@ -119,118 +119,115 @@ interface Slide {
   link: string;
   themeKey: keyof typeof CATEGORY_THEMES;
   gradientStops: string;
-  gradientOpacities: string;
 }
 
 const slides: Slide[] = [
   {
-    image:            "/carousel-1.jpg",
-    titleLine1:       "Buy Smart,",
-    titleLine2:       "Pay Easy",
-    description:      "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
-    cta:              "Shop Smartphones",
-    link:             "/products?category=smartphones",
-    themeKey:         "smartphones",
-    gradientStops:    "0%,38%,50%,62%,76%,88%",
-    gradientOpacities:"ff,f5,d0,99,44,00",
+    image:         "/carousel-1.jpg",
+    titleLine1:    "Buy Smart,",
+    titleLine2:    "Pay Easy",
+    description:   "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
+    cta:           "Shop Smartphones",
+    link:          "/products?category=smartphones",
+    themeKey:      "smartphones",
+    gradientStops: "0%,38%,55%,72%,88%",
   },
   {
-    image:            "/carousel-2.jpg",
-    titleLine1:       "Work Smarter,",
-    titleLine2:       "Pay Later",
-    description:      "MacBooks, Dell, HP & more — premium laptops on easy monthly plans.",
-    cta:              "Shop Laptops",
-    link:             "/products?category=laptops",
-    themeKey:         "laptops",
-    gradientStops:    "0%,40%,52%,64%,78%,90%",
-    gradientOpacities:"ff,f8,cc,88,33,00",
+    image:         "/carousel-2.jpg",
+    titleLine1:    "Work Smarter,",
+    titleLine2:    "Pay Later",
+    description:   "MacBooks, Dell, HP & more — premium laptops on easy monthly plans.",
+    cta:           "Shop Laptops",
+    link:          "/products?category=laptops",
+    themeKey:      "laptops",
+    gradientStops: "0%,40%,56%,72%,90%",
   },
   {
-    image:            "/carousel-3.jpg",
-    titleLine1:       "Ride Your",
-    titleLine2:       "Dream Bike",
-    description:      "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
-    cta:              "Shop Bikes",
-    link:             "/products?category=bikes",
-    themeKey:         "bikes",
-    gradientStops:    "0%,36%,48%,60%,74%,88%",
-    gradientOpacities:"ff,f2,cc,88,33,00",
+    image:         "/carousel-3.jpg",
+    titleLine1:    "Ride Your",
+    titleLine2:    "Dream Bike",
+    description:   "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
+    cta:           "Shop Bikes",
+    link:          "/products?category=bikes",
+    themeKey:      "bikes",
+    gradientStops: "0%,36%,52%,68%,86%",
   },
   {
-    image:            "/carousel-4.jpg",
-    titleLine1:       "Home",
-    titleLine2:       "Essentials",
-    description:      "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
-    cta:              "Shop Appliances",
-    link:             "/products?category=appliances",
-    themeKey:         "appliances",
-    gradientStops:    "0%,38%,50%,62%,76%,90%",
-    gradientOpacities:"ff,f5,d0,88,33,00",
+    image:         "/carousel-4.jpg",
+    titleLine1:    "Home",
+    titleLine2:    "Essentials",
+    description:   "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
+    cta:           "Shop Appliances",
+    link:          "/products?category=appliances",
+    themeKey:      "appliances",
+    gradientStops: "0%,38%,55%,72%,90%",
   },
   {
-    image:            "/carousel-5.jpg",
-    titleLine1:       "Go",
-    titleLine2:       "Solar",
-    description:      "Complete Solar Panel Systems — save on electricity bills with easy installments.",
-    cta:              "Shop Solar",
-    link:             "/products?category=solar",
-    themeKey:         "solar",
-    gradientStops:    "0%,38%,50%,62%,76%,90%",
-    gradientOpacities:"ff,f5,d5,88,33,00",
+    image:         "/carousel-5.jpg",
+    titleLine1:    "Go",
+    titleLine2:    "Solar",
+    description:   "Complete Solar Panel Systems — save on electricity bills with easy installments.",
+    cta:           "Shop Solar",
+    link:          "/products?category=solar",
+    themeKey:      "solar",
+    gradientStops: "0%,38%,55%,72%,90%",
   },
   {
-    image:            "/carousel-6.jpg",
-    titleLine1:       "Complete",
-    titleLine2:       "Jahez Package",
-    description:      "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
-    cta:              "Shop Jahez",
-    link:             "/products?category=jahez",
-    themeKey:         "jahez",
-    gradientStops:    "0%,38%,50%,62%,76%,90%",
-    gradientOpacities:"ff,f5,cc,88,33,00",
+    image:         "/carousel-6.jpg",
+    titleLine1:    "Complete",
+    titleLine2:    "Jahez Package",
+    description:   "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
+    cta:           "Shop Jahez",
+    link:          "/products?category=jahez",
+    themeKey:      "jahez",
+    gradientStops: "0%,38%,55%,72%,90%",
   },
   {
-    image:            "/carousel-7.jpg",
-    titleLine1:       "Furnish Your",
-    titleLine2:       "Dream Home",
-    description:      "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
-    cta:              "Shop Furniture",
-    link:             "/products?category=furniture",
-    themeKey:         "furniture",
-    gradientStops:    "0%,38%,50%,62%,76%,90%",
-    gradientOpacities:"ff,f5,cc,88,33,00",
+    image:         "/carousel-7.jpg",
+    titleLine1:    "Furnish Your",
+    titleLine2:    "Dream Home",
+    description:   "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
+    cta:           "Shop Furniture",
+    link:          "/products?category=furniture",
+    themeKey:      "furniture",
+    gradientStops: "0%,38%,55%,72%,90%",
   },
   {
-    image:            "/carousel-8.jpg",
-    titleLine1:       "Drive Your",
-    titleLine2:       "Dream Car",
-    description:      "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
-    cta:              "Shop Cars",
-    link:             "/products?category=cars",
-    themeKey:         "cars",
-    gradientStops:    "0%,38%,50%,62%,76%,90%",
-    gradientOpacities:"ff,f5,cc,88,33,00",
+    image:         "/carousel-8.jpg",
+    titleLine1:    "Drive Your",
+    titleLine2:    "Dream Car",
+    description:   "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
+    cta:           "Shop Cars",
+    link:          "/products?category=cars",
+    themeKey:      "cars",
+    gradientStops: "0%,38%,55%,72%,90%",
   },
   {
-    image:            "/carousel-9.jpg",
-    titleLine1:       "Grow Your",
-    titleLine2:       "Business",
-    description:      "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
-    cta:              "Shop B2B",
-    link:             "/products?category=business",
-    themeKey:         "business",
-    gradientStops:    "0%,38%,50%,62%,76%,90%",
-    gradientOpacities:"ff,f5,cc,88,33,00",
+    image:         "/carousel-9.jpg",
+    titleLine1:    "Grow Your",
+    titleLine2:    "Business",
+    description:   "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
+    cta:           "Shop B2B",
+    link:          "/products?category=business",
+    themeKey:      "business",
+    gradientStops: "0%,38%,55%,72%,90%",
   },
 ];
 
 // ─────────────────────────────────────────────────────────────
-// Helper: build per-slide horizontal fade gradient
+// Helper: build per-slide horizontal fade gradient using
+// the category's primary color — makes each slide visually
+// distinct instead of relying on near-black darkBg values.
 // ─────────────────────────────────────────────────────────────
-function buildHorizontalGradient(bg: string, stops: string, opacities: string): string {
+function buildHorizontalGradient(primary: string, stops: string): string {
   const s = stops.split(",");
-  const o = opacities.split(",");
-  return s.map((stop, i) => `${bg}${o[i] ?? "00"} ${stop}`).join(", ");
+  return [
+    `${primary}66 ${s[0]}`,   // 40% opacity at left edge
+    `${primary}44 ${s[1]}`,   // 27% opacity
+    `${primary}22 ${s[2]}`,   // 13% opacity
+    `${primary}0a ${s[3]}`,   // ~4% opacity
+    `transparent ${s[4]}`,    // fully transparent at right
+  ].join(", ");
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -259,7 +256,7 @@ export default function HeroSection() {
 
   const slide     = slides[current];
   const theme     = CATEGORY_THEMES[slide.themeKey];
-  const hGradient = buildHorizontalGradient(theme.darkBg, slide.gradientStops, slide.gradientOpacities);
+  const hGradient = buildHorizontalGradient(theme.primary, slide.gradientStops);
 
   return (
     <section
