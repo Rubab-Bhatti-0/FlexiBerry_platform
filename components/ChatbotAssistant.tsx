@@ -47,7 +47,7 @@ export const ChatbotAssistant = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleQuickAction = (action: string) => {
+  const handleQuickAction = (actionId: string) => {
     const actionMessages: Record<string, string> = {
       build: "Great! I can help you build an AI chatbot. Let me guide you through the process...",
       using: "Perfect! Here are some tips on using ChatBot effectively...",
@@ -55,9 +55,10 @@ export const ChatbotAssistant = () => {
       browsing: "No problem! Feel free to explore and ask me anything when you need help. 👋"
     };
 
+    const actionLabel = quickActions.find(a => a.id === actionId)?.label || "";
     const userMessage: Message = {
       id: messages.length + 1,
-      text: action,
+      text: actionLabel,
       sender: 'user',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isQuickAction: true
@@ -69,7 +70,7 @@ export const ChatbotAssistant = () => {
     setTimeout(() => {
       const botMessage: Message = {
         id: messages.length + 2,
-        text: actionMessages[action.split(" ")[0].toLowerCase()] || "How can I assist you further?",
+        text: actionMessages[actionId] || "How can I assist you further?",
         sender: 'bot',
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
@@ -246,7 +247,7 @@ export const ChatbotAssistant = () => {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    onClick={() => handleQuickAction(action.label.split(" ")[0])}
+                    onClick={() => handleQuickAction(action.id)}
                     className="w-full px-4 py-2.5 border-2 border-blue-500 text-blue-600 rounded-full text-sm font-semibold hover:bg-blue-50 transition-all"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
