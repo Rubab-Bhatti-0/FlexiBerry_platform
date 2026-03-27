@@ -73,6 +73,14 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
     window.dispatchEvent(new Event('storage'))
   }
 
+  const announcementItems = [
+    "📦 Jahez Packages — Bundle & Save 50%",
+    "☀️ Solar Systems — Go Green Today",
+    "🚚 Free Nationwide Delivery",
+    "💸 0% Commission for first 90 days!",
+    "📱 iPhone 15 Pro — Starting PKR 45,833/mo"
+  ]
+
   return (
     <>
       <style>{`
@@ -126,19 +134,24 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
         }
         .flexi-btn-ind:hover { box-shadow: 0 6px 22px rgba(99,102,241,.55); transform: translateY(-1px) }
         
-        /* Moveable Strip Animation */
-        @keyframes marquee {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
+        /* Continuous Marquee Animation */
+        @keyframes marquee-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        .flexi-marquee {
-          display: inline-block;
-          white-space: nowrap;
-          animation: marquee 30s linear infinite;
-          padding-left: 100%;
+        .flexi-marquee-container {
+          display: flex;
+          width: max-content;
+          animation: marquee-scroll 40s linear infinite;
         }
-        .flexi-marquee:hover {
+        .flexi-marquee-container:hover {
           animation-play-state: paused;
+        }
+        .flexi-marquee-item {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          padding-right: 40px;
         }
 
         @media(max-width: 768px) {
@@ -158,34 +171,26 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
         transition: 'all .25s',
         fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
       }}>
-        {/* Deep Blue Moveable Strip (Moved to Top) */}
+        {/* Deep Blue Moveable Strip (Only Top One Kept) */}
         <div style={{ 
           background: '#1a1b3a', 
           color: '#fff', 
-          padding: '8px 0', 
+          padding: '10px 0', 
           fontSize: '12.5px', 
           fontWeight: 600, 
           overflow: 'hidden',
           position: 'relative',
           borderBottom: '1px solid rgba(255,255,255,0.05)'
         }}>
-          <div className="flexi-marquee">
-            📦 Jahez Packages — Bundle & Save 50% &nbsp;&nbsp; • &nbsp;&nbsp; ☀️ Solar Systems — Go Green Today &nbsp;&nbsp; • &nbsp;&nbsp; 🚚 Free Nationwide Delivery &nbsp;&nbsp; • &nbsp;&nbsp; 💸 0% Commission for first 90 days! &nbsp;&nbsp; • &nbsp;&nbsp; 📱 iPhone 15 Pro — Starting PKR 45,833/mo
-          </div>
-        </div>
-
-        {/* Light Blue Strip (Now below the deep blue one) */}
-        <div style={{ 
-          background: '#2563eb', 
-          color: '#fff', 
-          padding: '6px 0', 
-          fontSize: '12px', 
-          fontWeight: 700, 
-          overflow: 'hidden',
-          position: 'relative'
-        }}>
-          <div className="flexi-marquee" style={{ animationDuration: '20s' }}>
-            🚀 Welcome to FlexiBerry! Shop now and pay in easy installments. ✨ Free delivery on your first order! 📦 New arrivals every week! ⚡ Flash sale starts every Friday!
+          <div className="flexi-marquee-container">
+            {/* Duplicate content for seamless looping */}
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flexi-marquee-item">
+                {announcementItems.map((item, idx) => (
+                  <span key={idx} style={{ marginRight: '40px' }}>{item}</span>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
 
