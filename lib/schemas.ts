@@ -12,9 +12,33 @@ export const registerSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirmPassword: z.string(),
   userType: z.enum(['buyer', 'seller']),
+  // Buyer specific fields
+  cnicNumber: z.string().regex(/^\d{5}-\d{7}-\d{1}$/, 'Invalid CNIC format (12345-1234567-1)').optional(),
+  phoneNumber: z.string().min(10, 'Invalid phone number').optional(),
+  dob: z.string().optional(),
+  // Vendor specific fields
+  shopName: z.string().min(3, 'Shop name must be at least 3 characters').optional(),
+  shopLocation: z.string().min(5, 'Shop location required').optional(),
+  businessType: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
+}).refine((data) => {
+  if (data.userType === 'buyer') {
+    return !!data.cnicNumber && !!data.phoneNumber && !!data.dob;
+  }
+  return true;
+}, {
+  message: "Verification details are required for buyers",
+  path: ["cnicNumber"],
+}).refine((data) => {
+  if (data.userType === 'seller') {
+    return !!data.shopName && !!data.shopLocation;
+  }
+  return true;
+}, {
+  message: "Shop details are required for vendors",
+  path: ["shopName"],
 });
 
 export const resetPasswordSchema = z.object({
