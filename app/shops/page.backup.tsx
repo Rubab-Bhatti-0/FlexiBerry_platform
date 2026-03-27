@@ -12,29 +12,9 @@ import { VENDORS } from '@/lib/vendors'
 const CATEGORIES = ['All', ...Array.from(new Set(VENDORS.map(v => v.category)))]
 const CITIES = ['All Cities', ...Array.from(new Set(VENDORS.map(v => v.city)))]
 
-// Get category color by category name
-function getCategoryTheme(category: string) {
-  const vendor = VENDORS.find(v => v.category === category)
-  if (vendor) {
-    return {
-      color: vendor.categoryColor,
-      bg: vendor.categoryBg,
-      gradient: vendor.bannerGrad,
-      light: vendor.themeBgLight
-    }
-  }
-  return {
-    color: '#6366f1',
-    bg: 'rgba(99, 102, 241, 0.1)',
-    gradient: 'linear-gradient(135deg, #6366f1, #4f46e5)',
-    light: '#f0f9ff'
-  }
-}
-
-/* ─────────────── ENHANCED SHOP CARD COMPONENT ─────────────── */
+/* ─────────────── SHOP CARD COMPONENT ─────────────── */
 function ShopCard({ vendor, view }: { vendor: typeof VENDORS[0], view: 'grid' | 'list' }) {
   const isGrid = view === 'grid'
-  const theme = getCategoryTheme(vendor.category)
 
   return (
     <Link 
@@ -44,41 +24,37 @@ function ShopCard({ vendor, view }: { vendor: typeof VENDORS[0], view: 'grid' | 
         display: 'block',
         background: 'white',
         borderRadius: '16px',
-        border: `2px solid ${theme.bg}`,
+        border: '1px solid #e5e7eb',
         overflow: 'hidden',
         transition: 'all 0.3s ease',
         height: '100%',
-        position: 'relative',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+        position: 'relative'
       }}
       onMouseOver={e => {
-        const el = e.currentTarget as HTMLElement
-        el.style.transform = 'translateY(-6px)'
-        el.style.boxShadow = `0 16px 32px ${theme.color}22`
-        el.style.borderColor = theme.color
+        e.currentTarget.style.transform = 'translateY(-4px)'
+        e.currentTarget.style.boxShadow = '0 12px 24px -8px rgba(0,0,0,0.1)'
+        e.currentTarget.style.borderColor = '#6366f1'
       }}
       onMouseOut={e => {
-        const el = e.currentTarget as HTMLElement
-        el.style.transform = 'none'
-        el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)'
-        el.style.borderColor = theme.bg
+        e.currentTarget.style.transform = 'none'
+        e.currentTarget.style.boxShadow = 'none'
+        e.currentTarget.style.borderColor = '#e5e7eb'
       }}
     >
       <div style={{ 
         display: isGrid ? 'block' : 'flex',
         height: '100%'
       }}>
-        {/* Banner/Image Area with Category Gradient */}
+        {/* Banner/Image Area */}
         <div style={{ 
           width: isGrid ? '100%' : '240px',
-          height: isGrid ? '160px' : 'auto',
-          background: theme.gradient,
+          height: isGrid ? '140px' : 'auto',
+          background: vendor.bannerGrad || '#6366f1',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '56px',
-          position: 'relative',
-          borderBottom: isGrid ? `4px solid ${theme.color}` : 'none'
+          fontSize: '48px',
+          position: 'relative'
         }}>
           {vendor.emoji || '🏪'}
           {vendor.verified && (
@@ -88,11 +64,11 @@ function ShopCard({ vendor, view }: { vendor: typeof VENDORS[0], view: 'grid' | 
               right: '12px',
               background: 'white',
               borderRadius: '50%',
-              padding: '6px',
+              padding: '4px',
               display: 'flex',
-              boxShadow: '0 4px 8px rgba(0,0,0,0.15)'
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
             }}>
-              <BadgeCheck size={18} color={theme.color} fill={theme.color} stroke="white" />
+              <BadgeCheck size={16} color="#6366f1" fill="#6366f1" stroke="white" />
             </div>
           )}
         </div>
@@ -102,34 +78,32 @@ function ShopCard({ vendor, view }: { vendor: typeof VENDORS[0], view: 'grid' | 
           padding: '20px',
           flex: 1,
           display: 'flex',
-          flexDirection: 'column',
-          background: isGrid ? '#fff' : `${theme.light}40`
+          flexDirection: 'column'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
             <span style={{ 
               fontSize: '11px', 
               fontWeight: 700, 
               textTransform: 'uppercase', 
               letterSpacing: '0.5px',
-              color: theme.color,
-              background: theme.bg,
-              padding: '5px 10px',
-              borderRadius: '8px'
+              color: vendor.categoryColor || '#6366f1',
+              background: vendor.categoryBg || 'rgba(99, 102, 241, 0.1)',
+              padding: '4px 8px',
+              borderRadius: '6px'
             }}>
               {vendor.category}
             </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>
-              <Star size={15} fill="#f59e0b" color="#f59e0b" />
-              <span>{vendor.rating}</span>
-              <span style={{ color: '#9ca3af', fontWeight: 600 }}>({vendor.reviews})</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>
+              <Star size={14} fill="#f59e0b" color="#f59e0b" />
+              {vendor.rating}
             </div>
           </div>
 
-          <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', margin: '0 0 8px 0', lineHeight: 1.3 }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
             {vendor.name}
           </h3>
           
-          <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 16px 0', lineHeight: 1.6, flex: 1 }}>
+          <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 16px 0', lineHeight: 1.5, flex: 1 }}>
             {vendor.description}
           </p>
 
@@ -138,25 +112,18 @@ function ShopCard({ vendor, view }: { vendor: typeof VENDORS[0], view: 'grid' | 
             alignItems: 'center', 
             gap: '16px', 
             paddingTop: '16px', 
-            borderTop: `1px solid ${theme.bg}`,
+            borderTop: '1px solid #f3f4f6',
             fontSize: '13px',
-            color: '#64748b',
-            flexWrap: 'wrap'
+            color: '#64748b'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <MapPin size={14} color={theme.color} />
-              <span style={{ fontWeight: 600 }}>{vendor.city}</span>
+              <MapPin size={14} />
+              {vendor.city}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Package size={14} color={theme.color} />
-              <span style={{ fontWeight: 600 }}>{vendor.products} Products</span>
+              <Package size={14} />
+              {vendor.products} Products
             </div>
-            {vendor.verified && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700, color: theme.color }}>
-                <Sparkles size={14} />
-                Verified
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -181,8 +148,6 @@ export default function ShopsPage() {
       return matchCat && matchCity && matchSearch
     })
   }, [selectedCategory, selectedCity, searchTerm])
-
-  const categoryTheme = getCategoryTheme(selectedCategory !== 'All' ? selectedCategory : 'Electronics')
 
   return (
     <div style={{ background: '#f8f9fd', minHeight: '100vh' }}>
@@ -231,29 +196,28 @@ export default function ShopsPage() {
         </div>
       </header>
 
-      {/* Header with Category Theme */}
-      <div style={{ background: categoryTheme.light, borderBottom: `3px solid ${categoryTheme.color}`, padding: '32px 0' }}>
+      {/* Header */}
+      <div style={{ background: 'white', borderBottom: '1px solid #e5e7eb', padding: '24px 0' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 20px' }}>
-          <h1 style={{ fontSize: '36px', fontWeight: 900, color: '#0f172a', margin: '0 0 8px 0', letterSpacing: -1 }}>
+          <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#0f172a', margin: '0 0 8px 0' }}>
             All Shops
           </h1>
-          <p style={{ fontSize: '16px', color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '15px', color: '#64748b', margin: 0 }}>
             Discover {VENDORS.length} verified sellers. {filtered.length} shops match your filters.
           </p>
         </div>
       </div>
 
       {/* Filters & Search */}
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '28px 20px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '24px 20px' }}>
         {/* Search */}
         <div style={{
           display: 'flex',
-          border: `2px solid ${categoryTheme.color}`,
+          border: '1.5px solid #e5e7eb',
           borderRadius: '12px',
           overflow: 'hidden',
           marginBottom: '24px',
           background: 'white',
-          boxShadow: `0 4px 12px ${categoryTheme.color}15`
         }}>
           <input
             type="text"
@@ -262,7 +226,7 @@ export default function ShopsPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
               flex: 1,
-              padding: '14px 18px',
+              padding: '12px 16px',
               fontSize: '14px',
               outline: 'none',
               background: 'transparent',
@@ -270,15 +234,14 @@ export default function ShopsPage() {
             }}
           />
           <button style={{
-            padding: '0 18px',
-            background: categoryTheme.color,
+            padding: '0 16px',
+            background: '#6366f1',
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            transition: 'all .2s'
-          }} onMouseOver={e => (e.currentTarget as HTMLElement).style.opacity = '0.9'} onMouseOut={e => (e.currentTarget as HTMLElement).style.opacity = '1'}>
+          }}>
             <Search size={18} color="white" />
           </button>
         </div>
@@ -290,16 +253,14 @@ export default function ShopsPage() {
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
             style={{
-              padding: '11px 14px',
+              padding: '10px 14px',
               borderRadius: '10px',
-              border: `2px solid ${categoryTheme.bg}`,
+              border: '1.5px solid #e5e7eb',
               fontSize: '13px',
               fontWeight: 600,
               cursor: 'pointer',
               background: 'white',
               fontFamily: 'inherit',
-              color: '#0f172a',
-              transition: 'all .2s'
             }}
           >
             {CATEGORIES.map(c => <option key={c}>{c}</option>)}
@@ -310,16 +271,14 @@ export default function ShopsPage() {
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
             style={{
-              padding: '11px 14px',
+              padding: '10px 14px',
               borderRadius: '10px',
-              border: `2px solid ${categoryTheme.bg}`,
+              border: '1.5px solid #e5e7eb',
               fontSize: '13px',
               fontWeight: 600,
               cursor: 'pointer',
               background: 'white',
               fontFamily: 'inherit',
-              color: '#0f172a',
-              transition: 'all .2s'
             }}
           >
             {CITIES.map(c => <option key={c}>{c}</option>)}
@@ -331,33 +290,32 @@ export default function ShopsPage() {
             style={{
               padding: '10px 14px',
               borderRadius: '10px',
-              border: `2px solid ${view === 'grid' ? categoryTheme.color : '#e5e7eb'}`,
-              background: view === 'grid' ? categoryTheme.color : 'white',
+              border: `1.5px solid ${view === 'grid' ? '#6366f1' : '#e5e7eb'}`,
+              background: view === 'grid' ? '#6366f1' : 'white',
+              color: view === 'grid' ? 'white' : '#6366f1',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: view === 'grid' ? 'white' : '#6b7280',
-              transition: 'all .2s'
+              fontWeight: 600,
             }}
           >
             <Grid3X3 size={18} />
           </button>
 
-          {/* List View */}
           <button
             onClick={() => setView('list')}
             style={{
               padding: '10px 14px',
               borderRadius: '10px',
-              border: `2px solid ${view === 'list' ? categoryTheme.color : '#e5e7eb'}`,
-              background: view === 'list' ? categoryTheme.color : 'white',
+              border: `1.5px solid ${view === 'list' ? '#6366f1' : '#e5e7eb'}`,
+              background: view === 'list' ? '#6366f1' : 'white',
+              color: view === 'list' ? 'white' : '#6366f1',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: view === 'list' ? 'white' : '#6b7280',
-              transition: 'all .2s'
+              fontWeight: 600,
             }}
           >
             <List size={18} />
@@ -365,24 +323,73 @@ export default function ShopsPage() {
         </div>
 
         {/* Results */}
-        {filtered.length > 0 ? (
-          <div className={view === 'grid' ? 'shop-grid' : 'shop-list'}>
-            {filtered.map(vendor => (
-              <ShopCard key={vendor.id} vendor={vendor} view={view} />
+        <div className={view === 'grid' ? 'shop-grid' : 'shop-list'}>
+          {filtered.length > 0 ? (
+            filtered.map(vendor => <ShopCard key={vendor.id} vendor={vendor} view={view} />)
+          ) : (
+            <div style={{
+              gridColumn: '1 / -1',
+              textAlign: 'center',
+              padding: '60px 20px',
+              color: '#64748b',
+            }}>
+              <Package size={48} style={{ margin: '0 auto 16px', opacity: 0.4 }} />
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', margin: '0 0 8px 0' }}>
+                No shops found
+              </h3>
+              <p style={{ fontSize: '14px', margin: 0 }}>Try adjusting your filters or search term.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ─────────────── FOOTER ─────────────── */}
+      <footer style={{ background: '#1f2937', color: '#fff', marginTop: '60px' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '40px', marginBottom: '40px' }}>
+            <div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 16, color: '#fff', letterSpacing: -0.5 }}>
+                FlexiBerry
+              </h3>
+              <p style={{ color: '#9ca3af', fontSize: 13.5, lineHeight: 1.6, marginBottom: 20 }}>
+                Buy now, pay later on installments. Shop from 1000s of products with 0% markup.
+              </p>
+            </div>
+
+            {[
+              { h: 'Quick Links', links: ['About Us', 'Contact', 'Careers', 'Blog', 'Vendor Registration'] },
+              { h: 'Customer Care', links: ['Help Center', 'How to Buy on Installments', 'Returns Policy', 'KYC Guide', 'Payment Methods'] },
+              { h: 'Contact Us', links: ['support@flexiberry.com', '+92 300 1234567', 'Lahore, Punjab, Pakistan'] },
+            ].map(col => (
+              <div key={col.h}>
+                <h4 style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 16, letterSpacing: -0.2 }}>
+                  {col.h}
+                </h4>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, padding: 0 }}>
+                  {col.links.map(l => (
+                    <li key={l}>
+                      <a href="#" style={{ color: '#6b7280', fontSize: 13.5, textDecoration: 'none', transition: 'color .15s' }}>
+                        {l}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: 'white', borderRadius: '16px' }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
-              No shops found
-            </h3>
-            <p style={{ fontSize: '14px', color: '#64748b' }}>
-              Try adjusting your filters or search terms
-            </p>
+
+          <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 22, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+            <p style={{ color: '#4b5563', fontSize: 13 }}>© 2026 FlexiBerry. All rights reserved.</p>
+            <div style={{ display: 'flex', gap: 20 }}>
+              {['Privacy Policy', 'Terms of Service'].map(l => (
+                <a key={l} href="#" style={{ color: '#4b5563', fontSize: 13, textDecoration: 'none', transition: 'color .15s' }}>
+                  {l}
+                </a>
+              ))}
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      </footer>
     </div>
   )
 }
