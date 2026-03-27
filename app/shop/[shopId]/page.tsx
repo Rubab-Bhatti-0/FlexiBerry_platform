@@ -195,48 +195,80 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
             </div>
 
             <div className="prod-grid">
-              {(viewMode === 'featured' ? featured : products).map(p => (
-                <div key={p.id} style={{ background: '#fff', borderRadius: '14px', overflow: 'hidden', border: `2px solid ${shop.categoryBg}`, transition: 'all .3s', cursor: 'pointer', display: 'flex', flexDirection: 'column' }} onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = `0 12px 28px ${shop.themeColor}22` }} onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = 'none' }}>
-                  <div style={{ background: shop.themeBgLight, height: '180px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '56px', position: 'relative', borderBottom: `3px solid ${shop.themeColor}` }}>
-                    📦
-                    {p.sale && (
-                      <div style={{ position: 'absolute', top: '12px', right: '12px', background: '#ef4444', color: '#fff', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)' }}>
-                        SALE
+              {(viewMode === 'featured' ? featured : products).map((p, idx) => {
+                const discount = p.original ? Math.round(((p.original - p.price) / p.original) * 100) : 0;
+                return (
+                <div key={p.id} style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', border: '1px solid #e5e7eb', transition: 'all .3s', cursor: 'pointer', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', position: 'relative' }} onMouseOver={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'translateY(-6px)'; el.style.boxShadow = '0 20px 40px rgba(0,0,0,0.12)' }} onMouseOut={e => { const el = e.currentTarget as HTMLElement; el.style.transform = 'none'; el.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)' }}>
+                  {/* Badges */}
+                  <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {discount > 0 && (
+                      <div style={{
+                        background: 'linear-gradient(135deg, #ef4444, #f97316)',
+                        color: 'white', fontSize: 11, fontWeight: 800,
+                        padding: '3px 10px', borderRadius: 99,
+                        display: 'flex', alignItems: 'center', gap: 4,
+                        boxShadow: '0 3px 10px rgba(239,68,68,0.45)',
+                      }}>
+                        📉 -{discount}% OFF
                       </div>
                     )}
                     {p.featured && (
-                      <div style={{ position: 'absolute', top: '12px', left: '12px', background: shop.themeColor, color: '#fff', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Sparkles size={12} /> Featured
+                      <div style={{
+                        background: 'linear-gradient(135deg, #7c3aed, #2563eb)',
+                        color: 'white', fontSize: 10, fontWeight: 700,
+                        padding: '2px 8px', borderRadius: 99,
+                        display: 'flex', alignItems: 'center', gap: 3,
+                      }}>
+                        ⭐ FEATURED
                       </div>
                     )}
                   </div>
+                  <div style={{ position: 'relative', aspectRatio: '1', background: 'linear-gradient(to bottom right, #f9fafb, #f3f4f6)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '56px' }}>
+                    📦
+                    <div style={{ position: 'absolute', inset: 0, bottom: 0, height: 64, background: 'linear-gradient(to top, rgba(0,0,0,0.2), transparent)' }} />
+                  </div>
                   <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 700, color: '#111827', marginBottom: '10px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.4 }}>
+                    {/* Shop name */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 8 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        {shop.name}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#1f2937', marginBottom: '8px', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {p.name}
                     </div>
+                    {/* Rating */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px', fontSize: '12px' }}>
-                      <Star size={13} fill="#f59e0b" color="#f59e0b" />
-                      <span style={{ fontWeight: 700, color: '#111827' }}>{p.rating}</span>
-                      <span style={{ color: '#9ca3af' }}>({p.reviews})</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        {[...Array(5)].map((_, j) => (
+                          <Star key={j} size={12} fill={j < Math.floor(p.rating) ? '#fbbf24' : '#e5e7eb'} color={j < Math.floor(p.rating) ? '#fbbf24' : '#e5e7eb'} />
+                        ))}
+                      </div>
+                      <span style={{ fontSize: 11, color: '#9ca3af' }}>({p.reviews})</span>
                     </div>
-                    <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: `1px solid ${shop.categoryBg}` }}>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
-                        <span style={{ fontSize: '18px', fontWeight: 800, color: shop.themeColor }}>
+                    {/* Price */}
+                    <div style={{ marginTop: 'auto' }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '20px', fontWeight: 800, color: shop.themeColor, fontFamily: "'Space Grotesk', sans-serif" }}>
                           PKR {p.price.toLocaleString()}
                         </span>
                         {p.original && (
-                          <span style={{ fontSize: '12px', color: '#9ca3af', textDecoration: 'line-through' }}>
-                            {p.original.toLocaleString()}
+                          <span style={{ fontSize: '12px', color: '#d1d5db', textDecoration: 'line-through', fontWeight: 500 }}>
+                            PKR {p.original.toLocaleString()}
                           </span>
                         )}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: 600 }}>
-                        From PKR {p.mo.toLocaleString()}/month
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <span style={{ fontSize: 11, color: '#16a34a', fontWeight: 600 }}>
+                          💳 PKR {p.mo.toLocaleString()}/mo · 12-month plan
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
+              );
+              })}
+
             </div>
           </div>
 

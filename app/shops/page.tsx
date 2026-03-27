@@ -285,10 +285,11 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
         </div>
         {/* Description */}
         <p style={{
-          fontSize: "12px", color: "#64748b", lineHeight: 1.55,
+          fontSize: "12px", color: vendor.categoryColor, lineHeight: 1.55,
           margin: "8px 0 14px", flex: 1,
           display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
           overflow: "hidden",
+          fontWeight: 600,
         }}>
           {vendor.description}
         </p>

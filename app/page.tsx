@@ -313,74 +313,102 @@ export default function HomePage() {
           </div>
 
           <div className="pg" style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:16 }}>
-            {PRODUCTS.map(p => (
+            {PRODUCTS.map((p, idx) => {
+              const vendorColor = p.vendor.includes('TechZone') ? '#2563eb' : p.vendor.includes('DigiWorld') ? '#2563eb' : p.vendor.includes('SpeedRiders') ? '#f97316' : p.vendor.includes('StyleHub') ? '#be185d' : p.vendor.includes('GreenPower') ? '#ea580c' : '#6366f1';
+              return (
               <div key={p.id} className="lift" style={{
-                background:'#fff', borderRadius:18, border:'1.5px solid #eeeef4',
+                background:'#fff', borderRadius:16, border:'1px solid #e5e7eb',
                 overflow:'hidden', display:'flex', flexDirection:'column',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = 'translateY(-6px)';
+                el.style.boxShadow = '0 20px 40px rgba(0,0,0,0.12)';
+              }}
+              onMouseLeave={e => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = 'none';
+                el.style.boxShadow = '0 2px 12px rgba(0,0,0,0.06)';
               }}>
-                <div className="img-zoom" style={{ position:'relative', aspectRatio:'4/3', background:'#f8f8fc', flexShrink:0 }}>
+                {/* Badges */}
+                <div style={{ position:'absolute', top:12, left:12, zIndex:10, display:'flex', flexDirection:'column', gap:6 }}>
+                  {p.disc && (
+                    <div style={{
+                      background: 'linear-gradient(135deg, #ef4444, #f97316)',
+                      color: 'white', fontSize: 11, fontWeight: 800,
+                      padding: '3px 10px', borderRadius: 99,
+                      display: 'flex', alignItems: 'center', gap: 4,
+                      boxShadow: '0 3px 10px rgba(239,68,68,0.45)',
+                    }}>
+                      📉 {p.disc}% OFF
+                    </div>
+                  )}
+                </div>
+                {/* Wishlist */}
+                <button onClick={() => toggleWish(p.id)} aria-label="Wishlist" style={{
+                  position:'absolute', top:12, right:12, zIndex:10, width:32, height:32, borderRadius:'50%',
+                  background:'rgba(255,255,255,.9)', backdropFilter:'blur(4px)',
+                  border:'none', display:'flex', alignItems:'center',
+                  justifyContent:'center', cursor:'pointer', fontSize:15,
+                  transition:'all .2s', boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                }}
+                onMouseOver={e => (e.currentTarget as HTMLElement).style.transform='scale(1.1)'}
+                onMouseOut={e  => (e.currentTarget as HTMLElement).style.transform='scale(1)'}>
+                  {wish.has(p.id)?'❤️':'🤍'}
+                </button>
+                <div className="img-zoom" style={{ position:'relative', aspectRatio:'1', background:'linear-gradient(to bottom right, #f9fafb, #f3f4f6)', flexShrink:0 }}>
                   <Image src={p.img} alt={p.name} fill style={{ objectFit:'cover' }}
                          sizes="(max-width:768px) 50vw,20vw"
                          onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
-                  {p.disc && (
-                    <span style={{
-                      position:'absolute', top:10, left:10, background:'#1e1b4b', color:'#fff',
-                      fontSize:11, fontWeight:900, padding:'3px 9px', borderRadius:7, letterSpacing:.3,
-                    }}>{p.disc}%</span>
-                  )}
-                  <button onClick={() => toggleWish(p.id)} className="wish-btn" aria-label="Wishlist" style={{
-                    position:'absolute', top:10, right:10, width:32, height:32, borderRadius:'50%',
-                    background:'rgba(255,255,255,.92)', backdropFilter:'blur(4px)',
-                    border:'1.5px solid rgba(0,0,0,.07)', display:'flex', alignItems:'center',
-                    justifyContent:'center', cursor:'pointer', fontSize:15,
-                    transition:'transform .2s',
-                  }}
-                  onMouseOver={e => (e.currentTarget as HTMLElement).style.transform='scale(1.12)'}
-                  onMouseOut={e  => (e.currentTarget as HTMLElement).style.transform='scale(1)'}>
-                    {wish.has(p.id)?'❤️':'🤍'}
-                  </button>
+                  <div style={{ position:'absolute', inset:0, bottom:0, height:64, background:'linear-gradient(to top, rgba(0,0,0,0.2), transparent)' }} />
                 </div>
-                <div style={{ padding:'14px 14px 16px', flex:1, display:'flex', flexDirection:'column' }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:5, marginBottom:6,
-                                 fontSize:11.5, fontWeight:700, color:'#5855eb' }}>
-                    <span style={{ width:16, height:16, borderRadius:5, background:'rgba(99,102,241,.1)',
-                                    display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:9 }}>🏪</span>
-                    {p.vendor}
+                <div style={{ padding:16, flex:1, display:'flex', flexDirection:'column' }}>
+                  {/* Vendor */}
+                  <div style={{ display:'flex', alignItems:'center', gap:4, marginBottom:8 }}>
+                    <span style={{ fontSize:10, fontWeight:700, color:'#6b7280', textTransform:'uppercase', letterSpacing:'0.05em' }}>
+                      {p.vendor}
+                    </span>
                   </div>
-                  <h3 style={{ fontSize:13.5, fontWeight:800, color:'#111827', lineHeight:1.4, flex:1,
-                                marginBottom:10, display:'-webkit-box', WebkitLineClamp:2,
+                  <h3 style={{ fontSize:14, fontWeight:600, color:'#1f2937', lineHeight:1.4, flex:1,
+                                marginBottom:8, display:'-webkit-box', WebkitLineClamp:2,
                                 WebkitBoxOrient:'vertical' as any, overflow:'hidden' }}>
                     {p.name}
                   </h3>
-                  <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:8 }}>
-                    <span style={{ fontSize:15.5, fontWeight:900, color:'#111827', letterSpacing:-.3 }}>
-                      PKR {p.price.toLocaleString()}
-                    </span>
-                    {p.orig && (
-                      <span style={{ fontSize:12, color:'#9ca3af', textDecoration:'line-through' }}>
-                        PKR {p.orig.toLocaleString()}
-                      </span>
-                    )}
-                  </div>
-                  <div className="emi-pill" style={{ marginBottom:12 }}>
-                    💳 PKR {p.mo.toLocaleString()}/mo × 12
-                  </div>
-                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:4, fontSize:12, color:'#9ca3af' }}>
-                      <span style={{ color:'#facc15', fontSize:13 }}>★</span>
-                      <span style={{ fontWeight:700, color:'#374151' }}>{p.rat}</span>
-                      <span>({p.rv})</span>
+                  {/* Rating */}
+                  <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:12 }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:2 }}>
+                      {[...Array(5)].map((_, j) => (
+                        <svg key={j} width="12" height="12" viewBox="0 0 24 24" fill={j < Math.floor(p.rat) ? '#fbbf24' : '#e5e7eb'} stroke={j < Math.floor(p.rat) ? '#fbbf24' : '#e5e7eb'}>
+                          <polygon points="12 2 15.09 10.26 24 10.35 17.77 16.01 20.16 24.02 12 18.35 3.84 24.02 6.23 16.01 0 10.35 8.91 10.26 12 2"/>
+                        </svg>
+                      ))}
                     </div>
-                    <button onClick={() => addCart(p.name)} className="btn-sml">
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
-                      </svg>
-                      Add
-                    </button>
+                    <span style={{ fontSize:11, color:'#9ca3af' }}>({p.rv})</span>
+                  </div>
+                  {/* Price */}
+                  <div style={{ marginBottom:8 }}>
+                    <div style={{ display:'flex', alignItems:'baseline', gap:8, marginBottom:4 }}>
+                      <span style={{ fontSize:20, fontWeight:800, color:vendorColor, fontFamily:"'Space Grotesk', sans-serif" }}>
+                        PKR {p.price.toLocaleString()}
+                      </span>
+                      {p.orig && (
+                        <span style={{ fontSize:12, color:'#d1d5db', textDecoration:'line-through', fontWeight:500 }}>
+                          PKR {p.orig.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ display:'flex', alignItems:'center', gap:4 }}>
+                      <span style={{ fontSize:11, color:'#16a34a', fontWeight:600 }}>
+                        💳 PKR {p.mo.toLocaleString()}/mo · 12-month plan
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>

@@ -339,128 +339,133 @@ const ProductCard = ({ product, index }: { product: any; index: number }) => {
     <Link href={`/products/${product.id}`} style={{ textDecoration: "none" }}>
       <div
         style={{
-          background: "white", borderRadius: "20px",
-          border: "1.5px solid rgba(37,99,235,0.08)",
-          boxShadow: "0 4px 16px rgba(0,0,0,0.04)",
-          padding: "12px", position: "relative",
-          transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
+          background: "white", borderRadius: "16px",
+          border: "1px solid #e5e7eb",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+          padding: "0", position: "relative",
+          transition: "all 0.3s ease",
           animation: "cardIn 0.5s ease forwards",
           animationDelay: `${Math.min(index * 50, 400)}ms`,
           opacity: 0, height: "100%", display: "flex", flexDirection: "column",
           fontFamily: "'Plus Jakarta Sans', sans-serif",
+          overflow: "hidden",
         }}
         onMouseEnter={e => {
           const el = e.currentTarget as HTMLElement;
           el.style.transform = "translateY(-6px)";
-          el.style.boxShadow = "0 20px 40px rgba(37,99,235,0.12)";
-          el.style.borderColor = "rgba(37,99,235,0.22)";
+          el.style.boxShadow = "0 20px 40px rgba(0,0,0,0.12)";
         }}
         onMouseLeave={e => {
           const el = e.currentTarget as HTMLElement;
           el.style.transform = "none";
-          el.style.boxShadow = "0 4px 16px rgba(0,0,0,0.04)";
-          el.style.borderColor = "rgba(37,99,235,0.08)";
+          el.style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)";
         }}
       >
-        {/* Image area */}
-        <div style={{
-          height: "160px", borderRadius: "14px", marginBottom: "12px",
-          background: cat.bg, border: `1px solid ${cat.bd}`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          position: "relative", overflow: "hidden",
-        }}>
-          <span style={{ fontSize: "64px", userSelect: "none" }}>{product.image}</span>
-          
-          {/* Badges */}
-          <div style={{ position: "absolute", top: "8px", left: "8px", display: "flex", flexDirection: "column", gap: "4px" }}>
-            {product.badge && (
-              <span style={{
-                padding: "3px 8px", borderRadius: "6px", fontSize: "9px", fontWeight: 800,
-                background: "rgba(255,255,255,0.9)", color: "#2563eb",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.06)", textTransform: "uppercase",
-              }}>{product.badge}</span>
-            )}
-            {discount > 0 && (
-              <span style={{
-                padding: "3px 8px", borderRadius: "6px", fontSize: "9px", fontWeight: 800,
-                background: "#ef4444", color: "white",
-                boxShadow: "0 2px 8px rgba(239,68,68,0.2)",
-              }}>-{discount}%</span>
-            )}
-          </div>
-
-          {/* Wishlist */}
-          <button
-            onClick={e => { e.preventDefault(); setWish(!wish); }}
-            style={{
-              position: "absolute", top: "8px", right: "8px",
-              height: "28px", width: "28px", borderRadius: "50%",
-              background: "rgba(255,255,255,0.9)", border: "none",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-              transition: "transform 0.2s",
-            }}
-            onMouseEnter={e => e.currentTarget.style.transform = "scale(1.1)"}
-            onMouseLeave={e => e.currentTarget.style.transform = "none"}
-          >
-            <Heart size={14} fill={wish ? "#ef4444" : "none"} color={wish ? "#ef4444" : "#94a3b8"} strokeWidth={2.5} />
-          </button>
-
-          {!product.inStock && (
+        {/* Badges */}
+        <div style={{ position: "absolute", top: 12, left: 12, zIndex: 10, display: "flex", flexDirection: "column", gap: 6 }}>
+          {discount > 0 && (
             <div style={{
-              position: "absolute", inset: 0, background: "rgba(255,255,255,0.6)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              backdropFilter: "blur(2px)",
+              background: "linear-gradient(135deg, #ef4444, #f97316)",
+              color: "white", fontSize: 11, fontWeight: 800,
+              padding: "3px 10px", borderRadius: 99,
+              display: "flex", alignItems: "center", gap: 4,
+              boxShadow: "0 3px 10px rgba(239,68,68,0.45)",
             }}>
-              <span style={{
-                padding: "4px 12px", background: "#475569", color: "white",
-                borderRadius: "6px", fontSize: "10px", fontWeight: 800,
-              }}>OUT OF STOCK</span>
+              📉 -{discount}% OFF
+            </div>
+          )}
+          {product.badge && (
+            <div style={{
+              background: "linear-gradient(135deg, #7c3aed, #2563eb)",
+              color: "white", fontSize: 10, fontWeight: 700,
+              padding: "2px 8px", borderRadius: 99,
+              display: "flex", alignItems: "center", gap: 3,
+            }}>
+              ⭐ {product.badge.toUpperCase()}
             </div>
           )}
         </div>
 
-        {/* Info */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
-            <span style={{ fontSize: "10px", fontWeight: 800, color: "#2563eb", textTransform: "uppercase", letterSpacing: "0.02em" }}>
+        {/* Wishlist */}
+        <button
+          onClick={e => { e.preventDefault(); setWish(!wish); }}
+          style={{
+            position: "absolute", top: 12, right: 12,
+            zIndex: 10,
+            height: 32, width: 32, borderRadius: "50%",
+            background: "rgba(255,255,255,0.9)", border: "none",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            transition: "all 0.2s ease",
+            backdropFilter: "blur(4px)",
+          }}
+          onMouseEnter={e => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.transform = "scale(1.1)";
+          }}
+          onMouseLeave={e => {
+            const el = e.currentTarget as HTMLElement;
+            el.style.transform = "scale(1)";
+          }}
+        >
+          <Heart size={16} fill={wish ? "#ef4444" : "none"} color={wish ? "#ef4444" : "#9ca3af"} />
+        </button>
+
+        {/* Image */}
+        <div style={{ position: "relative", aspectRatio: "1", background: "linear-gradient(to bottom right, #f9fafb, #f3f4f6)", overflow: "hidden" }}>
+          <span style={{ fontSize: "64px", userSelect: "none", display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>{product.image}</span>
+          <div style={{ position: "absolute", inset: 0, bottom: 0, height: 64, background: "linear-gradient(to top, rgba(0,0,0,0.2), transparent)" }} />
+        </div>
+
+        {/* Content */}
+        <div style={{ padding: 16 }}>
+          {/* Category */}
+          <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 8 }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>
               {cat.name}
             </span>
-            <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
-              <Star size={10} fill="#f59e0b" color="#f59e0b" />
-              <span style={{ fontSize: "10px", fontWeight: 800, color: "#0f172a" }}>{product.rating}</span>
-            </div>
           </div>
 
-          <h3 style={{
-            fontSize: "14px", fontWeight: 800, color: "#0f172a",
-            margin: "0 0 8px", lineHeight: 1.3, letterSpacing: "-0.01em",
-            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
-            overflow: "hidden", height: "36px",
-          }}>{product.name}</h3>
+          <h3 style={{ fontWeight: 600, color: "#1f2937", fontSize: 14, lineHeight: 1.4, marginBottom: 8, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", cursor: "pointer" }}>
+            {product.name}
+          </h3>
 
-          <div style={{ marginTop: "auto" }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: "6px", marginBottom: "2px" }}>
-              <span style={{ fontSize: "16px", fontWeight: 900, color: "#0f172a" }}>
+          {/* Rating */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+              {[...Array(5)].map((_, j) => (
+                <Star key={j} style={{ width: 12, height: 12, fill: j < Math.floor(product.rating) ? "#fbbf24" : "#e5e7eb", color: j < Math.floor(product.rating) ? "#fbbf24" : "#e5e7eb" }} />
+              ))}
+            </div>
+            <span style={{ fontSize: 11, color: "#9ca3af" }}>({product.reviews.toLocaleString()})</span>
+          </div>
+
+          {/* Price */}
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }}>
+              <span style={{ fontSize: 20, fontWeight: 800, color: cat.id === "smartphones" ? "#ef4444" : cat.id === "laptops" ? "#2563eb" : cat.id === "bikes" ? "#f97316" : cat.id === "appliances" ? "#0369a1" : cat.id === "solar" ? "#ea580c" : cat.id === "furniture" ? "#92400e" : cat.id === "jahez" ? "#be185d" : cat.id === "cars" ? "#0c4a6e" : cat.id === "business" ? "#059669" : "#1f2937", fontFamily: "'Space Grotesk', sans-serif" }}>
                 ₨{product.price.toLocaleString()}
               </span>
               {product.originalPrice && (
-                <span style={{ fontSize: "11px", color: "#94a3b8", textDecoration: "line-through" }}>
+                <span style={{ fontSize: 12, color: "#d1d5db", textDecoration: "line-through", fontWeight: 500 }}>
                   ₨{product.originalPrice.toLocaleString()}
                 </span>
               )}
             </div>
-            
-            <div style={{
-              background: "rgba(37,99,235,0.05)", padding: "6px 10px", borderRadius: "10px",
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-            }}>
-              <span style={{ fontSize: "10px", fontWeight: 700, color: "#64748b" }}>Installment</span>
-              <span style={{ fontSize: "11px", fontWeight: 800, color: "#2563eb" }}>
-                ₨{product.installment.toLocaleString()}/mo
+            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <span style={{ fontSize: 11, color: "#16a34a", fontWeight: 600 }}>
+                💳 ₨{product.installment.toLocaleString()}/mo · 12-month plan
               </span>
             </div>
           </div>
+
+          {!product.inStock && (
+            <div style={{
+              padding: "6px 10px", background: "#475569", color: "white",
+              borderRadius: "6px", fontSize: "10px", fontWeight: 800,
+              textAlign: "center", marginTop: 8,
+            }}>OUT OF STOCK</div>
+          )}
         </div>
       </div>
     </Link>
