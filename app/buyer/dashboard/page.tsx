@@ -9,7 +9,8 @@ import {
   TrendingUp, Star, MapPin, Phone, Mail,
   Home, BarChart3, Truck, Gift, Shield, Eye, Download,
   Calendar, Wallet, ArrowUpRight, MoreHorizontal, Search,
-  ChevronDown, RefreshCw, X, ShoppingCart, Menu, Plus, Edit2, Trash2
+  ChevronDown, RefreshCw, X, ShoppingCart, Menu, Plus, Edit2, Trash2,
+  LogOut, ChevronLeft
 } from "lucide-react";
 
 /* ── FlexiBerry Logo ── */
@@ -42,8 +43,6 @@ const FlexiBerryLogo = ({ size = 40 }: { size?: number }) => (
     <rect width="100" height="100" rx="26" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.15"/>
   </svg>
 );
-
-
 
 /* ── Mock Data ── */
 const initialCustomer = {
@@ -186,55 +185,69 @@ export default function BuyerDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f4ff] flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
       
       {/* ── TOP NAV ── */}
-      <nav className="bg-white border-b border-blue-600/10 shadow-sm sticky top-0 z-50 px-4 md:px-6 h-[60px] flex items-center justify-between">
+      <nav className="bg-white/80 backdrop-blur-xl border-b border-blue-100/50 sticky top-0 z-50 px-4 md:px-6 h-[70px] flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3 md:gap-4">
-          <button 
+          <motion.button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden p-2 hover:bg-gray-100 rounded-lg"
+            className="md:hidden p-2.5 hover:bg-slate-100 rounded-xl transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Menu size={20} className="text-gray-600" />
-          </button>
-          <div className="flex items-center gap-2">
-            <FlexiBerryLogo size={32} />
+            <Menu size={22} className="text-slate-600" />
+          </motion.button>
+          <div className="flex items-center gap-2.5">
+            <FlexiBerryLogo size={36} />
             <div className="hidden sm:block">
               <div className="flex items-baseline gap-0.5">
                 <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-lg bg-gradient-to-br from-blue-600 to-purple-600 bg-clip-text text-transparent">Flexi</span>
-                <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-lg text-[#0f172a]">Berry</span>
+                <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-lg text-slate-900">Berry</span>
               </div>
-              <div className="text-[9px] text-slate-400 font-semibold tracking-wider uppercase -mt-1">Customer Portal</div>
+              <div className="text-[8px] text-slate-400 font-semibold tracking-widest uppercase -mt-1">Dashboard</div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-3">
           <div className="relative hidden lg:flex items-center">
-            <Search size={14} className="absolute left-3 text-slate-400" />
+            <Search size={16} className="absolute left-3 text-slate-400" />
             <input 
               placeholder="Search orders…" 
-              className="h-9 pl-9 pr-3 rounded-xl border-1.5 border-blue-600/15 text-xs outline-none bg-blue-50/30 w-40 xl:w-60 focus:border-blue-500 transition-colors"
+              className="h-10 pl-10 pr-4 rounded-xl border border-slate-200 text-sm outline-none bg-white/50 backdrop-blur-sm w-48 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all"
             />
           </div>
 
-          <button onClick={() => setActiveTab("notifications")} className="relative p-2 hover:bg-gray-100 rounded-xl text-slate-500">
-            <Bell size={18} />
-            <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 border-2 border-white" />
-          </button>
+          <motion.button 
+            onClick={() => setActiveTab("notifications")} 
+            className="relative p-2.5 hover:bg-slate-100 rounded-xl text-slate-500 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Bell size={20} />
+            <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
+          </motion.button>
 
-          <div className="flex items-center gap-2 cursor-pointer p-1 pr-3 rounded-full border-1.5 border-blue-600/15 bg-blue-600/5 hover:bg-blue-600/10 transition-colors">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-[10px] font-extrabold">
+          <motion.div 
+            className="flex items-center gap-2 cursor-pointer p-1.5 pr-3 rounded-full border border-blue-200/50 bg-gradient-to-r from-blue-50/50 to-purple-50/50 hover:border-blue-300 transition-all"
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-xs font-extrabold shadow-md">
               {customer.avatar}
             </div>
-            <span className="text-xs font-bold text-gray-700 hidden sm:inline">{customer.name.split(" ")[0]}</span>
-            <ChevronDown size={12} className="text-slate-400" />
-          </div>
+            <span className="text-sm font-semibold text-slate-700 hidden sm:inline">{customer.name.split(" ")[0]}</span>
+            <ChevronDown size={14} className="text-slate-400" />
+          </motion.div>
 
           <Link href="/">
-            <button className="hidden sm:flex items-center gap-2 bg-gradient-to-br from-blue-600 to-purple-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-blue-600/20 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
-              <ShoppingCart size={13} /> <span className="hidden md:inline">Browse Products</span>
-            </button>
+            <motion.button 
+              className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98, y: 0 }}
+            >
+              <ShoppingCart size={16} /> <span className="hidden md:inline">Browse</span>
+            </motion.button>
           </Link>
         </div>
       </nav>
@@ -249,142 +262,206 @@ export default function BuyerDashboardPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
             />
           )}
         </AnimatePresence>
 
-        {/* ── SIDEBAR ── */}
-        <aside className={`
-          fixed md:sticky top-[60px] left-0 h-[calc(100vh-60px)] z-40
-          w-[240px] bg-white border-r border-blue-600/10 p-4 flex flex-col gap-1 transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        `}>
-          {nav.map(item => {
-            const active = activeTab === item.id;
-            const Icon = item.icon;
-            return (
-              <button 
-                key={item.id} 
-                onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
-                className={`flex items-center justify-between p-3 rounded-xl transition-all ${active ? 'bg-blue-600/10 text-blue-600' : 'text-slate-500 hover:bg-gray-50'}`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon size={18} strokeWidth={active ? 2.5 : 2} />
-                  <span className={`text-sm ${active ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
-                </div>
-                {item.badge && (
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold ${active ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'}`}>
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-          
-          <div className="mt-auto pt-4 border-t border-gray-100">
-            <button className="flex w-full items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 font-bold text-sm transition-colors">
-              <RefreshCw size={18} /> Logout
-            </button>
+        {/* ── FIXED SIDEBAR ── */}
+        <motion.aside 
+          initial={false}
+          animate={{ x: sidebarOpen ? 0 : -280 }}
+          transition={{ type: "spring", damping: 20, stiffness: 300 }}
+          className={`
+            fixed md:static md:translate-x-0 top-[70px] left-0 bottom-0 z-40
+            w-72 bg-white/95 backdrop-blur-xl border-r border-blue-100/50 p-6 flex flex-col gap-2 
+            overflow-y-auto md:overflow-y-visible
+          `}
+        >
+          {/* Navigation Items */}
+          <div className="space-y-1">
+            {nav.map(item => {
+              const active = activeTab === item.id;
+              const Icon = item.icon;
+              return (
+                <motion.button 
+                  key={item.id} 
+                  onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
+                  className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all ${
+                    active 
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-600/20' 
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon size={20} strokeWidth={active ? 2.5 : 2} />
+                    <span className={`text-sm font-semibold`}>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <motion.span 
+                      className={`text-xs px-2.5 py-1 rounded-full font-bold ${
+                        active 
+                          ? 'bg-white/30 text-white' 
+                          : 'bg-blue-100 text-blue-600'
+                      }`}
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      {item.badge}
+                    </motion.span>
+                  )}
+                </motion.button>
+              );
+            })}
           </div>
-        </aside>
+          
+          {/* Divider */}
+          <div className="my-4 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+
+          {/* User Profile Section */}
+          <div className="mt-auto pt-4 space-y-3">
+            <div className="px-4 py-3 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border border-blue-100/50">
+              <p className="text-xs font-bold text-slate-500 uppercase mb-1">Member Status</p>
+              <p className="text-sm font-bold text-slate-900">{customer.tier}</p>
+              <p className="text-xs text-slate-500 mt-1">{customer.loyaltyPoints} loyalty points</p>
+            </div>
+            
+            <motion.button 
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-semibold text-sm transition-all"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <LogOut size={18} /> Logout
+            </motion.button>
+          </div>
+        </motion.aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto w-full overflow-y-auto">
+        <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full overflow-y-auto">
           
           {/* ════════ OVERVIEW tab ════════ */}
           {activeTab === "overview" && (
-            <div className="space-y-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-8"
+            >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-extrabold text-slate-900">Welcome back, {customer.name.split(" ")[0]}! 👋</h1>
-                  <p className="text-sm text-slate-500">Here's what's happening with your orders and installments.</p>
-                </div>
-                <div className="flex items-center gap-2 bg-white p-1 rounded-2xl border border-blue-600/10 shadow-sm">
-                  <button className="px-4 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm">Last 30 Days</button>
-                  <button className="px-4 py-2 rounded-xl text-xs font-bold text-slate-500 hover:bg-gray-50">All Time</button>
+                  <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900">Welcome back, {customer.name.split(" ")[0]}! 👋</h1>
+                  <p className="text-slate-500 mt-2">Here's your shopping dashboard at a glance</p>
                 </div>
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {[
-                  { label: "Total Spent", val: formatPKR(totalSpend), icon: Wallet, color: "#2563eb", bg: "#dbeafe" },
-                  { label: "Active Orders", val: orders.filter(o=>o.status!=='delivered').length, icon: ShoppingBag, color: "#7c3aed", bg: "#ede9fe" },
-                  { label: "Monthly Due", val: formatPKR(totalMonthlyDue), icon: Calendar, color: "#d97706", bg: "#fef3c7" },
-                  { label: "Loyalty Points", val: customer.loyaltyPoints, icon: Star, color: "#059669", bg: "#d1fae5" },
+                  { label: "Total Spent", val: formatPKR(totalSpend), icon: Wallet, color: "#2563eb", bg: "#dbeafe", tab: "orders" },
+                  { label: "Active Orders", val: orders.filter(o=>o.status!=='delivered').length, icon: ShoppingBag, color: "#7c3aed", bg: "#ede9fe", tab: "orders" },
+                  { label: "Monthly Due", val: formatPKR(totalMonthlyDue), icon: Calendar, color: "#d97706", bg: "#fef3c7", tab: "installments" },
+                  { label: "Loyalty Points", val: customer.loyaltyPoints, icon: Star, color: "#059669", bg: "#d1fae5", tab: "overview" },
                 ].map(s => (
-                  <div key={s.label} className="bg-white p-5 rounded-2xl border border-blue-600/5 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => {
-                    if (s.label === "Active Orders") setActiveTab("orders");
-                    if (s.label === "Monthly Due") setActiveTab("installments");
-                  }}>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="p-2 rounded-xl" style={{ background: s.bg }}>
-                        <s.icon size={20} style={{ color: s.color }} />
-                      </div>
-                      <ArrowUpRight size={14} className="text-slate-300" />
+                  <motion.div 
+                    key={s.label} 
+                    className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-blue-100/50 shadow-sm hover:shadow-lg transition-all cursor-pointer group"
+                    onClick={() => setActiveTab(s.tab as Tab)}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <motion.div 
+                        className="p-3 rounded-xl"
+                        style={{ background: s.bg }}
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                      >
+                        <s.icon size={24} style={{ color: s.color }} />
+                      </motion.div>
+                      <ArrowUpRight size={16} className="text-slate-300 group-hover:text-slate-400 transition-colors" />
                     </div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{s.label}</p>
-                    <p className="text-xl font-extrabold text-slate-900 mt-1">{s.val}</p>
-                  </div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{s.label}</p>
+                    <p className="text-2xl font-extrabold text-slate-900">{s.val}</p>
+                  </motion.div>
                 ))}
               </div>
 
               {/* Two Column Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Orders */}
-                <div className="lg:col-span-2 bg-white rounded-2xl border border-blue-600/5 shadow-sm overflow-hidden">
-                  <div className="p-5 border-b border-gray-50 flex items-center justify-between">
-                    <h3 className="font-bold text-slate-900">Recent Orders</h3>
-                    <button onClick={() => setActiveTab("orders")} className="text-xs font-bold text-blue-600 hover:underline">View All</button>
+                <motion.div 
+                  className="lg:col-span-2 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-sm overflow-hidden"
+                  whileHover={{ shadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+                >
+                  <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <h3 className="font-bold text-lg text-slate-900">Recent Orders</h3>
+                    <motion.button 
+                      onClick={() => setActiveTab("orders")} 
+                      className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                      whileHover={{ x: 4 }}
+                    >
+                      View All →
+                    </motion.button>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left">
                       <thead>
                         <tr className="bg-slate-50/50">
-                          <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Product</th>
-                          <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider hidden sm:table-cell">Date</th>
-                          <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">Status</th>
-                          <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">Amount</th>
+                          <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Product</th>
+                          <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Date</th>
+                          <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                          <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Amount</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-50">
+                      <tbody className="divide-y divide-slate-100">
                         {orders.slice(0, 3).map(o => {
                           const status = statusConfig[o.status];
                           return (
-                            <tr key={o.id} className="hover:bg-slate-50/50 transition-colors">
-                              <td className="p-4">
+                            <motion.tr 
+                              key={o.id} 
+                              className="hover:bg-slate-50/50 transition-colors"
+                              whileHover={{ x: 4 }}
+                            >
+                              <td className="px-6 py-4">
                                 <div className="flex items-center gap-3">
-                                  <img src={o.image} className="w-10 h-10 rounded-lg object-cover bg-gray-100" />
+                                  <img src={o.image} className="w-12 h-12 rounded-lg object-cover bg-slate-100" />
                                   <div>
-                                    <p className="text-xs font-bold text-slate-900 line-clamp-1">{o.product}</p>
-                                    <p className="text-[10px] text-slate-400">{o.id}</p>
+                                    <p className="text-sm font-semibold text-slate-900 line-clamp-1">{o.product}</p>
+                                    <p className="text-xs text-slate-400">{o.id}</p>
                                   </div>
                                 </div>
                               </td>
-                              <td className="p-4 text-xs text-slate-500 hidden sm:table-cell">{o.date}</td>
-                              <td className="p-4">
-                                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold" style={{ background: status.bg, color: status.color }}>
-                                  <status.icon size={10} /> {status.label}
+                              <td className="px-6 py-4 text-sm text-slate-500 hidden sm:table-cell">{o.date}</td>
+                              <td className="px-6 py-4">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold" style={{ background: status.bg, color: status.color }}>
+                                  <status.icon size={12} /> {status.label}
                                 </span>
                               </td>
-                              <td className="p-4 text-xs font-bold text-slate-900 text-right">{formatPKR(o.price)}</td>
-                            </tr>
+                              <td className="px-6 py-4 text-sm font-bold text-slate-900 text-right">{formatPKR(o.price)}</td>
+                            </motion.tr>
                           );
                         })}
                       </tbody>
                     </table>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Recent Notifications */}
-                <div className="bg-white rounded-2xl border border-blue-600/5 shadow-sm overflow-hidden">
-                  <div className="p-5 border-b border-gray-50 flex items-center justify-between">
-                    <h3 className="font-bold text-slate-900">Recent Notifications</h3>
-                    <button onClick={() => setActiveTab("notifications")} className="text-xs font-bold text-blue-600 hover:underline">View All</button>
+                <motion.div 
+                  className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-sm overflow-hidden"
+                  whileHover={{ shadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+                >
+                  <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <h3 className="font-bold text-lg text-slate-900">Recent Updates</h3>
+                    <motion.button 
+                      onClick={() => setActiveTab("notifications")} 
+                      className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                      whileHover={{ x: 4 }}
+                    >
+                      All →
+                    </motion.button>
                   </div>
-                  <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
-                    {notifications.slice(0, 4).map(n => {
+                  <div className="p-6 space-y-3 max-h-80 overflow-y-auto">
+                    {notifications.slice(0, 4).map((n, idx) => {
                       const NotifIcon = n.icon;
                       const typeColors = {
                         warning: { bg: '#fef3c7', color: '#d97706', icon: '#d97706' },
@@ -393,34 +470,43 @@ export default function BuyerDashboardPage() {
                       };
                       const colors = typeColors[n.type as keyof typeof typeColors];
                       return (
-                        <div key={n.id} className="flex gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
-                          <div className="p-2 rounded-lg flex-shrink-0" style={{ background: colors.bg }}>
-                            <NotifIcon size={14} style={{ color: colors.icon }} />
-                          </div>
+                        <motion.div 
+                          key={n.id} 
+                          className="flex gap-3 p-3 rounded-xl bg-slate-50/50 hover:bg-slate-100 transition-colors"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.05 }}
+                          whileHover={{ x: 4 }}
+                        >
+                          <motion.div 
+                            className="p-2 rounded-lg flex-shrink-0"
+                            style={{ background: colors.bg }}
+                            whileHover={{ scale: 1.1 }}
+                          >
+                            <NotifIcon size={16} style={{ color: colors.icon }} />
+                          </motion.div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-medium text-slate-700 leading-relaxed line-clamp-2">{n.text}</p>
-                            <p className="text-[10px] text-slate-400 mt-1">{n.time}</p>
+                            <p className="text-[11px] text-slate-400 mt-1">{n.time}</p>
                           </div>
-                        </div>
+                        </motion.div>
                       );
                     })}
                   </div>
-                </div>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ════════ ORDERS tab ════════ */}
           {activeTab === "orders" && (
-            <div className="space-y-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-extrabold text-slate-900">My Orders</h1>
-                <div className="flex items-center gap-2">
-                  <div className="relative hidden sm:block">
-                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input placeholder="Filter orders..." className="h-9 pl-9 pr-3 rounded-xl border-1.5 border-blue-600/15 text-xs outline-none bg-white w-48" />
-                  </div>
-                </div>
+                <h1 className="text-3xl font-extrabold text-slate-900">My Orders</h1>
               </div>
 
               <div className="space-y-4">
@@ -428,211 +514,279 @@ export default function BuyerDashboardPage() {
                   const status = statusConfig[o.status];
                   const isExpanded = expandedOrder === o.id;
                   return (
-                    <div key={o.id} className="bg-white rounded-2xl border border-blue-600/5 shadow-sm overflow-hidden transition-all">
-                      <div className="p-4 md:p-5 flex flex-wrap md:flex-nowrap items-center gap-4">
-                        <img src={o.image} className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover bg-gray-100" />
+                    <motion.div 
+                      key={o.id} 
+                      className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-sm overflow-hidden"
+                      whileHover={{ y: -2, shadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+                    >
+                      <motion.div 
+                        className="p-5 md:p-6 flex flex-wrap md:flex-nowrap items-center gap-4 cursor-pointer"
+                        onClick={() => setExpandedOrder(isExpanded ? null : o.id)}
+                      >
+                        <img src={o.image} className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover bg-slate-100" />
                         <div className="flex-1 min-w-[200px]">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{o.id}</span>
-                            <span className="text-[10px] text-slate-400 font-medium">{o.date}</span>
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">{o.id}</span>
+                            <span className="text-xs text-slate-400 font-medium">{o.date}</span>
                           </div>
-                          <h4 className="font-bold text-slate-900 text-sm md:text-base">{o.product}</h4>
-                          <p className="text-xs text-slate-500 mt-0.5 flex items-center gap-1"><Home size={10} /> {o.shop}</p>
+                          <h4 className="font-bold text-slate-900 text-base">{o.product}</h4>
+                          <p className="text-sm text-slate-500 mt-1 flex items-center gap-1"><Home size={12} /> {o.shop}</p>
                         </div>
                         <div className="flex flex-col items-end gap-2 ml-auto">
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold" style={{ background: status.bg, color: status.color }}>
-                            <status.icon size={12} /> {status.label}
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold" style={{ background: status.bg, color: status.color }}>
+                            <status.icon size={14} /> {status.label}
                           </span>
                           <p className="font-extrabold text-slate-900">{formatPKR(o.price)}</p>
                         </div>
-                        <button 
-                          onClick={() => setExpandedOrder(isExpanded ? null : o.id)}
-                          className="p-2 hover:bg-gray-50 rounded-xl text-slate-400"
+                        <motion.button 
+                          className="p-2 hover:bg-slate-100 rounded-xl text-slate-400"
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
                         >
-                          <ChevronDown size={20} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
-                        </button>
-                      </div>
+                          <ChevronDown size={22} />
+                        </motion.button>
+                      </motion.div>
                       
                       {isExpanded && (
-                        <div className="px-5 pb-5 pt-0 border-t border-gray-50 animate-in slide-in-from-top-2 duration-300">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-5">
+                        <motion.div 
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="px-6 pb-6 pt-2 border-t border-slate-100"
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
                             <div className="space-y-3">
-                              <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Payment Plan</h5>
-                              <div className="bg-slate-50 p-3 rounded-xl space-y-2">
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-slate-500">Total Installments</span>
+                              <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Payment Plan</h5>
+                              <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-4 rounded-xl space-y-3 border border-blue-100/50">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-slate-600">Total Installments</span>
                                   <span className="font-bold text-slate-900">{o.installments.total} months</span>
                                 </div>
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-slate-500">Paid to date</span>
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-slate-600">Paid to date</span>
                                   <span className="font-bold text-emerald-600">{o.installments.paid} paid</span>
                                 </div>
-                                <div className="w-full h-1.5 bg-gray-200 rounded-full mt-2 overflow-hidden">
-                                  <div className="h-full bg-blue-600" style={{ width: `${(o.installments.paid/o.installments.total)*100}%` }} />
+                                <div className="w-full h-2 bg-slate-200 rounded-full mt-2 overflow-hidden">
+                                  <motion.div 
+                                    className="h-full bg-gradient-to-r from-blue-600 to-purple-600"
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${(o.installments.paid/o.installments.total)*100}%` }}
+                                    transition={{ duration: 0.8, delay: 0.2 }}
+                                  />
                                 </div>
                               </div>
                             </div>
                             <div className="space-y-3">
-                              <h5 className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Next Payment</h5>
+                              <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Next Payment</h5>
                               {o.nextDue ? (
-                                <div className="bg-amber-50 p-3 rounded-xl border border-amber-100">
-                                  <p className="text-xs font-bold text-amber-900">{formatPKR(o.installments.amount)}</p>
-                                  <p className="text-[10px] text-amber-700 mt-1 flex items-center gap-1"><Clock size={10} /> Due on {o.nextDue}</p>
+                                <div className="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                                  <p className="text-sm font-bold text-amber-900">{formatPKR(o.installments.amount)}</p>
+                                  <p className="text-xs text-amber-700 mt-2 flex items-center gap-1"><Clock size={12} /> Due on {o.nextDue}</p>
                                 </div>
                               ) : (
-                                <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
-                                  <p className="text-[10px] text-emerald-700 font-bold flex items-center gap-1"><CheckCircle2 size={10} /> Plan Fully Paid</p>
+                                <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+                                  <p className="text-xs text-emerald-700 font-bold flex items-center gap-1"><CheckCircle2 size={12} /> Plan Fully Paid</p>
                                 </div>
                               )}
                             </div>
-                            <div className="flex flex-col gap-2 justify-end">
-                              <button className="w-full h-10 bg-slate-900 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
-                                <Eye size={14} /> View Invoice
-                              </button>
-                              <button className="w-full h-10 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
-                                <Truck size={14} /> Track Order
-                              </button>
+                            <div className="flex flex-col gap-3 justify-end">
+                              <motion.button 
+                                className="w-full bg-slate-900 text-white rounded-xl text-sm font-semibold py-3 flex items-center justify-center gap-2 hover:bg-slate-800 transition-all"
+                                whileHover={{ scale: 1.02, y: -2 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                <Eye size={16} /> View Invoice
+                              </motion.button>
+                              <motion.button 
+                                className="w-full border-2 border-slate-200 text-slate-700 rounded-xl text-sm font-semibold py-3 flex items-center justify-center gap-2 hover:bg-slate-50 transition-all"
+                                whileHover={{ scale: 1.02, y: -2 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                <Truck size={16} /> Track Order
+                              </motion.button>
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
                       )}
-                    </div>
+                    </motion.div>
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ════════ INSTALLMENTS tab ════════ */}
           {activeTab === "installments" && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-2xl font-extrabold text-slate-900">My Installments</h1>
-                  <p className="text-sm text-slate-500 mt-1">Manage and track all your active payment plans</p>
-                </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div>
+                <h1 className="text-3xl font-extrabold text-slate-900">My Installments</h1>
+                <p className="text-slate-500 mt-2">Manage and track all your active payment plans</p>
               </div>
 
               {/* Summary Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-2xl border border-blue-200">
-                  <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Active Plans</p>
-                  <p className="text-3xl font-extrabold text-blue-900">{activeInstallments.length}</p>
-                </div>
-                <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-5 rounded-2xl border border-amber-200">
-                  <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-2">Total Monthly Due</p>
-                  <p className="text-3xl font-extrabold text-amber-900">{formatPKR(totalMonthlyDue)}</p>
-                </div>
-                <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-5 rounded-2xl border border-emerald-200">
-                  <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">Fully Paid</p>
-                  <p className="text-3xl font-extrabold text-emerald-900">{orders.filter(o => o.installments.paid === o.installments.total).length}</p>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                {[
+                  { title: "Active Plans", value: activeInstallments.length, gradient: "from-blue-600 to-blue-500", icon: CreditCard },
+                  { title: "Total Monthly Due", value: formatPKR(totalMonthlyDue), gradient: "from-amber-600 to-amber-500", icon: Calendar },
+                  { title: "Fully Paid", value: orders.filter(o => o.installments.paid === o.installments.total).length, gradient: "from-emerald-600 to-emerald-500", icon: CheckCircle2 },
+                ].map((card, idx) => (
+                  <motion.div 
+                    key={idx}
+                    className={`bg-gradient-to-br ${card.gradient} text-white p-6 rounded-2xl shadow-lg`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <p className="text-sm font-semibold opacity-90">{card.title}</p>
+                      <card.icon size={24} className="opacity-60" />
+                    </div>
+                    <p className="text-3xl font-extrabold">{card.value}</p>
+                  </motion.div>
+                ))}
               </div>
 
               {/* Installment Cards */}
               <div className="space-y-4">
-                {orders.map(o => (
-                  <div key={o.id} className="bg-white rounded-2xl border border-blue-600/5 shadow-sm overflow-hidden">
-                    <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                {orders.map((o, idx) => (
+                  <motion.div 
+                    key={o.id} 
+                    className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-sm overflow-hidden"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    whileHover={{ y: -2, shadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+                  >
+                    <motion.div 
+                      className="p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer"
+                      onClick={() => setExpandedInstallment(expandedInstallment === o.id ? null : o.id)}
+                    >
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <img src={o.image} className="w-12 h-12 rounded-lg object-cover bg-gray-100" />
+                        <div className="flex items-center gap-3 mb-3">
+                          <img src={o.image} className="w-14 h-14 rounded-lg object-cover bg-slate-100" />
                           <div>
-                            <h4 className="font-bold text-slate-900 text-sm">{o.product}</h4>
+                            <h4 className="font-bold text-slate-900 text-base">{o.product}</h4>
                             <p className="text-xs text-slate-500">{o.id}</p>
                           </div>
                         </div>
                       </div>
-                      <div className="grid grid-cols-3 gap-4 md:gap-6 text-center">
+                      <div className="grid grid-cols-3 gap-6 md:gap-8 text-center">
                         <div>
-                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Total</p>
-                          <p className="text-sm font-extrabold text-slate-900">{o.installments.total}M</p>
+                          <p className="text-xs font-bold text-slate-500 uppercase mb-1">Total</p>
+                          <p className="text-lg font-extrabold text-slate-900">{o.installments.total}M</p>
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Paid</p>
-                          <p className="text-sm font-extrabold text-emerald-600">{o.installments.paid}</p>
+                          <p className="text-xs font-bold text-slate-500 uppercase mb-1">Paid</p>
+                          <p className="text-lg font-extrabold text-emerald-600">{o.installments.paid}</p>
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Remaining</p>
-                          <p className="text-sm font-extrabold text-amber-600">{o.installments.total - o.installments.paid}</p>
+                          <p className="text-xs font-bold text-slate-500 uppercase mb-1">Remaining</p>
+                          <p className="text-lg font-extrabold text-amber-600">{o.installments.total - o.installments.paid}</p>
                         </div>
                       </div>
-                      <button 
-                        onClick={() => setExpandedInstallment(expandedInstallment === o.id ? null : o.id)}
-                        className="p-2 hover:bg-gray-50 rounded-xl text-slate-400"
+                      <motion.button 
+                        className="p-2 hover:bg-slate-100 rounded-xl text-slate-400"
+                        animate={{ rotate: expandedInstallment === o.id ? 180 : 0 }}
                       >
-                        <ChevronDown size={20} className={`transition-transform duration-300 ${expandedInstallment === o.id ? 'rotate-180' : ''}`} />
-                      </button>
-                    </div>
+                        <ChevronDown size={22} />
+                      </motion.button>
+                    </motion.div>
 
                     {/* Progress Bar */}
-                    <div className="px-5 py-3 bg-slate-50 border-t border-gray-100">
-                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-blue-600 to-purple-600" style={{ width: `${(o.installments.paid/o.installments.total)*100}%` }} />
+                    <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100">
+                      <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                        <motion.div 
+                          className="h-full bg-gradient-to-r from-blue-600 to-purple-600"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${(o.installments.paid/o.installments.total)*100}%` }}
+                          transition={{ duration: 0.8, delay: 0.2 }}
+                        />
                       </div>
-                      <p className="text-xs text-slate-500 mt-2">{Math.round((o.installments.paid/o.installments.total)*100)}% Complete</p>
+                      <p className="text-xs text-slate-500 mt-2 font-medium">{Math.round((o.installments.paid/o.installments.total)*100)}% Complete</p>
                     </div>
 
                     {/* Expanded Details */}
                     {expandedInstallment === o.id && (
-                      <div className="px-5 py-5 border-t border-gray-100 space-y-4 animate-in slide-in-from-top-2 duration-300">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="px-6 py-6 border-t border-slate-100 space-y-5"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-xl border border-blue-200">
                             <p className="text-xs font-bold text-blue-600 uppercase mb-2">Monthly Payment</p>
                             <p className="text-2xl font-extrabold text-blue-900">{formatPKR(o.installments.amount)}</p>
                           </div>
                           {o.nextDue && (
-                            <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                            <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-5 rounded-xl border border-amber-200">
                               <p className="text-xs font-bold text-amber-600 uppercase mb-2">Next Due Date</p>
                               <p className="text-2xl font-extrabold text-amber-900">{o.nextDue}</p>
                             </div>
                           )}
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           <h5 className="text-xs font-bold text-slate-600 uppercase">Payment Schedule</h5>
-                          <div className="grid grid-cols-6 gap-1">
+                          <div className="grid grid-cols-6 gap-2">
                             {Array.from({ length: o.installments.total }).map((_, i) => (
-                              <div 
+                              <motion.div 
                                 key={i}
-                                className={`h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all ${
+                                className={`h-10 rounded-lg flex items-center justify-center text-xs font-bold transition-all ${
                                   i < o.installments.paid 
                                     ? 'bg-emerald-500 text-white' 
                                     : i === o.installments.paid
                                     ? 'bg-amber-500 text-white border-2 border-amber-600'
-                                    : 'bg-gray-200 text-slate-500'
+                                    : 'bg-slate-200 text-slate-500'
                                 }`}
+                                whileHover={{ scale: 1.1 }}
                               >
                                 {i + 1}
-                              </div>
+                              </motion.div>
                             ))}
                           </div>
                         </div>
-                        <div className="flex gap-3">
-                          <button className="flex-1 h-10 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-colors">
+                        <div className="flex gap-3 pt-2">
+                          <motion.button 
+                            className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-sm font-semibold hover:shadow-lg transition-all"
+                            whileHover={{ scale: 1.02, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
                             Pay Now
-                          </button>
-                          <button className="flex-1 h-10 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors">
+                          </motion.button>
+                          <motion.button 
+                            className="flex-1 h-12 border-2 border-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-all"
+                            whileHover={{ scale: 1.02, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
                             View Details
-                          </button>
+                          </motion.button>
                         </div>
-                      </div>
+                      </motion.div>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ════════ NOTIFICATIONS tab ════════ */}
           {activeTab === "notifications" && (
-            <div className="space-y-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
               <div>
-                <h1 className="text-2xl font-extrabold text-slate-900">Notifications</h1>
-                <p className="text-sm text-slate-500 mt-1">Stay updated with your orders and account activity</p>
+                <h1 className="text-3xl font-extrabold text-slate-900">Notifications</h1>
+                <p className="text-slate-500 mt-2">Stay updated with your orders and account activity</p>
               </div>
 
               <div className="space-y-3">
-                {notifications.map(n => {
+                {notifications.map((n, idx) => {
                   const NotifIcon = n.icon;
                   const typeColors = {
                     warning: { bg: '#fef3c7', border: '#fcd34d', color: '#d97706', icon: '#d97706' },
@@ -646,91 +800,132 @@ export default function BuyerDashboardPage() {
                       key={n.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="bg-white rounded-2xl border border-blue-600/5 shadow-sm p-5 flex gap-4 hover:shadow-md transition-all"
+                      transition={{ delay: idx * 0.05 }}
+                      className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-sm p-5 flex gap-4 hover:shadow-lg transition-all"
+                      whileHover={{ y: -2, x: 4 }}
                     >
-                      <div className="p-3 rounded-xl flex-shrink-0 h-fit" style={{ background: colors.bg, borderLeft: `4px solid ${colors.border}` }}>
-                        <NotifIcon size={20} style={{ color: colors.icon }} />
-                      </div>
+                      <motion.div 
+                        className="p-3 rounded-xl flex-shrink-0 h-fit"
+                        style={{ background: colors.bg, borderLeft: `4px solid ${colors.border}` }}
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        <NotifIcon size={22} style={{ color: colors.icon }} />
+                      </motion.div>
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-slate-900">{n.text}</p>
+                        <p className="text-base font-bold text-slate-900">{n.text}</p>
                         <p className="text-xs text-slate-400 mt-2">{n.time}</p>
                       </div>
-                      <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                        <X size={18} />
-                      </button>
+                      <motion.button 
+                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <X size={20} />
+                      </motion.button>
                     </motion.div>
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ════════ SETTINGS / PROFILE tab ════════ */}
           {activeTab === "settings" && (
-            <div className="space-y-6 max-w-4xl">
-              <h1 className="text-2xl font-extrabold text-slate-900">Account Settings</h1>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6 max-w-4xl"
+            >
+              <h1 className="text-3xl font-extrabold text-slate-900">Account Settings</h1>
               
               {/* Profile Card */}
-              <div className="bg-white rounded-2xl p-6 border border-blue-600/5 shadow-sm space-y-6">
-                <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-gray-100">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-blue-100/50 shadow-sm space-y-6">
+                <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-slate-100">
                   <div className="relative">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-2xl font-extrabold shadow-lg">
+                    <motion.div 
+                      className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-3xl font-extrabold shadow-lg"
+                      whileHover={{ scale: 1.05 }}
+                    >
                       {customer.avatar}
-                    </div>
-                    <button className="absolute -bottom-1 -right-1 p-1.5 bg-white rounded-full border border-gray-100 shadow-md text-blue-600 hover:scale-110 transition-transform">
-                      <Edit2 size={14} />
-                    </button>
+                    </motion.div>
+                    <motion.button 
+                      className="absolute -bottom-2 -right-2 p-2 bg-white rounded-full border-2 border-blue-600 shadow-lg text-blue-600 hover:bg-blue-50 transition-colors"
+                      whileHover={{ scale: 1.15 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Edit2 size={16} />
+                    </motion.button>
                   </div>
                   <div className="text-center sm:text-left">
-                    <h3 className="text-lg font-extrabold text-slate-900">{customer.name}</h3>
-                    <p className="text-xs text-slate-400 font-medium">{customer.tier} · Member since {customer.memberSince}</p>
-                    <div className="flex gap-2 mt-3 justify-center sm:justify-start">
-                      <button className="px-4 py-1.5 bg-blue-600 text-white text-[11px] font-bold rounded-lg hover:bg-blue-700 transition-colors">Update Photo</button>
-                      <button className="px-4 py-1.5 border border-gray-200 text-slate-600 text-[11px] font-bold rounded-lg hover:bg-gray-50 transition-colors">Remove</button>
+                    <h3 className="text-2xl font-extrabold text-slate-900">{customer.name}</h3>
+                    <p className="text-sm text-slate-500 font-medium mt-1">{customer.tier} · Member since {customer.memberSince}</p>
+                    <div className="flex gap-2 mt-4 justify-center sm:justify-start">
+                      <motion.button 
+                        className="px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-lg shadow-md hover:shadow-lg transition-all"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Update Photo
+                      </motion.button>
+                      <motion.button 
+                        className="px-5 py-2 border-2 border-slate-300 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-50 transition-all"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Remove
+                      </motion.button>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[
                     { label: "Full Name", value: customer.name, icon: User, name: "name" },
                     { label: "Email Address", value: customer.email, icon: Mail, name: "email" },
                     { label: "Phone Number", value: customer.phone, icon: Phone, name: "phone" },
                     { label: "City", value: customer.city, icon: MapPin, name: "city" },
                   ].map((field) => (
-                    <div key={field.label} className="space-y-2">
-                      <label className="text-xs font-bold text-slate-700 ml-1">{field.label}</label>
+                    <motion.div 
+                      key={field.label} 
+                      className="space-y-2"
+                      whileHover={{ y: -2 }}
+                    >
+                      <label className="text-sm font-bold text-slate-700 ml-1">{field.label}</label>
                       <div className="relative">
-                        <field.icon size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <field.icon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input 
                           defaultValue={field.value} 
-                          className="w-full h-11 pl-10 pr-4 rounded-xl border border-blue-600/10 bg-blue-50/20 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                          className="w-full h-12 pl-12 pr-4 rounded-xl border-2 border-slate-200 bg-white text-base outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all"
                         />
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
                 
-                <div className="pt-2">
-                  <button className="px-6 h-11 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg shadow-slate-900/10 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all">
-                    Save Changes
-                  </button>
-                </div>
+                <motion.button 
+                  className="px-8 h-12 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-xl text-base font-bold shadow-lg hover:shadow-xl transition-all"
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Save Changes
+                </motion.button>
               </div>
 
               {/* Address Section */}
-              <div className="bg-white rounded-2xl p-6 border border-blue-600/5 shadow-sm space-y-6">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-blue-100/50 shadow-sm space-y-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <MapPin size={18} className="text-blue-600" />
-                    <h3 className="font-bold text-slate-900">Delivery Addresses</h3>
+                  <div className="flex items-center gap-3">
+                    <MapPin size={24} className="text-blue-600" />
+                    <h3 className="font-bold text-lg text-slate-900">Delivery Addresses</h3>
                   </div>
-                  <button 
+                  <motion.button 
                     onClick={() => { setEditingAddress(null); setIsAddingAddress(true); }}
-                    className="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
+                    className="flex items-center gap-2 text-sm font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-all"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <Plus size={14} /> Add New
-                  </button>
+                    <Plus size={16} /> Add New
+                  </motion.button>
                 </div>
 
                 {(isAddingAddress || editingAddress) && (
@@ -738,120 +933,164 @@ export default function BuyerDashboardPage() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     onSubmit={handleSaveAddress}
-                    className="p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-4"
+                    className="p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl border-2 border-blue-200 space-y-4"
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-slate-500 uppercase ml-1">Address Type</label>
-                        <select name="type" defaultValue={editingAddress?.type || "Home"} className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-blue-500">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-600 uppercase ml-1">Address Type</label>
+                        <select name="type" defaultValue={editingAddress?.type || "Home"} className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10">
                           <option>Home</option>
                           <option>Office</option>
                           <option>Other</option>
                         </select>
                       </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-slate-500 uppercase ml-1">Street Address</label>
-                        <input name="street" defaultValue={editingAddress?.street} required placeholder="House #, Street, Area" className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-blue-500" />
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-600 uppercase ml-1">Street Address</label>
+                        <input name="street" defaultValue={editingAddress?.street} required placeholder="House #, Street, Area" className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10" />
                       </div>
-                      <div className="space-y-1.5">
-                        <label className="text-[11px] font-bold text-slate-500 uppercase ml-1">City</label>
-                        <input name="city" defaultValue={editingAddress?.city} required className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-blue-500" />
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-600 uppercase ml-1">City</label>
+                        <input name="city" defaultValue={editingAddress?.city} required className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10" />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-1.5">
-                          <label className="text-[11px] font-bold text-slate-500 uppercase ml-1">Province</label>
-                          <input name="province" defaultValue={editingAddress?.province} required className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-blue-500" />
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-600 uppercase ml-1">Province</label>
+                          <input name="province" defaultValue={editingAddress?.province} required className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10" />
                         </div>
-                        <div className="space-y-1.5">
-                          <label className="text-[11px] font-bold text-slate-500 uppercase ml-1">ZIP Code</label>
-                          <input name="zip" defaultValue={editingAddress?.zip} required className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-blue-500" />
+                        <div className="space-y-2">
+                          <label className="text-xs font-bold text-slate-600 uppercase ml-1">ZIP Code</label>
+                          <input name="zip" defaultValue={editingAddress?.zip} required className="w-full h-11 px-4 rounded-xl border-2 border-slate-200 bg-white text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10" />
                         </div>
                       </div>
                     </div>
                     <div className="flex justify-end gap-3 pt-2">
-                      <button type="button" onClick={() => { setIsAddingAddress(false); setEditingAddress(null); }} className="px-4 py-2 text-xs font-bold text-slate-500 hover:bg-gray-100 rounded-lg transition-colors">Cancel</button>
-                      <button type="submit" className="px-6 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-md shadow-blue-600/10 hover:bg-blue-700 transition-colors">
+                      <motion.button 
+                        type="button" 
+                        onClick={() => { setIsAddingAddress(false); setEditingAddress(null); }} 
+                        className="px-6 py-2 text-sm font-bold text-slate-600 hover:bg-slate-200 rounded-lg transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Cancel
+                      </motion.button>
+                      <motion.button 
+                        type="submit" 
+                        className="px-8 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-bold rounded-lg shadow-md hover:shadow-lg transition-all"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
                         {editingAddress ? "Update Address" : "Save Address"}
-                      </button>
+                      </motion.button>
                     </div>
                   </motion.form>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {customer.addresses.map(addr => (
-                    <div key={addr.id} className={`p-4 rounded-2xl border transition-all ${addr.isDefault ? 'border-blue-200 bg-blue-50/30' : 'border-gray-100 bg-white'}`}>
-                      <div className="flex items-center justify-between mb-2">
+                    <motion.div 
+                      key={addr.id} 
+                      className={`p-5 rounded-2xl border-2 transition-all ${addr.isDefault ? 'border-blue-300 bg-blue-50/50' : 'border-slate-200 bg-white'}`}
+                      whileHover={{ y: -4, shadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+                    >
+                      <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${addr.type === 'Home' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
+                          <span className={`text-xs font-extrabold uppercase px-3 py-1.5 rounded-lg ${addr.type === 'Home' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
                             {addr.type}
                           </span>
-                          {addr.isDefault && <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Default</span>}
+                          {addr.isDefault && <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg">Default</span>}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <button onClick={() => setEditingAddress(addr)} className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-                            <Edit2 size={14} />
-                          </button>
-                          <button onClick={() => handleDeleteAddress(addr.id)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                            <Trash2 size={14} />
-                          </button>
+                        <div className="flex items-center gap-2">
+                          <motion.button 
+                            onClick={() => setEditingAddress(addr)} 
+                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Edit2 size={16} />
+                          </motion.button>
+                          <motion.button 
+                            onClick={() => handleDeleteAddress(addr.id)} 
+                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Trash2 size={16} />
+                          </motion.button>
                         </div>
                       </div>
-                      <p className="text-sm font-bold text-slate-800">{addr.street}</p>
-                      <p className="text-xs text-slate-500 mt-1">{addr.city}, {addr.province} {addr.zip}</p>
-                    </div>
+                      <p className="text-base font-bold text-slate-900">{addr.street}</p>
+                      <p className="text-sm text-slate-500 mt-2">{addr.city}, {addr.province} {addr.zip}</p>
+                    </motion.div>
                   ))}
                   {customer.addresses.length === 0 && !isAddingAddress && (
-                    <div className="sm:col-span-2 py-10 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                      <MapPin size={24} className="mx-auto text-slate-300 mb-2" />
-                      <p className="text-sm text-slate-400 font-medium">No addresses saved yet.</p>
+                    <div className="sm:col-span-2 py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300">
+                      <MapPin size={32} className="mx-auto text-slate-300 mb-3" />
+                      <p className="text-base text-slate-500 font-medium">No addresses saved yet.</p>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Security */}
-              <div className="bg-white rounded-2xl p-6 border border-blue-600/5 shadow-sm space-y-6">
-                <div className="flex items-center gap-2">
-                  <Shield size={18} className="text-blue-600" />
-                  <h3 className="font-bold text-slate-900">Security & Privacy</h3>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-blue-100/50 shadow-sm space-y-6">
+                <div className="flex items-center gap-3">
+                  <Shield size={24} className="text-blue-600" />
+                  <h3 className="font-bold text-lg text-slate-900">Security & Privacy</h3>
                 </div>
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-slate-100">
                   {[
                     { label: "Change Password", desc: "Update your account password", icon: Shield },
                     { label: "Two-Factor Authentication", desc: "Add an extra layer of security", icon: Shield },
                     { label: "Active Sessions", desc: "Manage devices logged into your account", icon: Shield },
                   ].map(({ label, desc }) => (
-                    <div key={label} className="py-4 first:pt-0 last:pb-0 flex items-center justify-between">
+                    <div key={label} className="py-5 first:pt-0 last:pb-0 flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-bold text-slate-800">{label}</p>
-                        <p className="text-xs text-slate-400">{desc}</p>
+                        <p className="text-base font-bold text-slate-900">{label}</p>
+                        <p className="text-sm text-slate-500">{desc}</p>
                       </div>
-                      <button className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg hover:bg-blue-100 transition-colors">Manage</button>
+                      <motion.button 
+                        className="text-sm font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg hover:bg-blue-100 transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Manage
+                      </motion.button>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ════════ WISHLIST tab ════════ */}
           {activeTab === "wishlist" && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-red-600 mb-4">
-                <Heart size={32} />
-              </div>
-              <h2 className="text-xl font-extrabold text-slate-900">Your Wishlist</h2>
-              <p className="text-sm text-slate-500 mt-2 max-w-xs">You have {wishlistCount} items saved in your wishlist.</p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center justify-center py-20 text-center"
+            >
+              <motion.div 
+                className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center text-red-600 mb-6"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+              >
+                <Heart size={40} />
+              </motion.div>
+              <h2 className="text-2xl font-extrabold text-slate-900">Your Wishlist</h2>
+              <p className="text-slate-500 mt-3 max-w-xs">You have {wishlistCount} items saved in your wishlist.</p>
               <Link href="/wishlist">
-                <button className="mt-6 px-6 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl">View Wishlist Page</button>
+                <motion.button 
+                  className="mt-8 px-8 py-3 bg-gradient-to-r from-slate-900 to-slate-800 text-white text-base font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  View Wishlist Page
+                </motion.button>
               </Link>
-            </div>
+            </motion.div>
           )}
 
         </main>
       </div>
-
-
     </div>
   );
 }
