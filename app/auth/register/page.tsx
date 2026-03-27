@@ -11,7 +11,7 @@ import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
 import { 
   Upload, ShieldCheck, Store, MapPin, User, Mail, Lock, 
   Phone, Calendar, CreditCard, ChevronRight, ChevronLeft, 
-  CheckCircle2, FileText, Wallet, Checkbox
+  CheckCircle2, FileText, Eye, EyeOff, Briefcase, FileCheck
 } from 'lucide-react'
 
 function RegisterForm() {
@@ -19,9 +19,12 @@ function RegisterForm() {
   const searchParams = useSearchParams()
   const typeParam = searchParams.get('type')
   
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(0) // 0: Role Selection, 1: Basic, 2: Identity, 3: Shop/Docs, 4: Confirm, 5: Security
   const [userType, setUserType] = useState<'buyer' | 'seller'>((typeParam as 'buyer' | 'seller') || 'buyer')
-  const [formData, setFormData] = useState<any>({
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  
+  const [formData, setFormData] = useState({
     email: '',
     firstName: '',
     lastName: '',
@@ -35,6 +38,7 @@ function RegisterForm() {
     shopName: '',
     shopLocation: '',
     businessType: 'Retail',
+    shopLicense: '',
     documentsConfirmed: false,
   })
   
@@ -46,6 +50,7 @@ function RegisterForm() {
     if (typeParam === 'seller' || typeParam === 'buyer') {
       setUserType(typeParam)
       setFormData(prev => ({ ...prev, userType: typeParam }))
+      setStep(1) // Skip role selection if type is in URL
     }
   }, [typeParam])
 
@@ -65,17 +70,17 @@ function RegisterForm() {
       if (!formData.email || !formData.email.includes('@')) newErrors.email = 'Valid email is required'
       if (!formData.address) newErrors.address = 'Address is required'
     } else if (step === 2) {
-      if (userType === 'buyer') {
-        if (!formData.cnicNumber || !/^\d{5}-\d{7}-\d{1}$/.test(formData.cnicNumber)) newErrors.cnicNumber = 'Valid CNIC (12345-1234567-1) is required'
-        if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required'
-        if (!formData.dob) newErrors.dob = 'Date of birth is required'
-      } else {
-        if (!formData.shopName) newErrors.shopName = 'Shop name is required'
-        if (!formData.shopLocation) newErrors.shopLocation = 'Shop location is required'
-      }
-    } else if (step === 3) {
-      if (!formData.documentsConfirmed) newErrors.documentsConfirmed = 'You must confirm the documents'
+      if (!formData.cnicNumber) newErrors.cnicNumber = 'CNIC is required'
+      if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required'
+      if (!formData.dob) newErrors.dob = 'Date of birth is required'
+    } else if (step === 3 && userType === 'seller') {
+      if (!formData.shopName) newErrors.shopName = 'Shop name is required'
+      if (!formData.shopLocation) newErrors.shopLocation = 'Shop location is required'
+      if (!formData.businessType) newErrors.businessType = 'Business type is required'
+      if (!formData.shopLicense) newErrors.shopLicense = 'Shop license is required'
     } else if (step === 4) {
+      if (!formData.documentsConfirmed) newErrors.documentsConfirmed = 'You must confirm the information'
+    } else if (step === 5) {
       if (!formData.password || formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters'
       if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
     }
@@ -85,11 +90,27 @@ function RegisterForm() {
   }
 
   const nextStep = () => {
-    if (validateStep()) setStep(prev => prev + 1)
+    if (step === 0) {
+      setStep(1)
+      return
+    }
+    
+    if (validateStep()) {
+      // For buyers, skip shop info step
+      if (step === 2 && userType === 'buyer') {
+        setStep(4)
+      } else {
+        setStep(prev => prev + 1)
+      }
+    }
   }
 
   const prevStep = () => {
-    setStep(prev => prev - 1)
+    if (step === 4 && userType === 'buyer') {
+      setStep(2)
+    } else {
+      setStep(prev => prev - 1)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -121,11 +142,93 @@ function RegisterForm() {
   }
 
   const steps = [
-    { id: 1, title: 'Basic Info', icon: <User size={18} /> },
-    { id: 2, title: userType === 'buyer' ? 'Identity' : 'Shop Info', icon: userType === 'buyer' ? <ShieldCheck size={18} /> : <Store size={18} /> },
-    { id: 3, title: 'Documents', icon: <FileText size={18} /> },
-    { id: 4, title: 'Security', icon: <Lock size={18} /> },
+    { id: 1, title: 'Basic', icon: <User size={18} /> },
+    { id: 2, title: 'Identity', icon: <ShieldCheck size={18} /> },
+    ...(userType === 'seller' ? [{ id: 3, title: 'Shop', icon: <Store size={18} /> }] : []),
+    { id: 4, title: 'Confirm', icon: <FileCheck size={18} /> },
+    { id: 5, title: 'Security', icon: <Lock size={18} /> },
   ]
+
+  if (step === 0) {
+    return (
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-serif font-bold text-[#111827] mb-4">Join FlexiBerry</h1>
+          <p className="text-lg text-[#6b7280]">Choose how you want to use our platform</p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-8">
+          <Card 
+            className={`p-8 cursor-pointer transition-all duration-300 border-2 hover:shadow-2xl ${userType === 'buyer' ? 'border-[#6366f1] bg-indigo-50/30' : 'border-transparent hover:border-indigo-200'}`}
+            onClick={() => {
+              setUserType('buyer')
+              setFormData(prev => ({ ...prev, userType: 'buyer' }))
+            }}
+          >
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${userType === 'buyer' ? 'bg-[#6366f1] text-white' : 'bg-indigo-100 text-[#6366f1]'}`}>
+              <User size={32} />
+            </div>
+            <h3 className="text-2xl font-bold text-[#111827] mb-2">I am a Buyer</h3>
+            <p className="text-[#6b7280] mb-6">Shop the best products with flexible installment plans and secure payments.</p>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-center gap-2 text-sm text-[#4b5563]">
+                <CheckCircle2 size={16} className="text-green-500" /> Browse thousands of products
+              </li>
+              <li className="flex items-center gap-2 text-sm text-[#4b5563]">
+                <CheckCircle2 size={16} className="text-green-500" /> Flexible installment options
+              </li>
+              <li className="flex items-center gap-2 text-sm text-[#4b5563]">
+                <CheckCircle2 size={16} className="text-green-500" /> Fast and secure checkout
+              </li>
+            </ul>
+            <Button 
+              className={`w-full h-12 rounded-xl font-bold ${userType === 'buyer' ? 'bg-[#6366f1] text-white' : 'bg-white border-2 border-[#e5e7eb] text-[#374151]'}`}
+              onClick={nextStep}
+            >
+              Continue as Buyer
+            </Button>
+          </Card>
+
+          <Card 
+            className={`p-8 cursor-pointer transition-all duration-300 border-2 hover:shadow-2xl ${userType === 'seller' ? 'border-[#6366f1] bg-indigo-50/30' : 'border-transparent hover:border-indigo-200'}`}
+            onClick={() => {
+              setUserType('seller')
+              setFormData(prev => ({ ...prev, userType: 'seller' }))
+            }}
+          >
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${userType === 'seller' ? 'bg-[#6366f1] text-white' : 'bg-indigo-100 text-[#6366f1]'}`}>
+              <Store size={32} />
+            </div>
+            <h3 className="text-2xl font-bold text-[#111827] mb-2">I am a Vendor</h3>
+            <p className="text-[#6b7280] mb-6">Grow your business by selling to thousands of customers on our platform.</p>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-center gap-2 text-sm text-[#4b5563]">
+                <CheckCircle2 size={16} className="text-green-500" /> Reach more customers
+              </li>
+              <li className="flex items-center gap-2 text-sm text-[#4b5563]">
+                <CheckCircle2 size={16} className="text-green-500" /> Manage orders efficiently
+              </li>
+              <li className="flex items-center gap-2 text-sm text-[#4b5563]">
+                <CheckCircle2 size={16} className="text-green-500" /> Secure payment processing
+              </li>
+            </ul>
+            <Button 
+              className={`w-full h-12 rounded-xl font-bold ${userType === 'seller' ? 'bg-[#6366f1] text-white' : 'bg-white border-2 border-[#e5e7eb] text-[#374151]'}`}
+              onClick={nextStep}
+            >
+              Continue as Vendor
+            </Button>
+          </Card>
+        </div>
+        
+        <div className="mt-12 text-center">
+          <p className="text-[#6b7280]">
+            Already have an account? <Link href="/auth/login" className="text-[#6366f1] font-bold hover:underline">Log in</Link>
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -135,9 +238,9 @@ function RegisterForm() {
           <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[#e5e7eb] -translate-y-1/2 z-0"></div>
           <div 
             className="absolute top-1/2 left-0 h-0.5 bg-[#6366f1] -translate-y-1/2 z-0 transition-all duration-500"
-            style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}
+            style={{ width: `${((steps.findIndex(s => s.id === step)) / (steps.length - 1)) * 100}%` }}
           ></div>
-          {steps.map((s) => (
+          {steps.map((s, idx) => (
             <div key={s.id} className="relative z-10 flex flex-col items-center">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                 step >= s.id ? 'bg-[#6366f1] text-white shadow-lg shadow-indigo-200' : 'bg-white border-2 border-[#e5e7eb] text-[#9ca3af]'
@@ -197,99 +300,116 @@ function RegisterForm() {
           </Card>
         )}
 
-        {/* Step 2: Identity / Shop Info */}
+        {/* Step 2: Identity Info */}
         {step === 2 && (
           <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {userType === 'buyer' ? (
-              <>
-                <div className="mb-8">
-                  <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Identity Verification</h2>
-                  <p className="text-[#6b7280]">Secure your account with official identification</p>
+            <div className="mb-8">
+              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Identity Verification</h2>
+              <p className="text-[#6b7280]">Secure your account with official identification</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="md:col-span-2 space-y-2">
+                <label className="text-sm font-bold text-[#374151] ml-1">CNIC Number</label>
+                <div className="relative">
+                  <Input name="cnicNumber" placeholder="12345-1234567-1" value={formData.cnicNumber} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
                 </div>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-bold text-[#374151] ml-1">CNIC Number</label>
-                    <div className="relative">
-                      <Input name="cnicNumber" placeholder="12345-1234567-1" value={formData.cnicNumber} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                      <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
-                    </div>
-                    {errors.cnicNumber && <p className="text-red-500 text-xs mt-1 ml-1">{errors.cnicNumber}</p>}
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-[#374151] ml-1">Mobile Number</label>
-                    <div className="relative">
-                      <Input name="phoneNumber" placeholder="0300-1234567" value={formData.phoneNumber} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
-                    </div>
-                    {errors.phoneNumber && <p className="text-red-500 text-xs mt-1 ml-1">{errors.phoneNumber}</p>}
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-[#374151] ml-1">Date of Birth</label>
-                    <div className="relative">
-                      <Input name="dob" type="date" value={formData.dob} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
-                    </div>
-                    {errors.dob && <p className="text-red-500 text-xs mt-1 ml-1">{errors.dob}</p>}
-                  </div>
+                {errors.cnicNumber && <p className="text-red-500 text-xs mt-1 ml-1">{errors.cnicNumber}</p>}
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-[#374151] ml-1">Mobile Number</label>
+                <div className="relative">
+                  <Input name="phoneNumber" placeholder="0300-1234567" value={formData.phoneNumber} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
                 </div>
-              </>
-            ) : (
-              <>
-                <div className="mb-8">
-                  <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Shop Information</h2>
-                  <p className="text-[#6b7280]">Tell us about your business</p>
+                {errors.phoneNumber && <p className="text-red-500 text-xs mt-1 ml-1">{errors.phoneNumber}</p>}
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-[#374151] ml-1">Date of Birth</label>
+                <div className="relative">
+                  <Input name="dob" type="date" value={formData.dob} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
                 </div>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-bold text-[#374151] ml-1">Shop Name</label>
-                    <div className="relative">
-                      <Input name="shopName" placeholder="Your Business Name" value={formData.shopName} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                      <Store className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
-                    </div>
-                    {errors.shopName && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopName}</p>}
-                  </div>
-                  <div className="md:col-span-2 space-y-2">
-                    <label className="text-sm font-bold text-[#374151] ml-1">Shop Location</label>
-                    <div className="relative">
-                      <Input name="shopLocation" placeholder="Full physical address" value={formData.shopLocation} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
-                    </div>
-                    {errors.shopLocation && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopLocation}</p>}
-                  </div>
-                </div>
-              </>
-            )}
+                {errors.dob && <p className="text-red-500 text-xs mt-1 ml-1">{errors.dob}</p>}
+              </div>
+            </div>
           </Card>
         )}
 
-        {/* Step 3: Documents */}
-        {step === 3 && (
+        {/* Step 3: Shop Info (Vendor Only) */}
+        {step === 3 && userType === 'seller' && (
           <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8">
-              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Document Upload</h2>
-              <p className="text-[#6b7280]">Upload required documents for verification</p>
+              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Shop Information</h2>
+              <p className="text-[#6b7280]">Tell us about your business and documents</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="md:col-span-2 space-y-2">
+                <label className="text-sm font-bold text-[#374151] ml-1">Shop Name</label>
+                <div className="relative">
+                  <Input name="shopName" placeholder="Your Business Name" value={formData.shopName} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <Store className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                </div>
+                {errors.shopName && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopName}</p>}
+              </div>
+              <div className="md:col-span-2 space-y-2">
+                <label className="text-sm font-bold text-[#374151] ml-1">Shop Location</label>
+                <div className="relative">
+                  <Input name="shopLocation" placeholder="Full physical address" value={formData.shopLocation} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                </div>
+                {errors.shopLocation && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopLocation}</p>}
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-[#374151] ml-1">Business Type</label>
+                <div className="relative">
+                  <select 
+                    name="businessType" 
+                    value={formData.businessType} 
+                    onChange={handleChange as any}
+                    className="w-full pl-11 h-13 rounded-2xl border-[#e5e7eb] bg-white text-sm focus:border-[#6366f1] focus:ring-[#6366f1]/10 outline-none appearance-none"
+                  >
+                    <option value="Retail">Retail</option>
+                    <option value="Wholesale">Wholesale</option>
+                    <option value="Manufacturer">Manufacturer</option>
+                    <option value="Service">Service</option>
+                  </select>
+                  <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                </div>
+                {errors.businessType && <p className="text-red-500 text-xs mt-1 ml-1">{errors.businessType}</p>}
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-[#374151] ml-1">Shop License Number</label>
+                <div className="relative">
+                  <Input name="shopLicense" placeholder="LIC-12345678" value={formData.shopLicense} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                </div>
+                {errors.shopLicense && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopLicense}</p>}
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Step 4: Confirmation */}
+        {step === 4 && (
+          <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="mb-8">
+              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Confirmation</h2>
+              <p className="text-[#6b7280]">Please confirm your details</p>
             </div>
             
             <div className="space-y-4 mb-8">
-              {[
-                { label: 'CNIC Front Side', desc: 'Clear photo of the front' },
-                { label: 'CNIC Back Side', desc: 'Clear photo of the back' },
-                { label: 'Salary Slip', desc: 'Latest month salary slip' },
-                { label: 'Bank Statement', desc: 'Last 3 months statement' },
-              ].map((doc) => (
-                <div key={doc.label} className="border-2 border-dashed border-[#e5e7eb] rounded-2xl p-5 flex items-center justify-between hover:border-[#6366f1] transition-all group cursor-pointer bg-white">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-[#f9fafb] rounded-xl flex items-center justify-center text-[#9ca3af] group-hover:bg-[#f5f3ff] group-hover:text-[#6366f1] transition-colors">
-                      <Upload size={22} />
-                    </div>
-                    <div>
-                      <p className="font-bold text-[#111827] text-sm">{doc.label}</p>
-                      <p className="text-xs text-[#6b7280]">{doc.desc}</p>
-                    </div>
-                  </div>
-                  <Button type="button" variant="outline" className="rounded-xl border-[#e5e7eb] text-[#6366f1] font-bold text-xs h-9">Browse</Button>
-                </div>
-              ))}
+              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
+                <p className="text-sm text-gray-600"><span className="font-bold">Name:</span> {formData.firstName} {formData.lastName}</p>
+                <p className="text-sm text-gray-600"><span className="font-bold">Email:</span> {formData.email}</p>
+                <p className="text-sm text-gray-600"><span className="font-bold">Role:</span> {userType === 'seller' ? 'Vendor' : 'Buyer'}</p>
+                {userType === 'seller' && (
+                  <>
+                    <p className="text-sm text-gray-600"><span className="font-bold">Shop:</span> {formData.shopName}</p>
+                    <p className="text-sm text-gray-600"><span className="font-bold">License:</span> {formData.shopLicense}</p>
+                  </>
+                )}
+              </div>
             </div>
 
             <div className="flex items-start gap-3 p-4 bg-[#f5f3ff] rounded-2xl border border-[#e0e7ff]">
@@ -302,15 +422,15 @@ function RegisterForm() {
                 className="mt-1 w-4 h-4 rounded border-[#e5e7eb] text-[#6366f1] focus:ring-[#6366f1]"
               />
               <label htmlFor="documentsConfirmed" className="text-sm font-medium text-[#4338ca] leading-relaxed cursor-pointer">
-                I confirm that all uploaded documents are authentic and belong to me. I understand that providing false information will lead to account rejection.
+                I confirm that all information provided is authentic and belongs to me. I understand that providing false information will lead to account rejection.
               </label>
             </div>
             {errors.documentsConfirmed && <p className="text-red-500 text-xs mt-2 ml-1">{errors.documentsConfirmed}</p>}
           </Card>
         )}
 
-        {/* Step 4: Security */}
-        {step === 4 && (
+        {/* Step 5: Security */}
+        {step === 5 && (
           <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8">
               <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Secure Your Account</h2>
@@ -320,16 +440,44 @@ function RegisterForm() {
               <div className="space-y-2">
                 <label className="text-sm font-bold text-[#374151] ml-1">Password</label>
                 <div className="relative">
-                  <Input name="password" type="password" placeholder="••••••••" value={formData.password} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <Input 
+                    name="password" 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="••••••••" 
+                    value={formData.password} 
+                    onChange={handleChange} 
+                    className="pl-11 pr-11 h-13 rounded-2xl border-[#e5e7eb]" 
+                  />
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                  <button 
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#6366f1]"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
                 {errors.password && <p className="text-red-500 text-xs mt-1 ml-1">{errors.password}</p>}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-[#374151] ml-1">Confirm Password</label>
                 <div className="relative">
-                  <Input name="confirmPassword" type="password" placeholder="••••••••" value={formData.confirmPassword} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                  <Input 
+                    name="confirmPassword" 
+                    type={showConfirmPassword ? "text" : "password"} 
+                    placeholder="••••••••" 
+                    value={formData.confirmPassword} 
+                    onChange={handleChange} 
+                    className="pl-11 pr-11 h-13 rounded-2xl border-[#e5e7eb]" 
+                  />
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                  <button 
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#6366f1]"
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
                 {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1">{errors.confirmPassword}</p>}
               </div>
@@ -344,17 +492,15 @@ function RegisterForm() {
 
         {/* Navigation Buttons */}
         <div className="flex gap-4">
-          {step > 1 && (
-            <Button 
-              type="button" 
-              onClick={prevStep} 
-              variant="outline" 
-              className="flex-1 h-14 rounded-2xl border-[#e5e7eb] text-[#374151] font-bold hover:bg-[#f9fafb] transition-all flex items-center justify-center gap-2"
-            >
-              <ChevronLeft size={20} /> Back
-            </Button>
-          )}
-          {step < 4 ? (
+          <Button 
+            type="button" 
+            onClick={prevStep} 
+            variant="outline" 
+            className="flex-1 h-14 rounded-2xl border-[#e5e7eb] text-[#374151] font-bold hover:bg-[#f9fafb] transition-all flex items-center justify-center gap-2"
+          >
+            <ChevronLeft size={20} /> Back
+          </Button>
+          {step < 5 ? (
             <Button 
               type="button" 
               onClick={nextStep} 

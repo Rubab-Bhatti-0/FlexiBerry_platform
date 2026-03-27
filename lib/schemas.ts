@@ -22,6 +22,7 @@ export const registerSchema = z.object({
   shopName: z.string().min(3, 'Shop name must be at least 3 characters').optional(),
   shopLocation: z.string().min(5, 'Shop location required').optional(),
   businessType: z.string().optional(),
+  shopLicense: z.string().min(5, 'Shop license is required').optional(),
 
   // Step 3: Documents Confirmation
   documentsConfirmed: z.boolean().refine(val => val === true, 'You must confirm the documents are accurate'),
