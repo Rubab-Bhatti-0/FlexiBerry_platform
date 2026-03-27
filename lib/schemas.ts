@@ -6,39 +6,32 @@ export const loginSchema = z.object({
 });
 
 export const registerSchema = z.object({
+  // Step 1: Basic Info
   email: z.string().email('Invalid email address'),
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  confirmPassword: z.string(),
+  address: z.string().min(5, 'Address must be at least 5 characters'),
   userType: z.enum(['buyer', 'seller']),
-  // Buyer specific fields
+  
+  // Step 2: Identity Info
   cnicNumber: z.string().regex(/^\d{5}-\d{7}-\d{1}$/, 'Invalid CNIC format (12345-1234567-1)').optional(),
   phoneNumber: z.string().min(10, 'Invalid phone number').optional(),
   dob: z.string().optional(),
-  // Vendor specific fields
+  
+  // Step 2 (Vendor): Shop Info
   shopName: z.string().min(3, 'Shop name must be at least 3 characters').optional(),
   shopLocation: z.string().min(5, 'Shop location required').optional(),
   businessType: z.string().optional(),
+
+  // Step 3: Documents Confirmation
+  documentsConfirmed: z.boolean().refine(val => val === true, 'You must confirm the documents are accurate'),
+
+  // Step 4: Password
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
-}).refine((data) => {
-  if (data.userType === 'buyer') {
-    return !!data.cnicNumber && !!data.phoneNumber && !!data.dob;
-  }
-  return true;
-}, {
-  message: "Verification details are required for buyers",
-  path: ["cnicNumber"],
-}).refine((data) => {
-  if (data.userType === 'seller') {
-    return !!data.shopName && !!data.shopLocation;
-  }
-  return true;
-}, {
-  message: "Shop details are required for vendors",
-  path: ["shopName"],
 });
 
 export const resetPasswordSchema = z.object({
