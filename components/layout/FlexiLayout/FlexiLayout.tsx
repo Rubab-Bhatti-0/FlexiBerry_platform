@@ -5,18 +5,11 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { User, LogOut, LayoutDashboard, UserPlus, ShoppingBag, ChevronDown, Search, Heart, Menu, X, PlusCircle } from 'lucide-react'
 
-export const CATEGORY_THEMES: Record<string, { primary: string; bg: string; gradient: string }> = {
-  smartphones: { primary: '#ef4444', bg: '#fff1f2', gradient: 'linear-gradient(135deg, #ef4444, #be123c)' },
-  laptops:     { primary: '#8b5cf6', bg: '#f5f3ff', gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' },
-  bikes:       { primary: '#f97316', bg: '#fff7ed', gradient: 'linear-gradient(135deg, #f97316, #c2410c)' },
-  appliances:  { primary: '#3b82f6', bg: '#eff6ff', gradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)' },
-  solar:       { primary: '#eab308', bg: '#fefce8', gradient: 'linear-gradient(135deg, #eab308, #a16207)' },
-  furniture:   { primary: '#14b8a6', bg: '#f0fdfa', gradient: 'linear-gradient(135deg, #14b8a6, #0f766e)' },
-  jahez:       { primary: '#ec4899', bg: '#fdf2f8', gradient: 'linear-gradient(135deg, #ec4899, #be185d)' },
-  cars:        { primary: '#06b6d4', bg: '#ecfeff', gradient: 'linear-gradient(135deg, #06b6d4, #0e7490)' },
-  business:    { primary: '#22c55e', bg: '#f0fdf4', gradient: 'linear-gradient(135deg, #22c55e, #15803d)' },
-  general:     { primary: '#f59e0b', bg: '#fffbeb', gradient: 'linear-gradient(135deg, #f59e0b, #b45309)' },
-}
+// ─────────────────────────────────────────────────────────────
+// Single source of truth — imported from carousel
+// ─────────────────────────────────────────────────────────────
+import { CATEGORY_THEMES } from '@/components/ui/carousel'
+export { CATEGORY_THEMES }
 
 const CATS = [
   { name: 'Smartphones',    e: '📱', slug: 'smartphones' },
@@ -36,24 +29,19 @@ interface FlexiLayoutProps {
 }
 
 export default function FlexiLayout({ children }: FlexiLayoutProps) {
-  const [scrolled, setScrolled]     = useState(false)
-  const [catOpen, setCatOpen]       = useState(false)
-  const [userOpen, setUserOpen]     = useState(false)
-  const [menuOpen, setMenuOpen]     = useState(false)
-  const [user, setUser]             = useState<any>(null)
+  const [scrolled, setScrolled]   = useState(false)
+  const [catOpen, setCatOpen]     = useState(false)
+  const [userOpen, setUserOpen]   = useState(false)
+  const [menuOpen, setMenuOpen]   = useState(false)
+  const [user, setUser]           = useState<any>(null)
   const pathname = usePathname()
-  const router = useRouter()
+  const router   = useRouter()
 
   useEffect(() => {
     const checkUser = () => {
       const storedUser = localStorage.getItem('user')
-      if (storedUser) {
-        setUser(JSON.parse(storedUser))
-      } else {
-        setUser(null)
-      }
+      setUser(storedUser ? JSON.parse(storedUser) : null)
     }
-    
     checkUser()
     window.addEventListener('storage', checkUser)
     return () => window.removeEventListener('storage', checkUser)
@@ -156,6 +144,8 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
       }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', padding: '0 16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, height: 64 }}>
+
+            {/* Logo */}
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
               <div style={{
                 width: 40, height: 40, borderRadius: 12, flexShrink: 0,
@@ -175,17 +165,17 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
               </div>
             </Link>
 
+            {/* Search */}
             <div className="flexi-srch flexi-hide-sm" style={{ flex: 1, maxWidth: 520, margin: '0 14px' }}>
               <input type="text" placeholder="Search products, brands and categories..." />
-              <button aria-label="Search">
-                <Search size={16} color="white" />
-              </button>
+              <button aria-label="Search"><Search size={16} color="white" /></button>
             </div>
 
+            {/* Right actions */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
               {user ? (
                 <div data-dd style={{ position: 'relative' }}>
-                  <button 
+                  <button
                     onClick={() => setUserOpen(!userOpen)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 8, height: 40,
@@ -193,7 +183,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
                       background: '#fff', cursor: 'pointer', transition: 'all .15s'
                     }}
                     onMouseOver={e => (e.currentTarget as HTMLElement).style.borderColor = '#6366f1'}
-                    onMouseOut={e => (e.currentTarget as HTMLElement).style.borderColor = '#e5e7eb'}
+                    onMouseOut={e  => (e.currentTarget as HTMLElement).style.borderColor = '#e5e7eb'}
                   >
                     <div style={{ width: 24, height: 24, borderRadius: 6, background: '#f5f3ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6366f1' }}>
                       <User size={14} />
@@ -227,15 +217,14 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
               ) : (
                 <>
                   <Link href="/auth/login" className="flexi-nav-lnk flexi-hide-sm" style={{ height: 38, padding: '0 14px' }}>
-                    <User size={15} />
-                    Login
+                    <User size={15} /> Login
                   </Link>
                   <Link href="/auth/register" className="flexi-btn-ind flexi-hide-sm" style={{ padding: '9px 18px', fontSize: 13.5 }}>
-                    <UserPlus size={15} />
-                    Sign Up
+                    <UserPlus size={15} /> Sign Up
                   </Link>
                 </>
               )}
+
               <button className="flexi-hide-sm" aria-label="Wishlist" style={{
                 width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
@@ -243,16 +232,22 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
               }}>
                 <Heart size={16} />
               </button>
+
               <Link href="/cart" className="flexi-btn-ind" style={{ padding: '9px 18px', fontSize: 13.5 }}>
                 <ShoppingBag size={15} />
                 <span className="flexi-hide-sm">Cart</span>
               </Link>
-              <button className="flexi-show-sm" onClick={() => setMenuOpen(!menuOpen)} style={{ width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+              <button className="flexi-show-sm" onClick={() => setMenuOpen(!menuOpen)} style={{
+                width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb',
+                background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
                 {menuOpen ? <X size={18} /> : <Menu size={18} />}
               </button>
             </div>
           </div>
 
+          {/* Category nav bar */}
           <div className="flexi-hide-sm" style={{ display: 'flex', alignItems: 'center', height: 46, borderTop: '1px solid #f3f4f6', gap: 2 }}>
             <div data-dd style={{ position: 'relative', flexShrink: 0 }}>
               <button
@@ -271,12 +266,21 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
               {catOpen && (
                 <div className="flexi-dd-menu" style={{ width: 270, left: 0, right: 'auto' }}>
                   <div style={{ maxHeight: 380, overflowY: 'auto' }}>
-                    {CATS.map(c => (
-                      <Link key={c.slug} href={`/products?category=${c.slug}`} className="flexi-dd-row" onClick={() => setCatOpen(false)}>
-                        <span style={{ fontSize: 18 }}>{c.e}</span>
-                        <span style={{ fontSize: 13.5, fontWeight: 700, color: '#111827' }}>{c.name}</span>
-                      </Link>
-                    ))}
+                    {CATS.map(c => {
+                      const t = CATEGORY_THEMES[c.slug]
+                      return (
+                        <Link
+                          key={c.slug}
+                          href={`/products?category=${c.slug}`}
+                          className="flexi-dd-row"
+                          onClick={() => setCatOpen(false)}
+                          style={{ borderLeft: `3px solid ${t?.primary ?? '#6366f1'}` }}
+                        >
+                          <span style={{ fontSize: 18 }}>{c.e}</span>
+                          <span style={{ fontSize: 13.5, fontWeight: 700, color: '#111827' }}>{c.name}</span>
+                        </Link>
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -296,6 +300,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
           </div>
         </div>
 
+        {/* Mobile menu */}
         {menuOpen && (
           <div style={{ background: '#fff', borderTop: '1px solid #f3f4f6', padding: '14px 16px' }}>
             <div className="flexi-srch" style={{ marginBottom: 14 }}>
@@ -305,35 +310,68 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
               {user ? (
                 <>
-                  <Link href={user.role === 'seller' ? '/vendor/dashboard' : '/buyer/dashboard'} onClick={() => setMenuOpen(false)}
-                    style={{ padding: '10px 12px', borderRadius: 10, background: '#f5f3ff', textDecoration: 'none', fontSize: 14, fontWeight: 700, color: '#6366f1', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Link
+                    href={user.role === 'seller' ? '/vendor/dashboard' : '/buyer/dashboard'}
+                    onClick={() => setMenuOpen(false)}
+                    style={{ padding: '10px 12px', borderRadius: 10, background: '#f5f3ff', textDecoration: 'none', fontSize: 14, fontWeight: 700, color: '#6366f1', display: 'flex', alignItems: 'center', gap: 8 }}
+                  >
                     <LayoutDashboard size={16} /> Dashboard
                   </Link>
-                  <button onClick={handleLogout}
-                    style={{ width: '100%', textAlign: 'left', padding: '10px 12px', borderRadius: 10, background: '#fef2f2', border: 'none', fontSize: 14, fontWeight: 700, color: '#ef4444', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <button
+                    onClick={handleLogout}
+                    style={{ width: '100%', textAlign: 'left', padding: '10px 12px', borderRadius: 10, background: '#fef2f2', border: 'none', fontSize: 14, fontWeight: 700, color: '#ef4444', display: 'flex', alignItems: 'center', gap: 8 }}
+                  >
                     <LogOut size={16} /> Sign Out
                   </button>
                 </>
               ) : (
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <Link href="/auth/login" onClick={() => setMenuOpen(false)}
-                    style={{ flex: 1, textAlign: 'center', padding: '11px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: 14, fontWeight: 700, color: '#374151', textDecoration: 'none' }}>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setMenuOpen(false)}
+                    style={{ flex: 1, textAlign: 'center', padding: '11px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: 14, fontWeight: 700, color: '#374151', textDecoration: 'none' }}
+                  >
                     Login
                   </Link>
-                  <Link href="/auth/register" onClick={() => setMenuOpen(false)}
-                    className="flexi-btn-ind" style={{ flex: 1, justifyContent: 'center', padding: '11px', borderRadius: 12, fontSize: 14 }}>
+                  <Link
+                    href="/auth/register"
+                    onClick={() => setMenuOpen(false)}
+                    className="flexi-btn-ind"
+                    style={{ flex: 1, justifyContent: 'center', padding: '11px', borderRadius: 12, fontSize: 14 }}
+                  >
                     Sign Up
                   </Link>
                 </div>
               )}
             </div>
+            {/* Mobile category list */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {CATS.map(c => {
+                const t = CATEGORY_THEMES[c.slug]
+                return (
+                  <Link
+                    key={c.slug}
+                    href={`/products?category=${c.slug}`}
+                    onClick={() => setMenuOpen(false)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      padding: '9px 12px', borderRadius: 10,
+                      background: `${t?.primary ?? '#6366f1'}11`,
+                      textDecoration: 'none', fontSize: 13.5, fontWeight: 700,
+                      color: t?.primary ?? '#6366f1',
+                    }}
+                  >
+                    <span style={{ fontSize: 16 }}>{c.e}</span>
+                    {c.name}
+                  </Link>
+                )
+              })}
+            </div>
           </div>
         )}
       </header>
 
-      <main style={{ minHeight: '60vh' }}>
-        {children}
-      </main>
+      <main style={{ minHeight: '60vh' }}>{children}</main>
 
       <footer style={{ background: '#0d1117', color: '#fff', fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif" }}>
         <div style={{ background: 'linear-gradient(90deg, #312e81, #4c1d95)', padding: '18px 16px' }}>
