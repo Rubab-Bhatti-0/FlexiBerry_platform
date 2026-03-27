@@ -37,8 +37,7 @@ const FlexiBerryLogo = ({ size = 40 }: { size?: number }) => (
     <g transform="rotate(-14, 50, 52)">
       <path d="M 8 20 L 17 20 L 23 40" stroke="white" strokeWidth="5"
         strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M 23 40 L 23 70 Q 23 76 29 76 L 79 76 Q 85 76 85 70 L 85 40 Q 85
-34 79 34 L 35 34 Q 27 34 23 40 Z" fill="white" />
+      <path d="M 23 40 L 23 70 Q 23 76 29 76 L 79 76 Q 85 76 85 70 L 85 40 Q 85 34 79 34 L 35 34 Q 27 34 23 40 Z" fill="white" />
       <circle cx="32" cy="39" r="4.5" fill="url(#sLogoGrad)" />
       <rect x="30" y="45" width="5" height="21" rx="2.5" fill="url(#sLogoGrad)" />
       <rect x="30" y="45" width="13" height="4.5" rx="2.25" fill="url(#sLogoGrad)" />
@@ -76,7 +75,7 @@ const PLATFORM_STATS = [
 /* ─────────────────── SHOP CARD ─────────────────── */
 const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: number; view: "grid" | "list" }) => {
   const [hovered, setHovered] = useState(false);
-  
+
   if (view === "list") {
     return (
       <div
@@ -96,7 +95,7 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
           opacity: 0,
           cursor: "pointer",
           fontFamily: "'Plus Jakarta Sans', sans-serif",
-          flexWrap: "wrap",
+          flexWrap: "wrap" as const,
         }}>
         {/* Logo */}
         <div style={{
@@ -108,7 +107,7 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
         }}>{vendor.emoji}</div>
         {/* Info */}
         <div style={{ flex: 1, minWidth: "160px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px", flexWrap: "wrap" as const }}>
             <span style={{ fontSize: "16px", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>
               {vendor.name}
             </span>
@@ -120,7 +119,7 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
               }}>FEATURED</span>
             )}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" as const }}>
             <span style={{ fontSize: "12px", fontWeight: 700, padding: "2px 9px", borderRadius: "99px", background: vendor.categoryBg, color: vendor.categoryColor }}>{vendor.category}</span>
             <span style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "12px", color: "#64748b" }}>
               <MapPin size={11} /> {vendor.city}
@@ -129,17 +128,17 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
           <p style={{ fontSize: "12px", color: "#64748b", margin: "6px 0 0", lineHeight: 1.5 }}>{vendor.description}</p>
         </div>
         {/* Stats */}
-        <div style={{ display: "flex", gap: "24px", flexShrink: 0, flexWrap: "wrap" }}>
-          <div style={{ textAlign: "center" }}>
+        <div style={{ display: "flex", gap: "24px", flexShrink: 0, flexWrap: "wrap" as const }}>
+          <div style={{ textAlign: "center" as const }}>
             <div style={{ fontSize: "15px", fontWeight: 800, color: "#f59e0b" }}>★ {vendor.rating}</div>
             <div style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 600 }}>{vendor.reviews.toLocaleString()} reviews</div>
           </div>
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center" as const }}>
             <div style={{ fontSize: "15px", fontWeight: 800, color: "#0f172a" }}>{vendor.products}</div>
             <div style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 600 }}>Products</div>
           </div>
           {vendor.installments && (
-            <div style={{ textAlign: "center" }}>
+            <div style={{ textAlign: "center" as const }}>
               <div style={{ fontSize: "13px", fontWeight: 800, color: "#2563eb" }}>⚡ Kisti</div>
               <div style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 600 }}>Available</div>
             </div>
@@ -184,7 +183,7 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
         opacity: 0,
         cursor: "pointer",
         fontFamily: "'Plus Jakarta Sans', sans-serif",
-        display: "flex", flexDirection: "column",
+        display: "flex", flexDirection: "column" as const,
       }}>
       {/* ── Banner ── */}
       <div style={{
@@ -192,11 +191,9 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
         background: vendor.bannerGrad,
         overflow: "hidden",
       }}>
-        {/* Decorative circles */}
         <div style={{ position: "absolute", width: "120px", height: "120px", borderRadius: "50%", background: "rgba(255,255,255,0.08)", top: "-30px", right: "-20px" }} />
         <div style={{ position: "absolute", width: "70px", height: "70px", borderRadius: "50%", background: "rgba(255,255,255,0.06)", bottom: "-20px", right: "40px" }} />
         <div style={{ position: "absolute", width: "50px", height: "50px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "10px", left: "30%" }} />
-        {/* Dot grid */}
         <svg style={{ position: "absolute", right: 0, bottom: 0, opacity: 0.12 }} width="160" height="100" viewBox="0 0 160 100">
           {Array.from({ length: 5 }).map((_, row) =>
             Array.from({ length: 8 }).map((_, col) => (
@@ -204,8 +201,7 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
             ))
           )}
         </svg>
-        {/* Badges top-right */}
-        <div style={{ position: "absolute", top: "10px", right: "10px", display: "flex", flexDirection: "column", gap: "4px", alignItems: "flex-end" }}>
+        <div style={{ position: "absolute", top: "10px", right: "10px", display: "flex", flexDirection: "column" as const, gap: "4px", alignItems: "flex-end" }}>
           {vendor.featured && (
             <span style={{
               fontSize: "9px", fontWeight: 800, padding: "3px 8px", borderRadius: "99px",
@@ -227,7 +223,6 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
             </span>
           )}
         </div>
-        {/* Large emoji */}
         <div style={{
           position: "absolute", bottom: "-20px", left: "20px",
           height: "52px", width: "52px", borderRadius: "16px",
@@ -239,7 +234,6 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
           transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1)",
           transform: hovered ? "scale(1.12) rotate(-4deg)" : "scale(1)",
         }}>{vendor.emoji}</div>
-        {/* Verified */}
         {vendor.verified && (
           <div style={{
             position: "absolute", bottom: "-16px", left: "56px",
@@ -254,14 +248,13 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
         )}
       </div>
       {/* ── Body ── */}
-      <div style={{ padding: "28px 18px 18px", flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Name row */}
+      <div style={{ padding: "28px 18px 18px", flex: 1, display: "flex", flexDirection: "column" as const }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "6px" }}>
           <div>
             <h3 style={{ fontSize: "15px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
               {vendor.name}
             </h3>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "5px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "5px", flexWrap: "wrap" as const }}>
               <span style={{
                 fontSize: "11px", fontWeight: 700, padding: "2px 9px", borderRadius: "99px",
                 background: vendor.categoryBg, color: vendor.categoryColor,
@@ -271,7 +264,6 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
               </span>
             </div>
           </div>
-          {/* Rating pill */}
           <div style={{
             display: "flex", alignItems: "center", gap: "3px",
             padding: "4px 9px", borderRadius: "99px",
@@ -283,20 +275,18 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
             <span style={{ fontSize: "11px", fontWeight: 800, color: "#b45309" }}>{vendor.rating}</span>
           </div>
         </div>
-        {/* Description */}
         <p style={{
-          fontSize: "12px", color: vendor.categoryColor, lineHeight: 1.55,
+          fontSize: "12px", color: "#64748b", lineHeight: 1.55,
           margin: "8px 0 14px", flex: 1,
-          display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
+          display: "-webkit-box" as any,
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical" as any,
           overflow: "hidden",
-          fontWeight: 600,
         }}>
           {vendor.description}
         </p>
-        {/* Stats strip */}
         <div style={{
           display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
-          gap: "0",
           borderTop: "1px solid rgba(37,99,235,0.07)",
           borderBottom: "1px solid rgba(37,99,235,0.07)",
           margin: "0 -2px 14px",
@@ -308,16 +298,15 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
             { val: (vendor as any).established || "2023", label: "Since", color: "#10b981" },
           ].map((s, i) => (
             <div key={i} style={{
-              textAlign: "center",
+              textAlign: "center" as const,
               borderRight: i < 2 ? "1px solid rgba(37,99,235,0.07)" : "none",
               padding: "0 4px",
             }}>
               <div style={{ fontSize: "14px", fontWeight: 800, color: s.color }}>{s.val}</div>
-              <div style={{ fontSize: "9px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em" }}>{s.label}</div>
+              <div style={{ fontSize: "9px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>{s.label}</div>
             </div>
           ))}
         </div>
-        {/* CTA */}
         <Link href={`/shop/${vendor.id}`} style={{ textDecoration: "none" }}>
           <button style={{
             width: "100%", height: "40px", borderRadius: "12px",
@@ -398,6 +387,7 @@ export default function ShopsPage() {
   return (
     <FlexiLayout>
       <div style={{ minHeight: "100vh", background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+
         {/* ── HERO SECTION ── */}
         <section style={{
           background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 35%, #7c3aed 70%, #4c1d95 100%)",
@@ -409,7 +399,6 @@ export default function ShopsPage() {
             <div style={{ position: "absolute", width: "500px", height: "500px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-150px", right: "-100px", animation: "floatOrb 8s ease-in-out infinite" }} />
             <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-80px", left: "10%", animation: "floatOrb 10s ease-in-out infinite 2s" }} />
             <div style={{ position: "absolute", width: "200px", height: "200px", borderRadius: "50%", background: "rgba(124,58,237,0.25)", top: "20%", left: "40%", filter: "blur(40px)" }} />
-            {/* Grid dots */}
             <svg style={{ position: "absolute", right: "5%", top: 0, opacity: 0.07 }} width="400" height="300" viewBox="0 0 400 300">
               {Array.from({ length: 12 }).map((_, row) =>
                 Array.from({ length: 20 }).map((_, col) => (
@@ -418,6 +407,7 @@ export default function ShopsPage() {
               )}
             </svg>
           </div>
+
           <div style={{ maxWidth: "1400px", margin: "0 auto", position: "relative", zIndex: 1 }}>
             {/* Eyebrow */}
             <div style={{
@@ -435,16 +425,16 @@ export default function ShopsPage() {
                 Verified Sellers
               </span>
             </div>
+
             {/* Headline + logo */}
             <div style={{
               display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-              flexWrap: "wrap", gap: "24px",
+              flexWrap: "wrap" as const, gap: "24px",
               opacity: heroVisible ? 1 : 0,
               transform: heroVisible ? "none" : "translateY(16px)",
               transition: "all 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s",
             }}>
               <div>
-                {/* Logo + title side-by-side */}
                 <div style={{ display: "flex", alignItems: "center", gap: "18px", marginBottom: "12px" }}>
                   <div style={{
                     background: "rgba(255,255,255,0.15)",
@@ -471,13 +461,14 @@ export default function ShopsPage() {
                   {VENDORS.length} verified sellers • Shop with confidence on FlexiBerry
                 </p>
               </div>
+
               {/* Platform stats */}
               <div style={{
                 display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px",
                 opacity: heroVisible ? 1 : 0,
                 transition: "all 0.55s ease 0.15s",
               }}>
-                {PLATFORM_STATS.map(({ label, value, icon: Icon, color }) => (
+                {PLATFORM_STATS.map(({ label, value, icon: Icon }) => (
                   <div key={label} style={{
                     padding: "12px 16px", borderRadius: "16px",
                     background: "rgba(255,255,255,0.12)",
@@ -501,6 +492,7 @@ export default function ShopsPage() {
                 ))}
               </div>
             </div>
+
             {/* ── Search bar ── */}
             <div style={{
               marginTop: "32px",
@@ -542,6 +534,7 @@ export default function ShopsPage() {
               </div>
             </div>
           </div>
+
           {/* Curved bottom edge */}
           <div style={{
             position: "absolute", bottom: -1, left: 0, right: 0, height: "40px",
@@ -558,7 +551,7 @@ export default function ShopsPage() {
             border: "1.5px solid rgba(37,99,235,0.08)",
             boxShadow: "0 4px 24px rgba(37,99,235,0.08)",
             padding: "16px 20px",
-            display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center",
+            display: "flex", flexWrap: "wrap" as const, gap: "12px", alignItems: "center",
           }}>
             {/* Filter icon */}
             <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
@@ -580,9 +573,11 @@ export default function ShopsPage() {
                 }}>{activeFilterCount}</span>
               )}
             </div>
+
             <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
-            {/* Category pills (scrollable) */}
-            <div style={{ display: "flex", gap: "5px", overflowX: "auto", scrollbarWidth: "none", flex: 1, minWidth: 0 }}>
+
+            {/* Category pills */}
+            <div style={{ display: "flex", gap: "5px", overflowX: "auto" as const, scrollbarWidth: "none" as const, flex: 1, minWidth: 0 }}>
               {CATEGORIES.map(cat => {
                 const active = activeCategory === cat;
                 return (
@@ -599,10 +594,11 @@ export default function ShopsPage() {
                 );
               })}
             </div>
+
             <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
+
             {/* Right side controls */}
-            <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0, flexWrap: "wrap" }}>
-              {/* City */}
+            <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0, flexWrap: "wrap" as const }}>
               <select value={activeCity} onChange={e => setCity(e.target.value)} style={{
                 height: "34px", padding: "0 10px", borderRadius: "10px",
                 border: "1.5px solid rgba(37,99,235,0.15)",
@@ -612,21 +608,20 @@ export default function ShopsPage() {
               }}>
                 {CITIES.map(c => <option key={c}>{c}</option>)}
               </select>
-              {/* Sort */}
-              <select value={sortBy} onChange={e => setSort(e.target.value as any)}
-                style={{
-                  height: "34px", padding: "0 10px", borderRadius: "10px",
-                  border: "1.5px solid rgba(37,99,235,0.15)",
-                  background: "#fafbff", fontSize: "12px", fontWeight: 600,
-                  color: "#374151", outline: "none", cursor: "pointer",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                }}>
+
+              <select value={sortBy} onChange={e => setSort(e.target.value as any)} style={{
+                height: "34px", padding: "0 10px", borderRadius: "10px",
+                border: "1.5px solid rgba(37,99,235,0.15)",
+                background: "#fafbff", fontSize: "12px", fontWeight: 600,
+                color: "#374151", outline: "none", cursor: "pointer",
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+              }}>
                 <option value="rating">Top Rated</option>
                 <option value="products">Most Products</option>
                 <option value="reviews">Most Reviews</option>
                 <option value="newest">Newest</option>
               </select>
-              {/* Verified toggle */}
+
               <button onClick={() => setVerified(!verifiedOnly)} style={{
                 display: "flex", alignItems: "center", gap: "5px",
                 height: "34px", padding: "0 12px", borderRadius: "10px",
@@ -639,7 +634,7 @@ export default function ShopsPage() {
               }}>
                 <BadgeCheck size={13} strokeWidth={2.5} /> Verified
               </button>
-              {/* Kisti toggle */}
+
               <button onClick={() => setInstall(!installOnly)} style={{
                 display: "flex", alignItems: "center", gap: "5px",
                 height: "34px", padding: "0 12px", borderRadius: "10px",
@@ -652,7 +647,7 @@ export default function ShopsPage() {
               }}>
                 <Zap size={13} strokeWidth={2.5} /> Kisti
               </button>
-              {/* Reset */}
+
               {activeFilterCount > 0 && (
                 <button onClick={resetFilters} style={{
                   height: "34px", padding: "0 12px", borderRadius: "10px",
@@ -665,7 +660,7 @@ export default function ShopsPage() {
                   <X size={11} strokeWidth={3} /> Reset
                 </button>
               )}
-              {/* View toggle */}
+
               <div style={{
                 display: "flex", borderRadius: "10px",
                 border: "1.5px solid rgba(37,99,235,0.12)",
@@ -689,10 +684,19 @@ export default function ShopsPage() {
 
         {/* ── MAIN CONTENT ── */}
         <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px 16px 60px" }}>
+
+          {/* Results count */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+            <p style={{ fontSize: "13px", fontWeight: 600, color: "#64748b", margin: 0 }}>
+              Showing <span style={{ fontWeight: 800, color: "#0f172a" }}>{filtered.length}</span> shop{filtered.length !== 1 ? "s" : ""}
+              {activeCategory !== "All" && ` in ${activeCategory}`}
+            </p>
+          </div>
+
           {filtered.length === 0 ? (
             <div style={{
-              textAlign: "center", padding: "80px 20px",
-              background: "white", borderRadius: "28px",
+              textAlign: "center" as const, padding: "80px 24px",
+              background: "white", borderRadius: "24px",
               border: "1.5px solid rgba(37,99,235,0.08)",
               boxShadow: "0 4px 24px rgba(37,99,235,0.06)",
             }}>
@@ -729,8 +733,7 @@ export default function ShopsPage() {
                     </div>
                     <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>Featured Shops</h2>
                     <span style={{
-                      padding: "2px 10px", borderRadius: "99px", fontSize: "11px",
-                      fontWeight: 700,
+                      padding: "2px 10px", borderRadius: "99px", fontSize: "11px", fontWeight: 700,
                       background: "rgba(37,99,235,0.08)", color: "#2563eb",
                     }}>{featured.length} shops</span>
                   </div>
@@ -743,6 +746,7 @@ export default function ShopsPage() {
                   </div>
                 </div>
               )}
+
               {/* All / remaining shops */}
               {(rest.length > 0 || search || activeCategory !== "All") && (
                 <div>
@@ -758,8 +762,7 @@ export default function ShopsPage() {
                       </div>
                       <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>All Shops</h2>
                       <span style={{
-                        padding: "2px 10px", borderRadius: "99px", fontSize: "11px",
-                        fontWeight: 700,
+                        padding: "2px 10px", borderRadius: "99px", fontSize: "11px", fontWeight: 700,
                         background: "rgba(37,99,235,0.08)", color: "#2563eb",
                       }}>{rest.length} shops</span>
                     </div>
@@ -777,6 +780,7 @@ export default function ShopsPage() {
               )}
             </>
           )}
+
           {/* ── BECOME A VENDOR BANNER ── */}
           <div style={{
             marginTop: "56px",
@@ -784,11 +788,10 @@ export default function ShopsPage() {
             background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%)",
             padding: "44px 40px",
             display: "flex", alignItems: "center", justifyContent: "space-between",
-            flexWrap: "wrap", gap: "24px",
+            flexWrap: "wrap" as const, gap: "24px",
             position: "relative", overflow: "hidden",
             boxShadow: "0 20px 60px rgba(37,99,235,0.30), 0 8px 24px rgba(124,58,237,0.20)",
           }}>
-            {/* Background decoration */}
             <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
               <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-80px", right: "15%" }} />
               <div style={{ position: "absolute", width: "180px", height: "180px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-60px", right: "5%" }} />
@@ -800,6 +803,7 @@ export default function ShopsPage() {
                 )}
               </svg>
             </div>
+
             <div style={{ position: "relative", zIndex: 1 }}>
               <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "10px" }}>
                 <div style={{
@@ -822,7 +826,7 @@ export default function ShopsPage() {
                   </p>
                 </div>
               </div>
-              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" as const }}>
                 {[
                   { icon: TrendingUp, text: "Reach 2.4M+ customers" },
                   { icon: Zap, text: "Installments built-in" },
@@ -835,7 +839,8 @@ export default function ShopsPage() {
                 ))}
               </div>
             </div>
-            <div style={{ display: "flex", gap: "12px", position: "relative", zIndex: 1, flexWrap: "wrap" }}>
+
+            <div style={{ display: "flex", gap: "12px", position: "relative", zIndex: 1, flexWrap: "wrap" as const }}>
               <Link href="/auth/login" style={{ textDecoration: "none" }}>
                 <button style={{
                   padding: "14px 28px", borderRadius: "14px",
@@ -863,8 +868,14 @@ export default function ShopsPage() {
                   boxShadow: "0 8px 24px rgba(0,0,0,0.20)",
                   transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
                 }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px) scale(1.02)"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 12px 32px rgba(0,0,0,0.25)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.20)"; }}>
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px) scale(1.02)";
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 12px 32px rgba(0,0,0,0.25)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLButtonElement).style.transform = "none";
+                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.20)";
+                  }}>
                   Register Free <ArrowUpRight size={15} />
                 </button>
               </Link>
@@ -872,15 +883,16 @@ export default function ShopsPage() {
           </div>
         </main>
       </div>
+
       <style jsx global>{`
         @keyframes cardIn {
           from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
+          to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes floatOrb {
           0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(-20px, -15px) scale(1.04); }
-          66% { transform: translate(15px, -25px) scale(0.97); }
+          33%       { transform: translate(-20px, -15px) scale(1.04); }
+          66%       { transform: translate(15px, -25px) scale(0.97); }
         }
         input::placeholder { color: rgba(255,255,255,0.40); }
         select { appearance: auto; }
