@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Playfair_Display, DM_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ChatbotAssistant } from '@/components/ChatbotAssistant'
 import './globals.css'
 
 /* ── Fonts loaded via next/font — NO @import needed in globals.css ───────── */
@@ -111,6 +112,7 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased">
         {children}
+        <ChatbotAssistant />
         <Analytics />
       </body>
     </html>

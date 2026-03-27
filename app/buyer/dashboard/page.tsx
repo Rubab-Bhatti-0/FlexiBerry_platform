@@ -43,6 +43,8 @@ const FlexiBerryLogo = ({ size = 40 }: { size?: number }) => (
   </svg>
 );
 
+
+
 /* ── Mock Data ── */
 const initialCustomer = {
   name: "Muhammad Ali",
@@ -108,9 +110,11 @@ const orders = [
 
 const wishlistCount = 6;
 const notifications = [
-  { id: 1, text: "Your installment for FBR-10042 is due on Apr 8", type: "warning", time: "2 days ago" },
-  { id: 2, text: "Order FBR-09102 is out for delivery!", type: "success", time: "5 hours ago" },
-  { id: 3, text: "Flash Sale starts tomorrow — items in your wishlist are on discount", type: "info", time: "1 day ago" },
+  { id: 1, text: "Your installment for FBR-10042 is due on Apr 8", type: "warning", time: "2 days ago", icon: AlertCircle },
+  { id: 2, text: "Order FBR-09102 is out for delivery!", type: "success", time: "5 hours ago", icon: Truck },
+  { id: 3, text: "Flash Sale starts tomorrow — items in your wishlist are on discount", type: "info", time: "1 day ago", icon: Gift },
+  { id: 4, text: "Payment received for FBR-08554. Thank you!", type: "success", time: "3 days ago", icon: CheckCircle2 },
+  { id: 5, text: "Your order FBR-10042 has been confirmed", type: "info", time: "5 days ago", icon: Package },
 ];
 
 const formatPKR = (n: number) => "PKR " + n.toLocaleString("en-PK");
@@ -131,6 +135,7 @@ export default function BuyerDashboardPage() {
   const [customer, setCustomer] = useState(initialCustomer);
   const [editingAddress, setEditingAddress] = useState<any | null>(null);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [expandedInstallment, setExpandedInstallment] = useState<string | null>(null);
 
   const totalSpend = orders.reduce((s, o) => s + o.price, 0);
   const activeInstallments = orders.filter(o => o.installments.paid < o.installments.total);
@@ -309,7 +314,10 @@ export default function BuyerDashboardPage() {
                   { label: "Monthly Due", val: formatPKR(totalMonthlyDue), icon: Calendar, color: "#d97706", bg: "#fef3c7" },
                   { label: "Loyalty Points", val: customer.loyaltyPoints, icon: Star, color: "#059669", bg: "#d1fae5" },
                 ].map(s => (
-                  <div key={s.label} className="bg-white p-5 rounded-2xl border border-blue-600/5 shadow-sm hover:shadow-md transition-shadow">
+                  <div key={s.label} className="bg-white p-5 rounded-2xl border border-blue-600/5 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => {
+                    if (s.label === "Active Orders") setActiveTab("orders");
+                    if (s.label === "Monthly Due") setActiveTab("installments");
+                  }}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="p-2 rounded-xl" style={{ background: s.bg }}>
                         <s.icon size={20} style={{ color: s.color }} />
@@ -369,21 +377,33 @@ export default function BuyerDashboardPage() {
                   </div>
                 </div>
 
-                {/* Notifications Preview */}
+                {/* Recent Notifications */}
                 <div className="bg-white rounded-2xl border border-blue-600/5 shadow-sm overflow-hidden">
-                  <div className="p-5 border-b border-gray-50">
-                    <h3 className="font-bold text-slate-900">Updates</h3>
+                  <div className="p-5 border-b border-gray-50 flex items-center justify-between">
+                    <h3 className="font-bold text-slate-900">Recent Notifications</h3>
+                    <button onClick={() => setActiveTab("notifications")} className="text-xs font-bold text-blue-600 hover:underline">View All</button>
                   </div>
-                  <div className="p-4 space-y-4">
-                    {notifications.map(n => (
-                      <div key={n.id} className="flex gap-3">
-                        <div className={`w-1.5 h-auto rounded-full ${n.type === 'warning' ? 'bg-amber-400' : n.type === 'success' ? 'bg-emerald-400' : 'bg-blue-400'}`} />
-                        <div>
-                          <p className="text-xs font-medium text-slate-700 leading-relaxed">{n.text}</p>
-                          <p className="text-[10px] text-slate-400 mt-1">{n.time}</p>
+                  <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
+                    {notifications.slice(0, 4).map(n => {
+                      const NotifIcon = n.icon;
+                      const typeColors = {
+                        warning: { bg: '#fef3c7', color: '#d97706', icon: '#d97706' },
+                        success: { bg: '#d1fae5', color: '#059669', icon: '#059669' },
+                        info: { bg: '#dbeafe', color: '#2563eb', icon: '#2563eb' }
+                      };
+                      const colors = typeColors[n.type as keyof typeof typeColors];
+                      return (
+                        <div key={n.id} className="flex gap-3 p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors">
+                          <div className="p-2 rounded-lg flex-shrink-0" style={{ background: colors.bg }}>
+                            <NotifIcon size={14} style={{ color: colors.icon }} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium text-slate-700 leading-relaxed line-clamp-2">{n.text}</p>
+                            <p className="text-[10px] text-slate-400 mt-1">{n.time}</p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -477,6 +497,168 @@ export default function BuyerDashboardPage() {
                         </div>
                       )}
                     </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ════════ INSTALLMENTS tab ════════ */}
+          {activeTab === "installments" && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl font-extrabold text-slate-900">My Installments</h1>
+                  <p className="text-sm text-slate-500 mt-1">Manage and track all your active payment plans</p>
+                </div>
+              </div>
+
+              {/* Summary Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-2xl border border-blue-200">
+                  <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Active Plans</p>
+                  <p className="text-3xl font-extrabold text-blue-900">{activeInstallments.length}</p>
+                </div>
+                <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-5 rounded-2xl border border-amber-200">
+                  <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-2">Total Monthly Due</p>
+                  <p className="text-3xl font-extrabold text-amber-900">{formatPKR(totalMonthlyDue)}</p>
+                </div>
+                <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-5 rounded-2xl border border-emerald-200">
+                  <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-2">Fully Paid</p>
+                  <p className="text-3xl font-extrabold text-emerald-900">{orders.filter(o => o.installments.paid === o.installments.total).length}</p>
+                </div>
+              </div>
+
+              {/* Installment Cards */}
+              <div className="space-y-4">
+                {orders.map(o => (
+                  <div key={o.id} className="bg-white rounded-2xl border border-blue-600/5 shadow-sm overflow-hidden">
+                    <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <img src={o.image} className="w-12 h-12 rounded-lg object-cover bg-gray-100" />
+                          <div>
+                            <h4 className="font-bold text-slate-900 text-sm">{o.product}</h4>
+                            <p className="text-xs text-slate-500">{o.id}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4 md:gap-6 text-center">
+                        <div>
+                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Total</p>
+                          <p className="text-sm font-extrabold text-slate-900">{o.installments.total}M</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Paid</p>
+                          <p className="text-sm font-extrabold text-emerald-600">{o.installments.paid}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Remaining</p>
+                          <p className="text-sm font-extrabold text-amber-600">{o.installments.total - o.installments.paid}</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => setExpandedInstallment(expandedInstallment === o.id ? null : o.id)}
+                        className="p-2 hover:bg-gray-50 rounded-xl text-slate-400"
+                      >
+                        <ChevronDown size={20} className={`transition-transform duration-300 ${expandedInstallment === o.id ? 'rotate-180' : ''}`} />
+                      </button>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="px-5 py-3 bg-slate-50 border-t border-gray-100">
+                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-blue-600 to-purple-600" style={{ width: `${(o.installments.paid/o.installments.total)*100}%` }} />
+                      </div>
+                      <p className="text-xs text-slate-500 mt-2">{Math.round((o.installments.paid/o.installments.total)*100)}% Complete</p>
+                    </div>
+
+                    {/* Expanded Details */}
+                    {expandedInstallment === o.id && (
+                      <div className="px-5 py-5 border-t border-gray-100 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <p className="text-xs font-bold text-blue-600 uppercase mb-2">Monthly Payment</p>
+                            <p className="text-2xl font-extrabold text-blue-900">{formatPKR(o.installments.amount)}</p>
+                          </div>
+                          {o.nextDue && (
+                            <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                              <p className="text-xs font-bold text-amber-600 uppercase mb-2">Next Due Date</p>
+                              <p className="text-2xl font-extrabold text-amber-900">{o.nextDue}</p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="space-y-2">
+                          <h5 className="text-xs font-bold text-slate-600 uppercase">Payment Schedule</h5>
+                          <div className="grid grid-cols-6 gap-1">
+                            {Array.from({ length: o.installments.total }).map((_, i) => (
+                              <div 
+                                key={i}
+                                className={`h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all ${
+                                  i < o.installments.paid 
+                                    ? 'bg-emerald-500 text-white' 
+                                    : i === o.installments.paid
+                                    ? 'bg-amber-500 text-white border-2 border-amber-600'
+                                    : 'bg-gray-200 text-slate-500'
+                                }`}
+                              >
+                                {i + 1}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex gap-3">
+                          <button className="flex-1 h-10 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition-colors">
+                            Pay Now
+                          </button>
+                          <button className="flex-1 h-10 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors">
+                            View Details
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ════════ NOTIFICATIONS tab ════════ */}
+          {activeTab === "notifications" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-extrabold text-slate-900">Notifications</h1>
+                <p className="text-sm text-slate-500 mt-1">Stay updated with your orders and account activity</p>
+              </div>
+
+              <div className="space-y-3">
+                {notifications.map(n => {
+                  const NotifIcon = n.icon;
+                  const typeColors = {
+                    warning: { bg: '#fef3c7', border: '#fcd34d', color: '#d97706', icon: '#d97706' },
+                    success: { bg: '#d1fae5', border: '#6ee7b7', color: '#059669', icon: '#059669' },
+                    info: { bg: '#dbeafe', border: '#7dd3fc', color: '#2563eb', icon: '#2563eb' }
+                  };
+                  const colors = typeColors[n.type as keyof typeof typeColors];
+                  
+                  return (
+                    <motion.div 
+                      key={n.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="bg-white rounded-2xl border border-blue-600/5 shadow-sm p-5 flex gap-4 hover:shadow-md transition-all"
+                    >
+                      <div className="p-3 rounded-xl flex-shrink-0 h-fit" style={{ background: colors.bg, borderLeft: `4px solid ${colors.border}` }}>
+                        <NotifIcon size={20} style={{ color: colors.icon }} />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-bold text-slate-900">{n.text}</p>
+                        <p className="text-xs text-slate-400 mt-2">{n.time}</p>
+                      </div>
+                      <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                        <X size={18} />
+                      </button>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -652,20 +834,24 @@ export default function BuyerDashboardPage() {
             </div>
           )}
 
-          {/* ════════ OTHER tabs ════════ */}
-          {(activeTab === "installments" || activeTab === "wishlist" || activeTab === "notifications") && (
+          {/* ════════ WISHLIST tab ════════ */}
+          {activeTab === "wishlist" && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-4">
-                {activeTab === "installments" ? <CreditCard size={32} /> : activeTab === "wishlist" ? <Heart size={32} /> : <Bell size={32} />}
+              <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-red-600 mb-4">
+                <Heart size={32} />
               </div>
-              <h2 className="text-xl font-extrabold text-slate-900 capitalize">{activeTab}</h2>
-              <p className="text-sm text-slate-500 mt-2 max-w-xs">This section is currently being updated with new features. Check back soon!</p>
-              <button onClick={() => setActiveTab("overview")} className="mt-6 px-6 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl">Back to Overview</button>
+              <h2 className="text-xl font-extrabold text-slate-900">Your Wishlist</h2>
+              <p className="text-sm text-slate-500 mt-2 max-w-xs">You have {wishlistCount} items saved in your wishlist.</p>
+              <Link href="/wishlist">
+                <button className="mt-6 px-6 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl">View Wishlist Page</button>
+              </Link>
             </div>
           )}
 
         </main>
       </div>
+
+
     </div>
   );
 }
