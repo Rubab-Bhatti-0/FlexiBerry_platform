@@ -2,8 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import FlexiLayout from "@/components/layout/FlexiLayout/FlexiLayout";
 import {
   Search, Star, MapPin, Package, TrendingUp, Shield,
   ArrowUpRight, Zap, Store, ChevronRight, BadgeCheck,
@@ -396,483 +395,483 @@ export default function ShopsPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      <Header />
-      {/* ── HERO SECTION ── */}
-      <section style={{
-        background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 35%, #7c3aed 70%, #4c1d95 100%)",
-        padding: "64px 16px 80px",
-        position: "relative", overflow: "hidden",
-      }}>
-        {/* Animated orbs */}
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-          <div style={{ position: "absolute", width: "500px", height: "500px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-150px", right: "-100px", animation: "floatOrb 8s ease-in-out infinite" }} />
-          <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-80px", left: "10%", animation: "floatOrb 10s ease-in-out infinite 2s" }} />
-          <div style={{ position: "absolute", width: "200px", height: "200px", borderRadius: "50%", background: "rgba(124,58,237,0.25)", top: "20%", left: "40%", filter: "blur(40px)" }} />
-          {/* Grid dots */}
-          <svg style={{ position: "absolute", right: "5%", top: 0, opacity: 0.07 }} width="400" height="300" viewBox="0 0 400 300">
-            {Array.from({ length: 12 }).map((_, row) =>
-              Array.from({ length: 20 }).map((_, col) => (
-                <circle key={`${row}-${col}`} cx={col * 22 + 11} cy={row * 26 + 13} r="1.8" fill="white" />
-              ))
-            )}
-          </svg>
-        </div>
-        <div style={{ maxWidth: "1400px", margin: "0 auto", position: "relative", zIndex: 1 }}>
-          {/* Eyebrow */}
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: "8px",
-            padding: "6px 14px", borderRadius: "99px",
-            background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.25)",
-            marginBottom: "20px",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "none" : "translateY(-8px)",
-            transition: "all 0.5s ease",
-          }}>
-            <BadgeCheck size={13} color="rgba(255,255,255,0.9)" />
-            <span style={{ fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "0.10em", textTransform: "uppercase" }}>
-              Verified Sellers
-            </span>
+    <FlexiLayout>
+      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        {/* ── HERO SECTION ── */}
+        <section style={{
+          background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 35%, #7c3aed 70%, #4c1d95 100%)",
+          padding: "64px 16px 80px",
+          position: "relative", overflow: "hidden",
+        }}>
+          {/* Animated orbs */}
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+            <div style={{ position: "absolute", width: "500px", height: "500px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-150px", right: "-100px", animation: "floatOrb 8s ease-in-out infinite" }} />
+            <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-80px", left: "10%", animation: "floatOrb 10s ease-in-out infinite 2s" }} />
+            <div style={{ position: "absolute", width: "200px", height: "200px", borderRadius: "50%", background: "rgba(124,58,237,0.25)", top: "20%", left: "40%", filter: "blur(40px)" }} />
+            {/* Grid dots */}
+            <svg style={{ position: "absolute", right: "5%", top: 0, opacity: 0.07 }} width="400" height="300" viewBox="0 0 400 300">
+              {Array.from({ length: 12 }).map((_, row) =>
+                Array.from({ length: 20 }).map((_, col) => (
+                  <circle key={`${row}-${col}`} cx={col * 22 + 11} cy={row * 26 + 13} r="1.8" fill="white" />
+                ))
+              )}
+            </svg>
           </div>
-          {/* Headline + logo */}
-          <div style={{
-            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
-            flexWrap: "wrap", gap: "24px",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "none" : "translateY(16px)",
-            transition: "all 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s",
-          }}>
-            <div>
-              {/* Logo + title side-by-side */}
-              <div style={{ display: "flex", alignItems: "center", gap: "18px", marginBottom: "12px" }}>
-                <div style={{
-                  background: "rgba(255,255,255,0.15)",
-                  backdropFilter: "blur(12px)",
-                  borderRadius: "20px",
-                  padding: "8px",
-                  border: "1.5px solid rgba(255,255,255,0.25)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.20)",
-                  flexShrink: 0,
-                }}>
-                  <FlexiBerryLogo size={52} />
-                </div>
-                <h1 style={{
-                  color: "white", fontWeight: 900,
-                  fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
-                  margin: 0, letterSpacing: "-0.04em", lineHeight: 1,
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  textShadow: "0 4px 24px rgba(0,0,0,0.20)",
-                }}>
-                  All Shops
-                </h1>
-              </div>
-              <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "clamp(14px,2vw,17px)", margin: 0, fontWeight: 500, maxWidth: "480px", lineHeight: 1.55 }}>
-                {VENDORS.length} verified sellers • Shop with confidence on FlexiBerry
-              </p>
-            </div>
-            {/* Platform stats */}
+          <div style={{ maxWidth: "1400px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+            {/* Eyebrow */}
             <div style={{
-              display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px",
+              display: "inline-flex", alignItems: "center", gap: "8px",
+              padding: "6px 14px", borderRadius: "99px",
+              background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              marginBottom: "20px",
               opacity: heroVisible ? 1 : 0,
-              transition: "all 0.55s ease 0.15s",
+              transform: heroVisible ? "none" : "translateY(-8px)",
+              transition: "all 0.5s ease",
             }}>
-              {PLATFORM_STATS.map(({ label, value, icon: Icon, color }) => (
-                <div key={label} style={{
-                  padding: "12px 16px", borderRadius: "16px",
-                  background: "rgba(255,255,255,0.12)",
-                  backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(255,255,255,0.20)",
-                  display: "flex", alignItems: "center", gap: "10px",
-                  minWidth: "140px",
-                }}>
+              <BadgeCheck size={13} color="rgba(255,255,255,0.9)" />
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "0.10em", textTransform: "uppercase" }}>
+                Verified Sellers
+              </span>
+            </div>
+            {/* Headline + logo */}
+            <div style={{
+              display: "flex", alignItems: "flex-end", justifyContent: "space-between",
+              flexWrap: "wrap", gap: "24px",
+              opacity: heroVisible ? 1 : 0,
+              transform: heroVisible ? "none" : "translateY(16px)",
+              transition: "all 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s",
+            }}>
+              <div>
+                {/* Logo + title side-by-side */}
+                <div style={{ display: "flex", alignItems: "center", gap: "18px", marginBottom: "12px" }}>
                   <div style={{
-                    height: "32px", width: "32px", borderRadius: "10px", flexShrink: 0,
-                    background: "rgba(255,255,255,0.18)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
+                    background: "rgba(255,255,255,0.15)",
+                    backdropFilter: "blur(12px)",
+                    borderRadius: "20px",
+                    padding: "8px",
+                    border: "1.5px solid rgba(255,255,255,0.25)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.20)",
+                    flexShrink: 0,
                   }}>
-                    <Icon size={15} color="white" strokeWidth={2} />
+                    <FlexiBerryLogo size={52} />
                   </div>
-                  <div>
-                    <div style={{ fontSize: "16px", fontWeight: 900, color: "white", lineHeight: 1 }}>{value}</div>
-                    <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", fontWeight: 600, marginTop: "2px" }}>{label}</div>
-                  </div>
+                  <h1 style={{
+                    color: "white", fontWeight: 900,
+                    fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
+                    margin: 0, letterSpacing: "-0.04em", lineHeight: 1,
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    textShadow: "0 4px 24px rgba(0,0,0,0.20)",
+                  }}>
+                    All Shops
+                  </h1>
                 </div>
-              ))}
+                <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "clamp(14px,2vw,17px)", margin: 0, fontWeight: 500, maxWidth: "480px", lineHeight: 1.55 }}>
+                  {VENDORS.length} verified sellers • Shop with confidence on FlexiBerry
+                </p>
+              </div>
+              {/* Platform stats */}
+              <div style={{
+                display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px",
+                opacity: heroVisible ? 1 : 0,
+                transition: "all 0.55s ease 0.15s",
+              }}>
+                {PLATFORM_STATS.map(({ label, value, icon: Icon, color }) => (
+                  <div key={label} style={{
+                    padding: "12px 16px", borderRadius: "16px",
+                    background: "rgba(255,255,255,0.12)",
+                    backdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255,255,255,0.20)",
+                    display: "flex", alignItems: "center", gap: "10px",
+                    minWidth: "140px",
+                  }}>
+                    <div style={{
+                      height: "32px", width: "32px", borderRadius: "10px", flexShrink: 0,
+                      background: "rgba(255,255,255,0.18)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      <Icon size={15} color="white" strokeWidth={2} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "16px", fontWeight: 900, color: "white", lineHeight: 1 }}>{value}</div>
+                      <div style={{ fontSize: "10px", color: "rgba(255,255,255,0.65)", fontWeight: 600, marginTop: "2px" }}>{label}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* ── Search bar ── */}
+            <div style={{
+              marginTop: "32px",
+              opacity: heroVisible ? 1 : 0,
+              transform: heroVisible ? "none" : "translateY(12px)",
+              transition: "all 0.55s ease 0.20s",
+            }}>
+              <div style={{ position: "relative", maxWidth: "600px" }}>
+                <Search size={16} color="rgba(255,255,255,0.55)"
+                  style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+                <input
+                  placeholder="Search shops by name, city, or category…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  style={{
+                    width: "100%", height: "52px",
+                    paddingLeft: "44px", paddingRight: search ? "44px" : "16px",
+                    borderRadius: "16px",
+                    border: "1.5px solid rgba(255,255,255,0.25)",
+                    background: "rgba(255,255,255,0.14)",
+                    backdropFilter: "blur(16px)",
+                    fontSize: "14px", fontWeight: 500, color: "white",
+                    outline: "none", fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    boxSizing: "border-box",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+                    transition: "border-color 0.2s",
+                  }}
+                />
+                {search && (
+                  <button onClick={() => setSearch("")} style={{
+                    position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)",
+                    background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%",
+                    cursor: "pointer", height: "26px", width: "26px",
+                    display: "flex", alignItems: "center", justifyContent: "center", color: "white",
+                  }}>
+                    <X size={11} strokeWidth={3} />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-          {/* ── Search bar ── */}
+          {/* Curved bottom edge */}
           <div style={{
-            marginTop: "32px",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "none" : "translateY(12px)",
-            transition: "all 0.55s ease 0.20s",
+            position: "absolute", bottom: -1, left: 0, right: 0, height: "40px",
+            background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)",
+            borderRadius: "60% 60% 0 0 / 100% 100% 0 0",
+          }} />
+        </section>
+
+        {/* ── FILTERS TOOLBAR ── */}
+        <div style={{ maxWidth: "1400px", margin: "-10px auto 0", padding: "0 16px 0" }}>
+          <div style={{
+            background: "white",
+            borderRadius: "20px",
+            border: "1.5px solid rgba(37,99,235,0.08)",
+            boxShadow: "0 4px 24px rgba(37,99,235,0.08)",
+            padding: "16px 20px",
+            display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center",
           }}>
-            <div style={{ position: "relative", maxWidth: "600px" }}>
-              <Search size={16} color="rgba(255,255,255,0.55)"
-                style={{ position: "absolute", left: "16px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-              <input
-                placeholder="Search shops by name, city, or category…"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                style={{
-                  width: "100%", height: "52px",
-                  paddingLeft: "44px", paddingRight: search ? "44px" : "16px",
-                  borderRadius: "16px",
-                  border: "1.5px solid rgba(255,255,255,0.25)",
-                  background: "rgba(255,255,255,0.14)",
-                  backdropFilter: "blur(16px)",
-                  fontSize: "14px", fontWeight: 500, color: "white",
-                  outline: "none", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  boxSizing: "border-box",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
-                  transition: "border-color 0.2s",
-                }}
-              />
-              {search && (
-                <button onClick={() => setSearch("")} style={{
-                  position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)",
-                  background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%",
-                  cursor: "pointer", height: "26px", width: "26px",
-                  display: "flex", alignItems: "center", justifyContent: "center", color: "white",
-                }}>
-                  <X size={11} strokeWidth={3} />
-                </button>
+            {/* Filter icon */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+              <div style={{
+                height: "32px", width: "32px", borderRadius: "9px",
+                background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 4px 12px rgba(37,99,235,0.35)",
+              }}>
+                <SlidersHorizontal size={14} color="white" strokeWidth={2.5} />
+              </div>
+              <span style={{ fontSize: "13px", fontWeight: 800, color: "#0f172a" }}>Filter</span>
+              {activeFilterCount > 0 && (
+                <span style={{
+                  height: "18px", minWidth: "18px", borderRadius: "99px",
+                  background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                  fontSize: "10px", fontWeight: 800, color: "white",
+                  display: "flex", alignItems: "center", justifyContent: "center", padding: "0 5px",
+                }}>{activeFilterCount}</span>
               )}
             </div>
-          </div>
-        </div>
-        {/* Curved bottom edge */}
-        <div style={{
-          position: "absolute", bottom: -1, left: 0, right: 0, height: "40px",
-          background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)",
-          borderRadius: "60% 60% 0 0 / 100% 100% 0 0",
-        }} />
-      </section>
-
-      {/* ── FILTERS TOOLBAR ── */}
-      <div style={{ maxWidth: "1400px", margin: "-10px auto 0", padding: "0 16px 0" }}>
-        <div style={{
-          background: "white",
-          borderRadius: "20px",
-          border: "1.5px solid rgba(37,99,235,0.08)",
-          boxShadow: "0 4px 24px rgba(37,99,235,0.08)",
-          padding: "16px 20px",
-          display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center",
-        }}>
-          {/* Filter icon */}
-          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
-            <div style={{
-              height: "32px", width: "32px", borderRadius: "9px",
-              background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: "0 4px 12px rgba(37,99,235,0.35)",
-            }}>
-              <SlidersHorizontal size={14} color="white" strokeWidth={2.5} />
+            <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
+            {/* Category pills (scrollable) */}
+            <div style={{ display: "flex", gap: "5px", overflowX: "auto", scrollbarWidth: "none", flex: 1, minWidth: 0 }}>
+              {CATEGORIES.map(cat => {
+                const active = activeCategory === cat;
+                return (
+                  <button key={cat} onClick={() => setCategory(cat)} style={{
+                    padding: "6px 14px", borderRadius: "99px", flexShrink: 0,
+                    fontSize: "12px", fontWeight: 700,
+                    border: `1.5px solid ${active ? "#2563eb" : "rgba(37,99,235,0.12)"}`,
+                    background: active ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "transparent",
+                    color: active ? "white" : "#64748b",
+                    cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    boxShadow: active ? "0 4px 12px rgba(37,99,235,0.30)" : "none",
+                    transition: "all 0.18s cubic-bezier(0.34,1.56,0.64,1)",
+                  }}>{cat}</button>
+                );
+              })}
             </div>
-            <span style={{ fontSize: "13px", fontWeight: 800, color: "#0f172a" }}>Filter</span>
-            {activeFilterCount > 0 && (
-              <span style={{
-                height: "18px", minWidth: "18px", borderRadius: "99px",
-                background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                fontSize: "10px", fontWeight: 800, color: "white",
-                display: "flex", alignItems: "center", justifyContent: "center", padding: "0 5px",
-              }}>{activeFilterCount}</span>
-            )}
-          </div>
-          <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
-          {/* Category pills (scrollable) */}
-          <div style={{ display: "flex", gap: "5px", overflowX: "auto", scrollbarWidth: "none", flex: 1, minWidth: 0 }}>
-            {CATEGORIES.map(cat => {
-              const active = activeCategory === cat;
-              return (
-                <button key={cat} onClick={() => setCategory(cat)} style={{
-                  padding: "6px 14px", borderRadius: "99px", flexShrink: 0,
-                  fontSize: "12px", fontWeight: 700,
-                  border: `1.5px solid ${active ? "#2563eb" : "rgba(37,99,235,0.12)"}`,
-                  background: active ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "transparent",
-                  color: active ? "white" : "#64748b",
-                  cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  boxShadow: active ? "0 4px 12px rgba(37,99,235,0.30)" : "none",
-                  transition: "all 0.18s cubic-bezier(0.34,1.56,0.64,1)",
-                }}>{cat}</button>
-              );
-            })}
-          </div>
-          <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
-          {/* Right side controls */}
-          <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0, flexWrap: "wrap" }}>
-            {/* City */}
-            <select value={activeCity} onChange={e => setCity(e.target.value)} style={{
-              height: "34px", padding: "0 10px", borderRadius: "10px",
-              border: "1.5px solid rgba(37,99,235,0.15)",
-              background: "#fafbff", fontSize: "12px", fontWeight: 600,
-              color: "#374151", outline: "none", cursor: "pointer",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}>
-              {CITIES.map(c => <option key={c}>{c}</option>)}
-            </select>
-            {/* Sort */}
-            <select value={sortBy} onChange={e => setSort(e.target.value as any)}
-              style={{
+            <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
+            {/* Right side controls */}
+            <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0, flexWrap: "wrap" }}>
+              {/* City */}
+              <select value={activeCity} onChange={e => setCity(e.target.value)} style={{
                 height: "34px", padding: "0 10px", borderRadius: "10px",
                 border: "1.5px solid rgba(37,99,235,0.15)",
                 background: "#fafbff", fontSize: "12px", fontWeight: 600,
                 color: "#374151", outline: "none", cursor: "pointer",
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
               }}>
-              <option value="rating">Top Rated</option>
-              <option value="products">Most Products</option>
-              <option value="reviews">Most Reviews</option>
-              <option value="newest">Newest</option>
-            </select>
-            {/* Verified toggle */}
-            <button onClick={() => setVerified(!verifiedOnly)} style={{
-              display: "flex", alignItems: "center", gap: "5px",
-              height: "34px", padding: "0 12px", borderRadius: "10px",
-              border: `1.5px solid ${verifiedOnly ? "#2563eb" : "rgba(37,99,235,0.15)"}`,
-              background: verifiedOnly ? "rgba(37,99,235,0.08)" : "transparent",
-              color: verifiedOnly ? "#2563eb" : "#64748b",
-              fontSize: "12px", fontWeight: 700, cursor: "pointer",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              transition: "all 0.15s",
-            }}>
-              <BadgeCheck size={13} strokeWidth={2.5} /> Verified
-            </button>
-            {/* Kisti toggle */}
-            <button onClick={() => setInstall(!installOnly)} style={{
-              display: "flex", alignItems: "center", gap: "5px",
-              height: "34px", padding: "0 12px", borderRadius: "10px",
-              border: `1.5px solid ${installOnly ? "#2563eb" : "rgba(37,99,235,0.15)"}`,
-              background: installOnly ? "rgba(37,99,235,0.08)" : "transparent",
-              color: installOnly ? "#2563eb" : "#64748b",
-              fontSize: "12px", fontWeight: 700, cursor: "pointer",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              transition: "all 0.15s",
-            }}>
-              <Zap size={13} strokeWidth={2.5} /> Kisti
-            </button>
-            {/* Reset */}
-            {activeFilterCount > 0 && (
-              <button onClick={resetFilters} style={{
-                height: "34px", padding: "0 12px", borderRadius: "10px",
-                border: "1.5 solid rgba(239,68,68,0.20)",
-                background: "rgba(239,68,68,0.07)",
-                color: "#ef4444", fontSize: "12px", fontWeight: 700,
-                cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                display: "flex", alignItems: "center", gap: "4px",
-              }}>
-                <X size={11} strokeWidth={3} /> Reset
-              </button>
-            )}
-            {/* View toggle */}
-            <div style={{
-              display: "flex", borderRadius: "10px",
-              border: "1.5px solid rgba(37,99,235,0.12)",
-              overflow: "hidden",
-            }}>
-              {([["grid", Grid3X3], ["list", List]] as const).map(([mode, Icon]) => (
-                <button key={mode} onClick={() => setView(mode)} style={{
-                  height: "34px", width: "34px", border: "none",
-                  background: view === mode ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "transparent",
-                  color: view === mode ? "white" : "#94a3b8",
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "all 0.15s",
+                {CITIES.map(c => <option key={c}>{c}</option>)}
+              </select>
+              {/* Sort */}
+              <select value={sortBy} onChange={e => setSort(e.target.value as any)}
+                style={{
+                  height: "34px", padding: "0 10px", borderRadius: "10px",
+                  border: "1.5px solid rgba(37,99,235,0.15)",
+                  background: "#fafbff", fontSize: "12px", fontWeight: 600,
+                  color: "#374151", outline: "none", cursor: "pointer",
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
                 }}>
-                  <Icon size={14} strokeWidth={2} />
+                <option value="rating">Top Rated</option>
+                <option value="products">Most Products</option>
+                <option value="reviews">Most Reviews</option>
+                <option value="newest">Newest</option>
+              </select>
+              {/* Verified toggle */}
+              <button onClick={() => setVerified(!verifiedOnly)} style={{
+                display: "flex", alignItems: "center", gap: "5px",
+                height: "34px", padding: "0 12px", borderRadius: "10px",
+                border: `1.5px solid ${verifiedOnly ? "#2563eb" : "rgba(37,99,235,0.15)"}`,
+                background: verifiedOnly ? "rgba(37,99,235,0.08)" : "transparent",
+                color: verifiedOnly ? "#2563eb" : "#64748b",
+                fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                transition: "all 0.15s",
+              }}>
+                <BadgeCheck size={13} strokeWidth={2.5} /> Verified
+              </button>
+              {/* Kisti toggle */}
+              <button onClick={() => setInstall(!installOnly)} style={{
+                display: "flex", alignItems: "center", gap: "5px",
+                height: "34px", padding: "0 12px", borderRadius: "10px",
+                border: `1.5px solid ${installOnly ? "#2563eb" : "rgba(37,99,235,0.15)"}`,
+                background: installOnly ? "rgba(37,99,235,0.08)" : "transparent",
+                color: installOnly ? "#2563eb" : "#64748b",
+                fontSize: "12px", fontWeight: 700, cursor: "pointer",
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                transition: "all 0.15s",
+              }}>
+                <Zap size={13} strokeWidth={2.5} /> Kisti
+              </button>
+              {/* Reset */}
+              {activeFilterCount > 0 && (
+                <button onClick={resetFilters} style={{
+                  height: "34px", padding: "0 12px", borderRadius: "10px",
+                  border: "1.5px solid rgba(239,68,68,0.20)",
+                  background: "rgba(239,68,68,0.07)",
+                  color: "#ef4444", fontSize: "12px", fontWeight: 700,
+                  cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  display: "flex", alignItems: "center", gap: "4px",
+                }}>
+                  <X size={11} strokeWidth={3} /> Reset
                 </button>
-              ))}
+              )}
+              {/* View toggle */}
+              <div style={{
+                display: "flex", borderRadius: "10px",
+                border: "1.5px solid rgba(37,99,235,0.12)",
+                overflow: "hidden",
+              }}>
+                {([["grid", Grid3X3], ["list", List]] as const).map(([mode, Icon]) => (
+                  <button key={mode} onClick={() => setView(mode)} style={{
+                    height: "34px", width: "34px", border: "none",
+                    background: view === mode ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "transparent",
+                    color: view === mode ? "white" : "#94a3b8",
+                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                    transition: "all 0.15s",
+                  }}>
+                    <Icon size={14} strokeWidth={2} />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* ── MAIN CONTENT ── */}
-      <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px 16px 60px" }}>
-        {filtered.length === 0 ? (
-          <div style={{
-            textAlign: "center", padding: "80px 20px",
-            background: "white", borderRadius: "28px",
-            border: "1.5px solid rgba(37,99,235,0.08)",
-            boxShadow: "0 4px 24px rgba(37,99,235,0.06)",
-          }}>
+        {/* ── MAIN CONTENT ── */}
+        <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "28px 16px 60px" }}>
+          {filtered.length === 0 ? (
             <div style={{
-              height: "80px", width: "80px", borderRadius: "24px",
-              background: "linear-gradient(135deg, #eff6ff, #f5f3ff)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              margin: "0 auto 20px",
+              textAlign: "center", padding: "80px 20px",
+              background: "white", borderRadius: "28px",
+              border: "1.5px solid rgba(37,99,235,0.08)",
+              boxShadow: "0 4px 24px rgba(37,99,235,0.06)",
             }}>
-              <Store size={36} color="#2563eb" strokeWidth={1.5} />
-            </div>
-            <p style={{ fontSize: "20px", fontWeight: 900, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.03em" }}>No shops found</p>
-            <p style={{ fontSize: "14px", color: "#94a3b8", margin: "0 0 28px" }}>Try adjusting your filters or search terms</p>
-            <button onClick={resetFilters} style={{
-              padding: "12px 32px", borderRadius: "14px",
-              background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-              border: "none", color: "white", fontSize: "14px", fontWeight: 700,
-              cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-              boxShadow: "0 8px 24px rgba(37,99,235,0.35)",
-            }}>Reset Filters</button>
-          </div>
-        ) : (
-          <>
-            {/* Featured shops */}
-            {featured.length > 0 && activeCategory === "All" && !search && (
-              <div style={{ marginBottom: "36px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-                  <div style={{
-                    height: "28px", width: "28px", borderRadius: "8px",
-                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    <Sparkles size={13} color="white" strokeWidth={2.5} />
-                  </div>
-                  <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>Featured Shops</h2>
-                  <span style={{
-                    padding: "2px 10px", borderRadius: "99px", fontSize: "11px",
-                    fontWeight: 700,
-                    background: "rgba(37,99,235,0.08)", color: "#2563eb",
-                  }}>{featured.length} shops</span>
-                </div>
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: view === "list" ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
-                  gap: "18px",
-                }}>
-                  {featured.map((v, i) => <ShopCard key={v.id} vendor={v} index={i} view={view} />)}
-                </div>
+              <div style={{
+                height: "80px", width: "80px", borderRadius: "24px",
+                background: "linear-gradient(135deg, #eff6ff, #f5f3ff)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                margin: "0 auto 20px",
+              }}>
+                <Store size={36} color="#2563eb" strokeWidth={1.5} />
               </div>
-            )}
-            {/* All / remaining shops */}
-            {(rest.length > 0 || search || activeCategory !== "All") && (
-              <div>
-                {featured.length > 0 && activeCategory === "All" && !search && (
+              <p style={{ fontSize: "20px", fontWeight: 900, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.03em" }}>No shops found</p>
+              <p style={{ fontSize: "14px", color: "#94a3b8", margin: "0 0 28px" }}>Try adjusting your filters or search terms</p>
+              <button onClick={resetFilters} style={{
+                padding: "12px 32px", borderRadius: "14px",
+                background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                border: "none", color: "white", fontSize: "14px", fontWeight: 700,
+                cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
+                boxShadow: "0 8px 24px rgba(37,99,235,0.35)",
+              }}>Reset Filters</button>
+            </div>
+          ) : (
+            <>
+              {/* Featured shops */}
+              {featured.length > 0 && activeCategory === "All" && !search && (
+                <div style={{ marginBottom: "36px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
                     <div style={{
                       height: "28px", width: "28px", borderRadius: "8px",
-                      background: "linear-gradient(135deg, #eff6ff, #f5f3ff)",
-                      border: "1.5px solid rgba(37,99,235,0.12)",
+                      background: "linear-gradient(135deg, #2563eb, #7c3aed)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>
-                      <Store size={13} color="#2563eb" strokeWidth={2.5} />
+                      <Sparkles size={13} color="white" strokeWidth={2.5} />
                     </div>
-                    <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>All Shops</h2>
+                    <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>Featured Shops</h2>
                     <span style={{
                       padding: "2px 10px", borderRadius: "99px", fontSize: "11px",
                       fontWeight: 700,
                       background: "rgba(37,99,235,0.08)", color: "#2563eb",
-                    }}>{rest.length} shops</span>
+                    }}>{featured.length} shops</span>
                   </div>
-                )}
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: view === "list" ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
-                  gap: "18px",
-                }}>
-                  {(search || activeCategory !== "All" ? filtered : rest).map((v, i) => (
-                    <ShopCard key={v.id} vendor={v} index={i} view={view} />
-                  ))}
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: view === "list" ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
+                    gap: "18px",
+                  }}>
+                    {featured.map((v, i) => <ShopCard key={v.id} vendor={v} index={i} view={view} />)}
+                  </div>
                 </div>
-              </div>
-            )}
-          </>
-        )}
-        {/* ── BECOME A VENDOR BANNER ── */}
-        <div style={{
-          marginTop: "56px",
-          borderRadius: "28px",
-          background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%)",
-          padding: "44px 40px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          flexWrap: "wrap", gap: "24px",
-          position: "relative", overflow: "hidden",
-          boxShadow: "0 20px 60px rgba(37,99,235,0.30), 0 8px 24px rgba(124,58,237,0.20)",
-        }}>
-          {/* Background decoration */}
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-            <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-80px", right: "15%" }} />
-            <div style={{ position: "absolute", width: "180px", height: "180px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-60px", right: "5%" }} />
-            <svg style={{ position: "absolute", right: "20%", top: 0, opacity: 0.06 }} width="300" height="200" viewBox="0 0 300 200">
-              {Array.from({ length: 8 }).map((_, row) =>
-                Array.from({ length: 14 }).map((_, col) => (
-                  <circle key={`${row}-${col}`} cx={col * 22 + 11} cy={row * 26 + 13} r="1.8" fill="white" />
-                ))
               )}
-            </svg>
-          </div>
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "10px" }}>
-              <div style={{
-                background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
-                borderRadius: "16px", padding: "8px",
-                border: "1.5px solid rgba(255,255,255,0.25)",
-              }}>
-                <FlexiBerryLogo size={44} />
-              </div>
-              <div>
-                <h2 style={{
-                  color: "white", fontWeight: 900, fontSize: "clamp(20px, 3vw, 28px)",
-                  margin: 0, letterSpacing: "-0.03em",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                }}>
-                  Sell on FlexiBerry
-                </h2>
-                <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "14px", margin: "4px 0 0", fontWeight: 500 }}>
-                  0% commission for your first 90 days · 1,200+ vendors already growing
-                </p>
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-              {[
-                { icon: TrendingUp, text: "Reach 2.4M+ customers" },
-                { icon: Zap, text: "Installments built-in" },
-                { icon: Shield, text: "KYC verified payouts" },
-              ].map(({ icon: Icon, text }) => (
-                <div key={text} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <Icon size={13} color="rgba(255,255,255,0.75)" />
-                  <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.80)" }}>{text}</span>
+              {/* All / remaining shops */}
+              {(rest.length > 0 || search || activeCategory !== "All") && (
+                <div>
+                  {featured.length > 0 && activeCategory === "All" && !search && (
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+                      <div style={{
+                        height: "28px", width: "28px", borderRadius: "8px",
+                        background: "linear-gradient(135deg, #eff6ff, #f5f3ff)",
+                        border: "1.5px solid rgba(37,99,235,0.12)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Store size={13} color="#2563eb" strokeWidth={2.5} />
+                      </div>
+                      <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>All Shops</h2>
+                      <span style={{
+                        padding: "2px 10px", borderRadius: "99px", fontSize: "11px",
+                        fontWeight: 700,
+                        background: "rgba(37,99,235,0.08)", color: "#2563eb",
+                      }}>{rest.length} shops</span>
+                    </div>
+                  )}
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: view === "list" ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
+                    gap: "18px",
+                  }}>
+                    {(search || activeCategory !== "All" ? filtered : rest).map((v, i) => (
+                      <ShopCard key={v.id} vendor={v} index={i} view={view} />
+                    ))}
+                  </div>
                 </div>
-              ))}
+              )}
+            </>
+          )}
+          {/* ── BECOME A VENDOR BANNER ── */}
+          <div style={{
+            marginTop: "56px",
+            borderRadius: "28px",
+            background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%)",
+            padding: "44px 40px",
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            flexWrap: "wrap", gap: "24px",
+            position: "relative", overflow: "hidden",
+            boxShadow: "0 20px 60px rgba(37,99,235,0.30), 0 8px 24px rgba(124,58,237,0.20)",
+          }}>
+            {/* Background decoration */}
+            <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+              <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-80px", right: "15%" }} />
+              <div style={{ position: "absolute", width: "180px", height: "180px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-60px", right: "5%" }} />
+              <svg style={{ position: "absolute", right: "20%", top: 0, opacity: 0.06 }} width="300" height="200" viewBox="0 0 300 200">
+                {Array.from({ length: 8 }).map((_, row) =>
+                  Array.from({ length: 14 }).map((_, col) => (
+                    <circle key={`${row}-${col}`} cx={col * 22 + 11} cy={row * 26 + 13} r="1.8" fill="white" />
+                  ))
+                )}
+              </svg>
+            </div>
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "10px" }}>
+                <div style={{
+                  background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
+                  borderRadius: "16px", padding: "8px",
+                  border: "1.5px solid rgba(255,255,255,0.25)",
+                }}>
+                  <FlexiBerryLogo size={44} />
+                </div>
+                <div>
+                  <h2 style={{
+                    color: "white", fontWeight: 900, fontSize: "clamp(20px, 3vw, 28px)",
+                    margin: 0, letterSpacing: "-0.03em",
+                    fontFamily: "'Space Grotesk', sans-serif",
+                  }}>
+                    Sell on FlexiBerry
+                  </h2>
+                  <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "14px", margin: "4px 0 0", fontWeight: 500 }}>
+                    0% commission for your first 90 days · 1,200+ vendors already growing
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
+                {[
+                  { icon: TrendingUp, text: "Reach 2.4M+ customers" },
+                  { icon: Zap, text: "Installments built-in" },
+                  { icon: Shield, text: "KYC verified payouts" },
+                ].map(({ icon: Icon, text }) => (
+                  <div key={text} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <Icon size={13} color="rgba(255,255,255,0.75)" />
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.80)" }}>{text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: "12px", position: "relative", zIndex: 1, flexWrap: "wrap" }}>
+              <Link href="/auth/login" style={{ textDecoration: "none" }}>
+                <button style={{
+                  padding: "14px 28px", borderRadius: "14px",
+                  background: "rgba(255,255,255,0.15)",
+                  border: "1.5px solid rgba(255,255,255,0.30)",
+                  backdropFilter: "blur(8px)",
+                  color: "white", fontSize: "14px", fontWeight: 700,
+                  cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  display: "flex", alignItems: "center", gap: "6px",
+                  transition: "all 0.2s ease",
+                }}
+                  onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.25)"}
+                  onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.15)"}>
+                  Vendor Login <ChevronRight size={15} />
+                </button>
+              </Link>
+              <Link href="/auth/register" style={{ textDecoration: "none" }}>
+                <button style={{
+                  padding: "14px 28px", borderRadius: "14px",
+                  background: "white",
+                  border: "none",
+                  color: "#2563eb", fontSize: "14px", fontWeight: 800,
+                  cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  display: "flex", alignItems: "center", gap: "6px",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.20)",
+                  transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
+                }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px) scale(1.02)"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 12px 32px rgba(0,0,0,0.25)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.20)"; }}>
+                  Register Free <ArrowUpRight size={15} />
+                </button>
+              </Link>
             </div>
           </div>
-          <div style={{ display: "flex", gap: "12px", position: "relative", zIndex: 1, flexWrap: "wrap" }}>
-            <Link href="/auth/login" style={{ textDecoration: "none" }}>
-              <button style={{
-                padding: "14px 28px", borderRadius: "14px",
-                background: "rgba(255,255,255,0.15)",
-                border: "1.5px solid rgba(255,255,255,0.30)",
-                backdropFilter: "blur(8px)",
-                color: "white", fontSize: "14px", fontWeight: 700,
-                cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                display: "flex", alignItems: "center", gap: "6px",
-                transition: "all 0.2s ease",
-              }}
-                onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.25)"}
-                onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.15)"}>
-                Vendor Login <ChevronRight size={15} />
-              </button>
-            </Link>
-            <Link href="/auth/register" style={{ textDecoration: "none" }}>
-              <button style={{
-                padding: "14px 28px", borderRadius: "14px",
-                background: "white",
-                border: "none",
-                color: "#2563eb", fontSize: "14px", fontWeight: 800,
-                cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                display: "flex", alignItems: "center", gap: "6px",
-                boxShadow: "0 8px 24px rgba(0,0,0,0.20)",
-                transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
-              }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px) scale(1.02)"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 12px 32px rgba(0,0,0,0.25)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "none"; (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.20)"; }}>
-                Register Free <ArrowUpRight size={15} />
-              </button>
-            </Link>
-          </div>
-        </div>
-      </main>
-      <Footer />
-      <style>{`
+        </main>
+      </div>
+      <style jsx global>{`
         @keyframes cardIn {
           from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
@@ -886,6 +885,6 @@ export default function ShopsPage() {
         select { appearance: auto; }
         ::-webkit-scrollbar { display: none; }
       `}</style>
-    </div>
+    </FlexiLayout>
   );
 }
