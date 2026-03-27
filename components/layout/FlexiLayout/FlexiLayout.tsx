@@ -302,12 +302,13 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
                 </>
               )}
 
-              <button className="flexi-hide-sm" aria-label="Wishlist" style={{
+              <Link href="/wishlist" className="flexi-hide-sm" aria-label="Wishlist" style={{
                 width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                color: 'inherit', textDecoration: 'none'
               }}>
                 <Heart size={16} />
-              </button>
+              </Link>
 
               <Link href="/cart" className="flexi-btn-ind" style={{ padding: '9px 18px', fontSize: 13.5 }}>
                 <ShoppingBag size={15} />
@@ -364,7 +365,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
 
             <Link href="/" className="flexi-nav-lnk">🏠 Home</Link>
             <Link href="/flash-sale" className="flexi-nav-lnk">⚡ Flash Sale</Link>
-            <Link href="/products?sort=new" className="flexi-nav-lnk">✨ New Arrivals</Link>
+            <Link href="/shops" className="flexi-nav-lnk">🏪 All Shops</Link>
             <Link href="/about" className="flexi-nav-lnk">About</Link>
             <Link href="/contact" className="flexi-nav-lnk">Contact</Link>
 
