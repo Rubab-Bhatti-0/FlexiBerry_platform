@@ -10,7 +10,7 @@ import {
   Home, BarChart3, Truck, Gift, Shield, Eye, Download,
   Calendar, Wallet, ArrowUpRight, MoreHorizontal, Search,
   ChevronDown, RefreshCw, X, ShoppingCart, Menu, Plus, Edit2, Trash2,
-  LogOut, ChevronLeft
+  LogOut
 } from "lucide-react";
 
 /* ── FlexiBerry Logo ── */
@@ -129,7 +129,6 @@ type Tab = "overview" | "orders" | "installments" | "wishlist" | "notifications"
 
 export default function BuyerDashboardPage() {
   const [activeTab, setActiveTab] = useState<Tab>("overview");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [customer, setCustomer] = useState(initialCustomer);
   const [editingAddress, setEditingAddress] = useState<any | null>(null);
@@ -185,40 +184,21 @@ export default function BuyerDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex flex-col md:flex-row font-['Plus_Jakarta_Sans',sans-serif]">
       
-      {/* ── TOP NAV ── */}
-      <nav className="bg-white/80 backdrop-blur-xl border-b border-blue-100/50 sticky top-0 z-50 px-4 md:px-6 h-[70px] flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-3 md:gap-4">
-          <motion.button 
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="md:hidden p-2.5 hover:bg-slate-100 rounded-xl transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Menu size={22} className="text-slate-600" />
-          </motion.button>
-          <div className="flex items-center gap-2.5">
-            <FlexiBerryLogo size={36} />
-            <div className="hidden sm:block">
-              <div className="flex items-baseline gap-0.5">
-                <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-lg bg-gradient-to-br from-blue-600 to-purple-600 bg-clip-text text-transparent">Flexi</span>
-                <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-lg text-slate-900">Berry</span>
-              </div>
-              <div className="text-[8px] text-slate-400 font-semibold tracking-widest uppercase -mt-1">Dashboard</div>
+      {/* ── TOP NAV (Mobile) ── */}
+      <nav className="md:hidden bg-white/80 backdrop-blur-xl border-b border-blue-100/50 sticky top-0 z-40 px-4 h-[70px] flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-2">
+          <FlexiBerryLogo size={32} />
+          <div>
+            <div className="flex items-baseline gap-0.5">
+              <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-sm bg-gradient-to-br from-blue-600 to-purple-600 bg-clip-text text-transparent">Flexi</span>
+              <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-sm text-slate-900">Berry</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-3">
-          <div className="relative hidden lg:flex items-center">
-            <Search size={16} className="absolute left-3 text-slate-400" />
-            <input 
-              placeholder="Search orders…" 
-              className="h-10 pl-10 pr-4 rounded-xl border border-slate-200 text-sm outline-none bg-white/50 backdrop-blur-sm w-48 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all"
-            />
-          </div>
-
+        <div className="flex items-center gap-2">
           <motion.button 
             onClick={() => setActiveTab("notifications")} 
             className="relative p-2.5 hover:bg-slate-100 rounded-xl text-slate-500 transition-colors"
@@ -229,116 +209,96 @@ export default function BuyerDashboardPage() {
             <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
           </motion.button>
 
-          <motion.div 
-            className="flex items-center gap-2 cursor-pointer p-1.5 pr-3 rounded-full border border-blue-200/50 bg-gradient-to-r from-blue-50/50 to-purple-50/50 hover:border-blue-300 transition-all"
-            whileHover={{ scale: 1.02 }}
-          >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-xs font-extrabold shadow-md">
-              {customer.avatar}
-            </div>
-            <span className="text-sm font-semibold text-slate-700 hidden sm:inline">{customer.name.split(" ")[0]}</span>
-            <ChevronDown size={14} className="text-slate-400" />
-          </motion.div>
-
           <Link href="/">
             <motion.button 
-              className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-600/30 transition-all"
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98, y: 0 }}
+              className="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded-lg text-xs font-semibold shadow-lg"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <ShoppingCart size={16} /> <span className="hidden md:inline">Browse</span>
+              <ShoppingCart size={14} />
             </motion.button>
           </Link>
         </div>
       </nav>
 
-      <div className="flex flex-1 relative overflow-hidden">
-        
-        {/* ── SIDEBAR OVERLAY ── */}
-        <AnimatePresence>
-          {sidebarOpen && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30 md:hidden"
-            />
-          )}
-        </AnimatePresence>
+      {/* ── FIXED SIDEBAR ── */}
+      <aside className="hidden md:flex md:flex-col w-64 bg-white/95 backdrop-blur-xl border-r border-blue-100/50 h-screen sticky top-0 overflow-y-auto">
+        {/* Logo Section */}
+        <div className="p-6 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <FlexiBerryLogo size={40} />
+            <div>
+              <div className="flex items-baseline gap-0.5">
+                <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-lg bg-gradient-to-br from-blue-600 to-purple-600 bg-clip-text text-transparent">Flexi</span>
+                <span className="font-['Space_Grotesk',sans-serif] font-extrabold text-lg text-slate-900">Berry</span>
+              </div>
+              <div className="text-[8px] text-slate-400 font-semibold tracking-widest uppercase -mt-1">Dashboard</div>
+            </div>
+          </div>
+        </div>
 
-        {/* ── FIXED SIDEBAR ── */}
-        <motion.aside 
-          initial={false}
-          animate={{ x: sidebarOpen ? 0 : -280 }}
-          transition={{ type: "spring", damping: 20, stiffness: 300 }}
-          className={`
-            fixed md:static md:translate-x-0 top-[70px] left-0 bottom-0 z-40
-            w-72 bg-white/95 backdrop-blur-xl border-r border-blue-100/50 p-6 flex flex-col gap-2 
-            overflow-y-auto md:overflow-y-visible
-          `}
-        >
-          {/* Navigation Items */}
-          <div className="space-y-1">
-            {nav.map(item => {
-              const active = activeTab === item.id;
-              const Icon = item.icon;
-              return (
-                <motion.button 
-                  key={item.id} 
-                  onClick={() => { setActiveTab(item.id); setSidebarOpen(false); }}
-                  className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all ${
-                    active 
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-600/20' 
-                      : 'text-slate-600 hover:bg-slate-100'
-                  }`}
-                  whileHover={{ x: 4 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon size={20} strokeWidth={active ? 2.5 : 2} />
-                    <span className={`text-sm font-semibold`}>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <motion.span 
-                      className={`text-xs px-2.5 py-1 rounded-full font-bold ${
-                        active 
-                          ? 'bg-white/30 text-white' 
-                          : 'bg-blue-100 text-blue-600'
-                      }`}
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      {item.badge}
-                    </motion.span>
-                  )}
-                </motion.button>
-              );
-            })}
+        {/* Navigation Items */}
+        <nav className="flex-1 p-4 space-y-2">
+          {nav.map(item => {
+            const active = activeTab === item.id;
+            const Icon = item.icon;
+            return (
+              <motion.button 
+                key={item.id} 
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all ${
+                  active 
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-600/20' 
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="flex items-center gap-3">
+                  <Icon size={20} strokeWidth={active ? 2.5 : 2} />
+                  <span className={`text-sm font-semibold`}>{item.label}</span>
+                </div>
+                {item.badge && (
+                  <motion.span 
+                    className={`text-xs px-2.5 py-1 rounded-full font-bold ${
+                      active 
+                        ? 'bg-white/30 text-white' 
+                        : 'bg-blue-100 text-blue-600'
+                    }`}
+                    whileHover={{ scale: 1.1 }}
+                  >
+                    {item.badge}
+                  </motion.span>
+                )}
+              </motion.button>
+            );
+          })}
+        </nav>
+
+        {/* Divider */}
+        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+
+        {/* User Profile Section */}
+        <div className="p-4 space-y-3">
+          <div className="px-4 py-3 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border border-blue-100/50">
+            <p className="text-xs font-bold text-slate-500 uppercase mb-1">Member Status</p>
+            <p className="text-sm font-bold text-slate-900">{customer.tier}</p>
+            <p className="text-xs text-slate-500 mt-1">{customer.loyaltyPoints} loyalty points</p>
           </div>
           
-          {/* Divider */}
-          <div className="my-4 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+          <motion.button 
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-semibold text-sm transition-all"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <LogOut size={18} /> Logout
+          </motion.button>
+        </div>
+      </aside>
 
-          {/* User Profile Section */}
-          <div className="mt-auto pt-4 space-y-3">
-            <div className="px-4 py-3 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border border-blue-100/50">
-              <p className="text-xs font-bold text-slate-500 uppercase mb-1">Member Status</p>
-              <p className="text-sm font-bold text-slate-900">{customer.tier}</p>
-              <p className="text-xs text-slate-500 mt-1">{customer.loyaltyPoints} loyalty points</p>
-            </div>
-            
-            <motion.button 
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-semibold text-sm transition-all"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <LogOut size={18} /> Logout
-            </motion.button>
-          </div>
-        </motion.aside>
-
-        {/* ── MAIN CONTENT ── */}
-        <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full overflow-y-auto">
+      {/* ── MAIN CONTENT ── */}
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+        <div className="max-w-6xl mx-auto">
           
           {/* ════════ OVERVIEW tab ════════ */}
           {activeTab === "overview" && (
@@ -505,9 +465,7 @@ export default function BuyerDashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-extrabold text-slate-900">My Orders</h1>
-              </div>
+              <h1 className="text-3xl font-extrabold text-slate-900">My Orders</h1>
 
               <div className="space-y-4">
                 {orders.map(o => {
@@ -834,7 +792,7 @@ export default function BuyerDashboardPage() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="space-y-6 max-w-4xl"
+              className="space-y-6"
             >
               <h1 className="text-3xl font-extrabold text-slate-900">Account Settings</h1>
               
@@ -1089,8 +1047,8 @@ export default function BuyerDashboardPage() {
             </motion.div>
           )}
 
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
