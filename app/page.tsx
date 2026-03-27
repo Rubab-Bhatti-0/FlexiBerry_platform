@@ -241,17 +241,7 @@ export default function HomePage() {
         }}>{toast}</div>
       )}
 
-      {/* ── TICKER ────────────────────────────────────────────────────── */}
-      <div style={{ background:'linear-gradient(90deg,#1e1b4b,#2e2a7a)', overflow:'hidden', padding:'9px 0' }}>
-        <div className="ticker-track">
-          {TICKER.map((t,i) => (
-            <span key={i} style={{ display:'inline-flex', alignItems:'center', padding:'0 18px',
-              fontSize:11.5, fontWeight:500, color:'rgba(255,255,255,.88)', gap:4 }}>
-              {t}<span style={{ opacity:.2, marginLeft:14 }}>•</span>
-            </span>
-          ))}
-        </div>
-      </div>
+      {/* ── TICKER REMOVED - MOVED TO FLEXILAYOUT ── */}
 
       {/* ── HEADER REMOVED - USING FLEXILAYOUT ── */}
 
