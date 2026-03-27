@@ -1,278 +1,616 @@
-'use client'
+"use client";
 
-import { useEffect, useCallback, useState } from 'react'
-import useEmblaCarousel from 'embla-carousel-react'
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect, useCallback } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 
-const slides = [
+// ─────────────────────────────────────────────────────────────
+// TYPES
+// ─────────────────────────────────────────────────────────────
+interface Slide {
+  image: string;
+  titleLine1: string;
+  titleLine2: string;
+  description: string;
+  cta: string;
+  link: string;
+  bg: string;
+  accent: string;
+  accentAlt: string;
+  gradientStops: string;
+  gradientOpacities: string;
+  glowColor: string;
+  glowOpacity: number;
+  imageTint: string;
+  vignetteColor: string;
+}
+
+// ─────────────────────────────────────────────────────────────
+// PER-SLIDE DESIGN TOKENS
+// Each slide gets: bg, accent, accentAlt, gradient stops,
+// glow, image tint overlay, vignette colour.
+// ─────────────────────────────────────────────────────────────
+const slides: Slide[] = [
   {
-    image: '/assets/carousel-1.jpg',
-    titleLine1: 'Buy Smart,',
-    titleLine2: 'Pay Easy',
-    description: 'Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.',
-    cta: 'Shop Smartphones',
-    link: '/category/smartphones',
-    accent: '#FF6B6B',
-    bg: '#1a0a0a',
+    // ── SMARTPHONES ──────────────────────────────────────────
+    image: "/carousel-1.jpg",
+    titleLine1: "Buy Smart,",
+    titleLine2: "Pay Easy",
+    description:
+      "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
+    cta: "Shop Smartphones",
+    link: "/category/smartphones",
+    bg: "#0d0608",
+    accent: "#FF3B5C",
+    accentAlt: "#FF8C69",
+    gradientStops: "0%,38%,50%,62%,76%,88%",
+    gradientOpacities: "ff,f5,d0,99,44,00",
+    glowColor: "#FF3B5C",
+    glowOpacity: 0.18,
+    imageTint: "rgba(255,59,92,0.12)",
+    vignetteColor: "#0d0608",
   },
   {
-    image: '/assets/carousel-2.jpg',
-    titleLine1: 'Power Up',
-    titleLine2: 'Your Work',
-    description: 'MacBooks, Gaming Laptops & more on easy installment plans for every budget.',
-    cta: 'Shop Laptops',
-    link: '/category/laptops',
-    accent: '#A78BFA',
-    bg: '#0f0a1e',
+    // ── LAPTOPS ──────────────────────────────────────────────
+    image: "/carousel-2.jpg",
+    titleLine1: "Power Up",
+    titleLine2: "Your Work",
+    description:
+      "MacBooks, Gaming Laptops & more on easy installment plans for every budget.",
+    cta: "Shop Laptops",
+    link: "/category/laptops",
+    bg: "#05050f",
+    accent: "#7C3AED",
+    accentAlt: "#A78BFA",
+    gradientStops: "0%,40%,52%,64%,78%,90%",
+    gradientOpacities: "ff,f8,cc,88,33,00",
+    glowColor: "#6D28D9",
+    glowOpacity: 0.22,
+    imageTint: "rgba(109,40,217,0.15)",
+    vignetteColor: "#05050f",
   },
-]
+  {
+    // ── MOTORCYCLES ──────────────────────────────────────────
+    image: "/carousel-3.jpg",
+    titleLine1: "Ride Your",
+    titleLine2: "Dream Bike",
+    description:
+      "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
+    cta: "Shop Motorcycles",
+    link: "/category/bikes",
+    bg: "#0e0700",
+    accent: "#F97316",
+    accentAlt: "#FDBA74",
+    gradientStops: "0%,36%,48%,60%,74%,88%",
+    gradientOpacities: "ff,f2,cc,88,33,00",
+    glowColor: "#EA580C",
+    glowOpacity: 0.2,
+    imageTint: "rgba(234,88,12,0.10)",
+    vignetteColor: "#0e0700",
+  },
+  {
+    // ── APPLIANCES ───────────────────────────────────────────
+    image: "/carousel-4.jpg",
+    titleLine1: "Home",
+    titleLine2: "Essentials",
+    description:
+      "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
+    cta: "Shop Appliances",
+    link: "/category/appliances",
+    bg: "#08030a",
+    accent: "#C026D3",
+    accentAlt: "#E879F9",
+    gradientStops: "0%,38%,50%,62%,76%,90%",
+    gradientOpacities: "ff,f5,d0,88,33,00",
+    glowColor: "#A21CAF",
+    glowOpacity: 0.18,
+    imageTint: "rgba(192,38,211,0.12)",
+    vignetteColor: "#08030a",
+  },
+  {
+    // ── SOLAR ────────────────────────────────────────────────
+    image: "/carousel-5.jpg",
+    titleLine1: "Go",
+    titleLine2: "Solar",
+    description:
+      "Complete Solar Panel Systems — save on electricity bills with easy installments.",
+    cta: "Shop Solar",
+    link: "/category/solar",
+    bg: "#080700",
+    accent: "#EAB308",
+    accentAlt: "#FDE68A",
+    gradientStops: "0%,38%,50%,62%,76%,90%",
+    gradientOpacities: "ff,f5,d5,88,33,00",
+    glowColor: "#CA8A04",
+    glowOpacity: 0.22,
+    imageTint: "rgba(202,138,4,0.12)",
+    vignetteColor: "#080700",
+  },
+  {
+    // ── JAHEZ / BUNDLES ──────────────────────────────────────
+    image: "/carousel-6.jpg",
+    titleLine1: "Complete",
+    titleLine2: "Jahez Package",
+    description:
+      "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
+    cta: "Shop Bundles",
+    link: "/category/jahez",
+    bg: "#09020a",
+    accent: "#EC4899",
+    accentAlt: "#F9A8D4",
+    gradientStops: "0%,38%,50%,62%,76%,90%",
+    gradientOpacities: "ff,f5,cc,88,33,00",
+    glowColor: "#DB2777",
+    glowOpacity: 0.18,
+    imageTint: "rgba(219,39,119,0.12)",
+    vignetteColor: "#09020a",
+  },
+  {
+    // ── FURNITURE ────────────────────────────────────────────
+    image: "/carousel-7.jpg",
+    titleLine1: "Furnish Your",
+    titleLine2: "Dream Home",
+    description:
+      "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
+    cta: "Shop Furniture",
+    link: "/category/furniture",
+    bg: "#010b07",
+    accent: "#10B981",
+    accentAlt: "#6EE7B7",
+    gradientStops: "0%,38%,50%,62%,76%,90%",
+    gradientOpacities: "ff,f5,cc,88,33,00",
+    glowColor: "#059669",
+    glowOpacity: 0.2,
+    imageTint: "rgba(5,150,105,0.10)",
+    vignetteColor: "#010b07",
+  },
+  {
+    // ── CARS ─────────────────────────────────────────────────
+    image: "/carousel-8.jpg",
+    titleLine1: "Drive Your",
+    titleLine2: "Dream Car",
+    description:
+      "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
+    cta: "Shop Cars",
+    link: "/category/cars",
+    bg: "#010a10",
+    accent: "#0EA5E9",
+    accentAlt: "#7DD3FC",
+    gradientStops: "0%,38%,50%,62%,76%,90%",
+    gradientOpacities: "ff,f5,cc,88,33,00",
+    glowColor: "#0284C7",
+    glowOpacity: 0.2,
+    imageTint: "rgba(2,132,199,0.12)",
+    vignetteColor: "#010a10",
+  },
+  {
+    // ── B2B / RAW MATERIALS ──────────────────────────────────
+    image: "/carousel-9.jpg",
+    titleLine1: "Grow Your",
+    titleLine2: "Business",
+    description:
+      "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
+    cta: "Shop B2B",
+    link: "/category/raw-materials",
+    bg: "#050900",
+    accent: "#84CC16",
+    accentAlt: "#BEF264",
+    gradientStops: "0%,38%,50%,62%,76%,90%",
+    gradientOpacities: "ff,f5,cc,88,33,00",
+    glowColor: "#65A30D",
+    glowOpacity: 0.2,
+    imageTint: "rgba(101,163,13,0.10)",
+    vignetteColor: "#050900",
+  },
+];
 
+// ─────────────────────────────────────────────────────────────
+// Helper: build per-slide horizontal fade gradient
+// ─────────────────────────────────────────────────────────────
+function buildHorizontalGradient(
+  bg: string,
+  stops: string,
+  opacities: string
+): string {
+  const s = stops.split(",");
+  const o = opacities.split(",");
+  return s.map((stop, i) => `${bg}${o[i] ?? "00"} ${stop}`).join(", ");
+}
+
+// ─────────────────────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────────────────────
 export default function HeroSection() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
-
-  const [current, setCurrent] = useState(0)
-  const [direction, setDirection] = useState(1)
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [isHovered, setIsHovered] = useState(false);
 
   const next = useCallback(() => {
-    setDirection(1)
-    emblaApi?.scrollNext()
-  }, [emblaApi])
+    setDirection(1);
+    setCurrent((p) => (p + 1) % slides.length);
+  }, []);
 
   const prev = useCallback(() => {
-    setDirection(-1)
-    emblaApi?.scrollPrev()
-  }, [emblaApi])
+    setDirection(-1);
+    setCurrent((p) => (p - 1 + slides.length) % slides.length);
+  }, []);
 
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return
-    const newIndex = emblaApi.selectedScrollSnap()
-    setDirection(newIndex > current ? 1 : -1)
-    setCurrent(newIndex)
-  }, [emblaApi, current])
-
+  // Pause on hover
   useEffect(() => {
-    if (!emblaApi) return
-    emblaApi.on('select', onSelect)
-  }, [emblaApi, onSelect])
+    if (isHovered) return;
+    const timer = setInterval(next, 5500);
+    return () => clearInterval(timer);
+  }, [next, isHovered]);
 
-  useEffect(() => {
-    if (!emblaApi) return
-    const timer = setInterval(() => next(), 5500)
-    return () => clearInterval(timer)
-  }, [emblaApi, next])
-
-  const slide = slides[current]
+  const slide = slides[current];
+  const hGradient = buildHorizontalGradient(
+    slide.bg,
+    slide.gradientStops,
+    slide.gradientOpacities
+  );
 
   return (
     <section
-      className="relative overflow-hidden"
+      className="relative overflow-hidden select-none"
       style={{
-        height: 'clamp(400px, 52vw, 560px)',
+        height: "clamp(400px, 52vw, 580px)",
         backgroundColor: slide.bg,
-        transition: 'background-color 0.9s ease',
+        transition: "background-color 0.85s cubic-bezier(0.4,0,0.2,1)",
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Invisible Embla */}
-      <div ref={emblaRef} className="absolute inset-0 opacity-0 pointer-events-none">
-        <div className="flex h-full">
-          {slides.map((_, i) => (
-            <div key={i} className="min-w-full" />
-          ))}
-        </div>
-      </div>
-
-      {/* BACKGROUND IMAGE + GRADIENT BLEND */}
-      <AnimatePresence mode="wait">
+      {/* ══════════════════════════════════════════
+          LAYER 1 — Full-bleed image + masks
+          ══════════════════════════════════════════ */}
+      <AnimatePresence>
         <motion.div
-          key={current}
-          initial={{ opacity: 0, scale: 1.05 }}
+          key={`bg-${current}`}
+          initial={{ opacity: 0, scale: 1.06 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          transition={{ duration: 0.75, ease: "easeInOut" }}
           className="absolute inset-0"
           style={{ zIndex: 1 }}
         >
-          {/* Right image */}
-          <div className="absolute top-0 right-0 h-full" style={{ width: '62%' }}>
+          {/* next/image — right 62% of banner */}
+          <div className="absolute top-0 right-0 h-full w-[62%]">
             <Image
               src={slide.image}
-              alt=""
+              alt={slide.titleLine2}
               fill
-              priority
-              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              priority={current === 0}
+              sizes="62vw"
+              className="object-cover object-center"
+            />
+            {/* Per-slide colour tint blended over photo */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: slide.imageTint,
+                mixBlendMode: "color",
+              }}
             />
           </div>
 
-          {/* LEFT → RIGHT COLOR BLEND */}
+          {/* Horizontal bg→transparent mask */}
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(
-                to right,
-                ${slide.bg} 0%,
-                ${slide.bg} 36%,
-                ${slide.bg}f0 45%,
-                ${slide.bg}bb 52%,
-                ${slide.bg}66 60%,
-                ${slide.bg}22 72%,
-                transparent 85%
-              )`,
+              background: `linear-gradient(to right, ${hGradient})`,
             }}
           />
 
-          {/* TOP/BOTTOM VIGNETTE */}
+          {/* Top vignette */}
           <div
             className="absolute inset-0"
             style={{
-              background: `linear-gradient(to bottom, ${slide.bg}88 0%, transparent 18%, transparent 78%, ${slide.bg}dd 100%)`,
+              background: `linear-gradient(to bottom, ${slide.vignetteColor}99 0%, transparent 18%)`,
+            }}
+          />
+
+          {/* Bottom vignette */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to top, ${slide.vignetteColor}ee 0%, transparent 22%)`,
             }}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* ACCENT GLOW */}
-      <div
-        className="absolute rounded-full blur-[160px] pointer-events-none"
+      {/* ══════════════════════════════════════════
+          LAYER 2 — Atmospheric glow blobs
+          ══════════════════════════════════════════ */}
+      <motion.div
+        key={`glow1-${current}`}
+        animate={{ opacity: slide.glowOpacity }}
+        transition={{ duration: 1 }}
+        className="absolute rounded-full pointer-events-none"
         style={{
           zIndex: 2,
-          width: '40%',
-          aspectRatio: '1',
-          top: '-25%',
-          left: '-8%',
-          background: slide.accent,
-          opacity: 0.13,
-          transition: 'background 0.7s ease',
+          width: "44%",
+          aspectRatio: "1",
+          top: "-28%",
+          left: "-6%",
+          background: `radial-gradient(circle, ${slide.glowColor} 0%, transparent 70%)`,
+          filter: "blur(80px)",
+        }}
+      />
+      <motion.div
+        key={`glow2-${current}`}
+        animate={{ opacity: slide.glowOpacity * 0.55 }}
+        transition={{ duration: 1.2 }}
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          zIndex: 2,
+          width: "30%",
+          aspectRatio: "1",
+          bottom: "-15%",
+          right: "10%",
+          background: `radial-gradient(circle, ${slide.accentAlt} 0%, transparent 70%)`,
+          filter: "blur(100px)",
         }}
       />
 
-      {/* GRID OVERLAY */}
+      {/* ══════════════════════════════════════════
+          LAYER 3 — Subtle grid texture
+          ══════════════════════════════════════════ */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          zIndex: 2,
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)`,
-          backgroundSize: '48px 48px',
+          zIndex: 3,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)
+          `,
+          backgroundSize: "48px 48px",
         }}
       />
 
-      {/* TEXT */}
+      {/* ══════════════════════════════════════════
+          LAYER 4 — Left accent line
+          ══════════════════════════════════════════ */}
+      <motion.div
+        key={`line-${current}`}
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+        className="absolute left-0 pointer-events-none"
+        style={{
+          zIndex: 4,
+          top: "10%",
+          width: 3,
+          height: "80%",
+          background: `linear-gradient(to bottom, transparent, ${slide.accent}, transparent)`,
+          borderRadius: 2,
+          transformOrigin: "top",
+          opacity: 0.7,
+        }}
+      />
+
+      {/* ══════════════════════════════════════════
+          LAYER 5 — Text content
+          ══════════════════════════════════════════ */}
       <div className="relative h-full flex items-center" style={{ zIndex: 10 }}>
-        <div className="px-6 md:px-12 lg:px-16 max-w-xl">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, x: direction * -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction * 30 }}
-              transition={{ duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="space-y-5"
-            >
-              <div>
-                <h1 className="font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5.2vw, 4.8rem)', lineHeight: 1.04 }}>
-                  {slide.titleLine1}
-                </h1>
-                <h1
-                  className="font-black"
-                  style={{
-                    fontSize: 'clamp(2.2rem, 5.2vw, 4.8rem)',
-                    lineHeight: 1.04,
-                    color: slide.accent,
-                    textShadow: `0 0 48px ${slide.accent}55`,
-                  }}
-                >
-                  {slide.titleLine2}
-                </h1>
-              </div>
-
-              <p
-                style={{
-                  color: 'rgba(255,255,255,0.58)',
-                  fontSize: 'clamp(0.8rem, 1.4vw, 0.95rem)',
-                  lineHeight: 1.7,
-                  maxWidth: 390,
-                }}
+        <div className="w-full px-6 md:px-12 lg:px-16">
+          <div style={{ maxWidth: 520 }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`content-${current}`}
+                initial={{ opacity: 0, x: direction * -28 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * 28 }}
+                transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="space-y-5"
               >
-                {slide.description}
-              </p>
+                {/* Category pill */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <span
+                    className="inline-flex items-center text-[0.65rem] font-black tracking-[0.18em] uppercase px-3 py-1 rounded-full"
+                    style={{
+                      background: `${slide.accent}22`,
+                      color: slide.accent,
+                      border: `1px solid ${slide.accent}44`,
+                    }}
+                  >
+                    {slide.cta}
+                  </span>
+                </motion.div>
 
-              <Link href={slide.link}>
-                <button
-                  className="flex items-center gap-2 font-bold text-sm px-7 py-3.5 rounded-2xl hover:scale-[1.03] transition-transform"
+                {/* Headline */}
+                <div>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.14 }}
+                    className="font-black text-white"
+                    style={{
+                      fontSize: "clamp(2.1rem, 5vw, 4.6rem)",
+                      lineHeight: 1.03,
+                      letterSpacing: "-0.02em",
+                    }}
+                  >
+                    {slide.titleLine1}
+                  </motion.h1>
+
+                  <motion.h1
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="font-black"
+                    style={{
+                      fontSize: "clamp(2.1rem, 5vw, 4.6rem)",
+                      lineHeight: 1.03,
+                      letterSpacing: "-0.02em",
+                      color: slide.accent,
+                      textShadow: `0 0 20px ${slide.accent}88, 0 0 60px ${slide.accent}33`,
+                      transition: "color 0.5s, text-shadow 0.5s",
+                    }}
+                  >
+                    {slide.titleLine2}
+                  </motion.h1>
+                </div>
+
+                {/* Description */}
+                <motion.p
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.26 }}
                   style={{
-                    background: slide.accent,
-                    color: '#fff',
-                    boxShadow: `0 8px 28px ${slide.accent}45`,
+                    color: "rgba(255,255,255,0.52)",
+                    fontSize: "clamp(0.78rem, 1.3vw, 0.92rem)",
+                    lineHeight: 1.75,
+                    maxWidth: 380,
                   }}
                 >
-                  {slide.cta}
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </Link>
-            </motion.div>
-          </AnimatePresence>
+                  {slide.description}
+                </motion.p>
+
+                {/* CTA Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.32 }}
+                  className="flex items-center gap-3 pt-1 flex-wrap"
+                >
+                  <Link href={slide.link}>
+                    <button
+                      type="button"
+                      className="group relative flex items-center gap-2.5 font-bold text-sm px-7 py-3.5 rounded-2xl overflow-hidden text-white"
+                    >
+                      <span
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(135deg, ${slide.accent}, ${slide.accentAlt})`,
+                          boxShadow: `0 8px 32px ${slide.accent}55`,
+                          transition: "opacity 0.3s",
+                        }}
+                      />
+                      {/* Hover shine sweep */}
+                      <span
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{
+                          background:
+                            "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)",
+                        }}
+                      />
+                      <span className="relative z-10 flex items-center gap-2">
+                        {slide.cta}
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </span>
+                    </button>
+                  </Link>
+
+                  <Link
+                    href={slide.link}
+                    className="text-xs font-semibold underline underline-offset-4 transition-opacity hover:opacity-80"
+                    style={{ color: "rgba(255,255,255,0.32)" }}
+                  >
+                    Learn more
+                  </Link>
+                </motion.div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
-      {/* ARROWS */}
-      <button
-        onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full flex items-center justify-center"
-        style={{
-          zIndex: 20,
-          background: 'rgba(255,255,255,0.07)',
-          border: '1px solid rgba(255,255,255,0.13)',
-          backdropFilter: 'blur(10px)',
-          color: '#fff',
-        }}
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </button>
+      {/* ══════════════════════════════════════════
+          LAYER 6 — Prev / Next arrows
+          ══════════════════════════════════════════ */}
+      {(
+        [
+          { fn: prev, Icon: ChevronLeft, pos: "left-3" },
+          { fn: next, Icon: ChevronRight, pos: "right-3" },
+        ] as const
+      ).map(({ fn, Icon, pos }) => (
+        <button
+          key={pos}
+          type="button"
+          onClick={fn}
+          aria-label={pos.startsWith("left") ? "Previous slide" : "Next slide"}
+          className={`absolute ${pos} top-1/2 -translate-y-1/2 h-9 w-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95`}
+          style={{
+            zIndex: 20,
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid rgba(255,255,255,0.12)",
+            backdropFilter: "blur(12px)",
+            color: "#fff",
+          }}
+        >
+          <Icon className="h-4 w-4" />
+        </button>
+      ))}
 
-      <button
-        onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full flex items-center justify-center"
-        style={{
-          zIndex: 20,
-          background: 'rgba(255,255,255,0.07)',
-          border: '1px solid rgba(255,255,255,0.13)',
-          backdropFilter: 'blur(10px)',
-          color: '#fff',
-        }}
+      {/* ══════════════════════════════════════════
+          LAYER 7 — Dot navigation
+          ══════════════════════════════════════════ */}
+      <div
+        className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 items-center"
+        style={{ zIndex: 20 }}
       >
-        <ChevronRight className="h-4 w-4" />
-      </button>
-
-      {/* DOTS */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 items-center" style={{ zIndex: 20 }}>
         {slides.map((_, i) => (
           <button
             key={i}
+            type="button"
+            aria-label={`Go to slide ${i + 1}`}
             onClick={() => {
-              setDirection(i > current ? 1 : -1)
-              emblaApi?.scrollTo(i)
+              setDirection(i > current ? 1 : -1);
+              setCurrent(i);
             }}
             className="rounded-full transition-all duration-300"
             style={{
               height: 5,
-              width: i === current ? 26 : 5,
-              background: i === current ? slide.accent : 'rgba(255,255,255,0.22)',
-              boxShadow: i === current ? `0 0 8px ${slide.accent}80` : 'none',
+              width: i === current ? 28 : 5,
+              background:
+                i === current
+                  ? `linear-gradient(90deg, ${slide.accent}, ${slide.accentAlt})`
+                  : "rgba(255,255,255,0.18)",
+              boxShadow:
+                i === current ? `0 0 10px ${slide.accent}99` : "none",
             }}
           />
         ))}
       </div>
 
-      {/* COUNTER */}
+      {/* ══════════════════════════════════════════
+          LAYER 8 — Slide counter
+          ══════════════════════════════════════════ */}
       <div
-        className="absolute bottom-5 right-6 text-xs font-bold tabular-nums"
-        style={{ zIndex: 20, color: 'rgba(255,255,255,0.28)' }}
+        className="absolute bottom-5 right-5 flex items-center gap-1 text-[10px] font-bold tabular-nums"
+        style={{ zIndex: 20, color: "rgba(255,255,255,0.25)" }}
       >
-        {String(current + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
+        <span style={{ color: slide.accent, fontSize: 11 }}>
+          {String(current + 1).padStart(2, "0")}
+        </span>
+        <span>/</span>
+        <span>{String(slides.length).padStart(2, "0")}</span>
       </div>
+
+      {/* ══════════════════════════════════════════
+          LAYER 9 — Auto-play progress bar
+          ══════════════════════════════════════════ */}
+      {!isHovered && (
+        <motion.div
+          key={`progress-${current}`}
+          className="absolute bottom-0 left-0 h-[2px]"
+          style={{
+            zIndex: 20,
+            background: `linear-gradient(90deg, ${slide.accent}, ${slide.accentAlt})`,
+            boxShadow: `0 0 8px ${slide.accent}88`,
+          }}
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 5.5, ease: "linear" }}
+        />
+      )}
     </section>
-  )
+  );
 }
