@@ -171,16 +171,15 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
         transition: 'all .25s',
         fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
       }}>
-        {/* Deep Blue Moveable Strip (Only Top One Kept) */}
+        {/* Top Announcement Strip with Linear Gradient */}
         <div style={{ 
-          background: '#1a1b3a', 
+          background: 'linear-gradient(90deg, #1e1b4b, #2e2a7a)', 
           color: '#fff', 
-          padding: '10px 0', 
+          padding: '9px 0', 
           fontSize: '12.5px', 
           fontWeight: 600, 
           overflow: 'hidden',
-          position: 'relative',
-          borderBottom: '1px solid rgba(255,255,255,0.05)'
+          position: 'relative'
         }}>
           <div className="flexi-marquee-container">
             {/* Duplicate content for seamless looping */}
