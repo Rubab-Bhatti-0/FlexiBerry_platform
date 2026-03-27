@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  User, ShoppingBag, CreditCard, Heart, Bell, Settings,
+  User, ShoppingBag, CreditCard, Heart, Bell, Settings, MessageCircle,
   ChevronRight, Package, CheckCircle2, Clock, AlertCircle,
   TrendingUp, Star, MapPin, Phone, Mail,
   Home, BarChart3, Truck, Gift, Shield, Eye, Download,
   Calendar, Wallet, ArrowUpRight, MoreHorizontal, Search,
   ChevronDown, RefreshCw, X, ShoppingCart, Menu, Plus, Edit2, Trash2,
-  LogOut
+  LogOut, Send
 } from "lucide-react";
 
 /* ── FlexiBerry Logo ── */
@@ -125,7 +125,14 @@ const statusConfig: Record<string, { label: string; color: string; bg: string; i
   completed:   { label: "Completed",   color: "#7c3aed", bg: "#ede9fe", icon: CheckCircle2 },
 };
 
-type Tab = "overview" | "orders" | "installments" | "wishlist" | "notifications" | "settings";
+type Tab = "overview" | "orders" | "installments" | "wishlist" | "notifications" | "chat" | "settings";
+
+interface ChatMessage {
+  id: number;
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: string;
+}
 
 export default function BuyerDashboardPage() {
   const [activeTab, setActiveTab] = useState<Tab>("overview");
@@ -134,6 +141,92 @@ export default function BuyerDashboardPage() {
   const [editingAddress, setEditingAddress] = useState<any | null>(null);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [expandedInstallment, setExpandedInstallment] = useState<string | null>(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    { id: 1, text: "Hello there! 👋 It's nice to meet you!", sender: 'bot', timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+    { id: 2, text: "What brings you here today? Please use the navigation below or ask me anything about FlexiBerry. 🚀", sender: 'bot', timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+  ]);
+  const [chatInput, setChatInput] = useState("");
+  const [isChatLoading, setIsChatLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const quickActions = [
+    { label: "🤖 Build AI chatbot", id: "build" },
+    { label: "📚 Using ChatBot", id: "using" },
+    { label: "❓ I have questions", id: "questions" },
+    { label: "👀 Just browsing", id: "browsing" }
+  ];
+
+  const scrollChatToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollChatToBottom();
+  }, [chatMessages]);
+
+  const handleChatQuickAction = (action: string) => {
+    const actionMessages: Record<string, string> = {
+      build: "Great! I can help you build an AI chatbot. Let me guide you through the process...",
+      using: "Perfect! Here are some tips on using ChatBot effectively...",
+      questions: "I'm happy to answer your questions! What would you like to know? 😊",
+      browsing: "No problem! Feel free to explore and ask me anything when you need help. 👋"
+    };
+
+    const userMessage: ChatMessage = {
+      id: chatMessages.length + 1,
+      text: action,
+      sender: 'user',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setChatMessages(prev => [...prev, userMessage]);
+    setIsChatLoading(true);
+
+    setTimeout(() => {
+      const botMessage: ChatMessage = {
+        id: chatMessages.length + 2,
+        text: actionMessages[action.split(" ")[0].toLowerCase()] || "How can I assist you further?",
+        sender: 'bot',
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setChatMessages(prev => [...prev, botMessage]);
+      setIsChatLoading(false);
+    }, 600);
+  };
+
+  const handleSendChatMessage = () => {
+    if (chatInput.trim()) {
+      const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const newMessage: ChatMessage = {
+        id: chatMessages.length + 1,
+        text: chatInput,
+        sender: 'user',
+        timestamp
+      };
+      setChatMessages([...chatMessages, newMessage]);
+      setChatInput("");
+      setIsChatLoading(true);
+
+      setTimeout(() => {
+        const botResponses = [
+          "That's a great question! Let me help you with that. 🤔",
+          "I understand. Here's what I can do for you...",
+          "Would you like more information about this? 💡",
+          "I'm here to assist! Is there anything else? 📞",
+          "Thanks for asking! Let me provide more details... ✨",
+        ];
+        const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+        const botMessage: ChatMessage = {
+          id: chatMessages.length + 2,
+          text: randomResponse,
+          sender: 'bot',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setChatMessages(prev => [...prev, botMessage]);
+        setIsChatLoading(false);
+      }, 800);
+    }
+  };
 
   const totalSpend = orders.reduce((s, o) => s + o.price, 0);
   const activeInstallments = orders.filter(o => o.installments.paid < o.installments.total);
@@ -145,6 +238,7 @@ export default function BuyerDashboardPage() {
     { id: "installments",  icon: CreditCard,  label: "Installments",  badge: activeInstallments.length },
     { id: "wishlist",      icon: Heart,       label: "Wishlist",       badge: wishlistCount },
     { id: "notifications", icon: Bell,        label: "Notifications",  badge: notifications.length },
+    { id: "chat",          icon: MessageCircle, label: "Chat Support" },
     { id: "settings",      icon: Settings,    label: "Settings" },
   ];
 
@@ -184,7 +278,7 @@ export default function BuyerDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex font-['Plus_Jakarta_Sans',sans-serif]">
       
       {/* ── FIXED SIDEBAR ── */}
       <aside className="hidden md:flex md:flex-col w-64 bg-white/95 backdrop-blur-xl border-r border-blue-100/50 h-screen sticky top-0 overflow-y-auto z-30">
@@ -262,11 +356,11 @@ export default function BuyerDashboardPage() {
       </aside>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col w-full">
         
         {/* ── TOP HEADER ── */}
         <header className="bg-white/80 backdrop-blur-xl border-b border-blue-100/50 sticky top-0 z-20 px-6 py-4 md:py-5">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-1">
               <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900">
                 {activeTab === "overview" && "Dashboard"}
@@ -274,6 +368,7 @@ export default function BuyerDashboardPage() {
                 {activeTab === "installments" && "Installments"}
                 {activeTab === "wishlist" && "Wishlist"}
                 {activeTab === "notifications" && "Notifications"}
+                {activeTab === "chat" && "Chat Support"}
                 {activeTab === "settings" && "Settings"}
               </h2>
             </div>
@@ -368,7 +463,7 @@ export default function BuyerDashboardPage() {
                   ))}
                 </div>
 
-                {/* Two Column Layout - Natural Scrolling */}
+                {/* Two Column Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   {/* Recent Orders */}
                   <motion.div 
@@ -428,7 +523,7 @@ export default function BuyerDashboardPage() {
                     </div>
                   </motion.div>
 
-                  {/* Recent Notifications - Natural Scrolling */}
+                  {/* Recent Notifications */}
                   <motion.div 
                     className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-sm overflow-hidden flex flex-col"
                     whileHover={{ shadow: "0 20px 40px rgba(0,0,0,0.1)" }}
@@ -803,7 +898,133 @@ export default function BuyerDashboardPage() {
               </motion.div>
             )}
 
-            {/* ════════ SETTINGS / PROFILE tab ════════ */}
+            {/* ════════ CHAT tab ════════ */}
+            {activeTab === "chat" && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-6"
+              >
+                <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-100/50 shadow-sm overflow-hidden flex flex-col h-[600px]">
+                  {/* Chat Header */}
+                  <div className="bg-white p-5 border-b border-slate-200 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
+                        <MessageCircle size={24} className="text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-slate-900">ChatBot</h3>
+                        <p className="text-xs text-slate-500">Online</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Chat Messages */}
+                  <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-white">
+                    {chatMessages.map((msg, idx) => (
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                        className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div
+                          className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
+                            msg.sender === 'user'
+                              ? 'bg-blue-500 text-white rounded-br-none'
+                              : 'bg-slate-100 text-slate-800 rounded-bl-none'
+                          }`}
+                        >
+                          <p className="break-words">{msg.text}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+
+                    {/* Typing Indicator */}
+                    {isChatLoading && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex justify-start"
+                      >
+                        <div className="bg-slate-100 text-slate-800 px-4 py-2 rounded-lg rounded-bl-none flex items-center gap-2">
+                          <div className="flex gap-1">
+                            {[0, 1, 2].map(i => (
+                              <motion.div
+                                key={i}
+                                className="w-2 h-2 bg-slate-400 rounded-full"
+                                animate={{ y: [0, -4, 0] }}
+                                transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  {/* Quick Actions */}
+                  {chatMessages.length <= 2 && !isChatLoading && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="px-5 py-4 bg-slate-50 border-t border-slate-200 space-y-2"
+                    >
+                      {quickActions.map((action, idx) => (
+                        <motion.button
+                          key={action.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.05 }}
+                          onClick={() => handleChatQuickAction(action.label.split(" ")[0])}
+                          className="w-full px-4 py-2.5 border-2 border-blue-500 text-blue-600 rounded-full text-sm font-semibold hover:bg-blue-50 transition-all"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          {action.label}
+                        </motion.button>
+                      ))}
+                    </motion.div>
+                  )}
+
+                  {/* Chat Input */}
+                  <div className="p-4 border-t border-slate-200 bg-white flex gap-2">
+                    <input
+                      type="text"
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter' && !isChatLoading) {
+                          handleSendChatMessage();
+                        }
+                      }}
+                      placeholder="Type your message here"
+                      disabled={isChatLoading}
+                      className="flex-1 px-4 py-2.5 border border-slate-300 rounded-full text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50"
+                    />
+                    <motion.button
+                      onClick={handleSendChatMessage}
+                      disabled={isChatLoading || !chatInput.trim()}
+                      className="p-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Send size={18} />
+                    </motion.button>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 text-center">
+                    <p className="text-xs text-slate-500">Powered by <span className="text-blue-600 font-semibold">ChatBot</span></p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ════════ SETTINGS tab ════════ */}
             {activeTab === "settings" && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
