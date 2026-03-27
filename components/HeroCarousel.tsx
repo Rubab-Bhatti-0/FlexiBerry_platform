@@ -17,7 +17,7 @@ interface CarouselSlide {
   accentColor: string
   gradientStart: string
   gradientEnd: string
-  overlayGradient: string
+  solidColor: string
 }
 
 const CAROUSEL_SLIDES: CarouselSlide[] = [
@@ -33,7 +33,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#ef4444',
     gradientStart: '#dc2626',
     gradientEnd: '#991b1b',
-    overlayGradient: 'linear-gradient(90deg,rgba(31,41,55,.92) 0%,rgba(31,41,55,.62) 48%,rgba(31,41,55,.15) 100%)',
+    solidColor: 'rgba(31, 41, 55, 0.95)',
   },
   {
     id: 2,
@@ -47,7 +47,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#8b5cf6',
     gradientStart: '#7c3aed',
     gradientEnd: '#5b21b6',
-    overlayGradient: 'linear-gradient(90deg,rgba(30,27,75,.92) 0%,rgba(30,27,75,.62) 48%,rgba(30,27,75,.15) 100%)',
+    solidColor: 'rgba(30, 27, 75, 0.95)',
   },
   {
     id: 3,
@@ -61,7 +61,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#f97316',
     gradientStart: '#ea580c',
     gradientEnd: '#92400e',
-    overlayGradient: 'linear-gradient(90deg,rgba(54,33,0,.92) 0%,rgba(54,33,0,.62) 48%,rgba(54,33,0,.15) 100%)',
+    solidColor: 'rgba(54, 33, 0, 0.95)',
   },
   {
     id: 4,
@@ -75,7 +75,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#eab308',
     gradientStart: '#ca8a04',
     gradientEnd: '#713f12',
-    overlayGradient: 'linear-gradient(90deg,rgba(51,40,0,.92) 0%,rgba(51,40,0,.62) 48%,rgba(51,40,0,.15) 100%)',
+    solidColor: 'rgba(51, 40, 0, 0.95)',
   },
   {
     id: 5,
@@ -89,7 +89,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#06b6d4',
     gradientStart: '#0891b2',
     gradientEnd: '#164e63',
-    overlayGradient: 'linear-gradient(90deg,rgba(6,41,58,.92) 0%,rgba(6,41,58,.62) 48%,rgba(6,41,58,.15) 100%)',
+    solidColor: 'rgba(6, 41, 58, 0.95)',
   },
   {
     id: 6,
@@ -103,7 +103,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#14b8a6',
     gradientStart: '#0d9488',
     gradientEnd: '#134e4a',
-    overlayGradient: 'linear-gradient(90deg,rgba(5,46,41,.92) 0%,rgba(5,46,41,.62) 48%,rgba(5,46,41,.15) 100%)',
+    solidColor: 'rgba(5, 46, 41, 0.95)',
   },
   {
     id: 7,
@@ -117,7 +117,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#ec4899',
     gradientStart: '#db2777',
     gradientEnd: '#831843',
-    overlayGradient: 'linear-gradient(90deg,rgba(63,13,34,.92) 0%,rgba(63,13,34,.62) 48%,rgba(63,13,34,.15) 100%)',
+    solidColor: 'rgba(63, 13, 34, 0.95)',
   },
   {
     id: 8,
@@ -131,7 +131,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#3b82f6',
     gradientStart: '#1d4ed8',
     gradientEnd: '#1e3a8a',
-    overlayGradient: 'linear-gradient(90deg,rgba(15,23,42,.92) 0%,rgba(15,23,42,.62) 48%,rgba(15,23,42,.15) 100%)',
+    solidColor: 'rgba(15, 23, 42, 0.95)',
   },
   {
     id: 9,
@@ -145,7 +145,7 @@ const CAROUSEL_SLIDES: CarouselSlide[] = [
     accentColor: '#10b981',
     gradientStart: '#059669',
     gradientEnd: '#064e3b',
-    overlayGradient: 'linear-gradient(90deg,rgba(5,46,22,.92) 0%,rgba(5,46,22,.62) 48%,rgba(5,46,22,.15) 100%)',
+    solidColor: 'rgba(5, 46, 22, 0.95)',
   },
 ]
 
@@ -355,43 +355,31 @@ export default function HeroCarousel() {
               pointerEvents: i === slide ? 'auto' : 'none',
             }}
           >
-            {/* ── BACKGROUND IMAGE ──────────────────────────────── */}
+            {/* ── BACKGROUND IMAGE (RIGHT SIDE) ──────────────────── */}
             <div style={{ position: 'absolute', inset: 0 }}>
               <Image
                 src={sl.img}
                 alt={sl.h}
                 fill
-                style={{ objectFit: 'cover', objectPosition: 'center' }}
+                style={{ objectFit: 'cover', objectPosition: 'center right' }}
                 priority={i === 0}
                 sizes="100vw"
                 onError={e => {
                   ;(e.target as HTMLImageElement).style.display = 'none'
                 }}
               />
-
-              {/* ── LEFT GRADIENT OVERLAY ─────────────────────────── */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: sl.overlayGradient,
-                }}
-              />
-
-              {/* ── BOTTOM GRADIENT FADE ──────────────────────────── */}
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: 120,
-                  background: 'linear-gradient(to top, rgba(7,4,15,.55), transparent)',
-                }}
-              />
             </div>
 
-            {/* ── CONTENT ────────────────────────────────────────── */}
+            {/* ── LEFT GRADIENT OVERLAY (PRODUCT-SPECIFIC) ─────────── */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(90deg, ${sl.solidColor} 0%, ${sl.solidColor} 35%, rgba(0,0,0,0.4) 65%, transparent 100%)`,
+              }}
+            />
+
+            {/* ── CONTENT (LEFT SIDE) ────────────────────────────── */}
             {i === slide && (
               <div
                 style={{
@@ -403,9 +391,10 @@ export default function HeroCarousel() {
                   height: '100%',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'flex-start',
                 }}
               >
-                <div style={{ maxWidth: 510 }}>
+                <div style={{ maxWidth: 480, paddingRight: 40 }}>
                   {/* ── BADGE ──────────────────────────────────────── */}
                   <span
                     className="carousel-badge"
@@ -464,11 +453,11 @@ export default function HeroCarousel() {
                   <p
                     className="carousel-description"
                     style={{
-                      color: 'rgba(255,255,255,.72)',
+                      color: 'rgba(255,255,255,.82)',
                       fontSize: 'clamp(13px, 1.8vw, 15px)',
                       lineHeight: 1.75,
                       marginBottom: 28,
-                      maxWidth: 390,
+                      maxWidth: 420,
                     }}
                   >
                     {sl.sub}
@@ -515,15 +504,14 @@ export default function HeroCarousel() {
           </div>
         ))}
 
-        {/* ── NAVIGATION ARROWS ──────────────────────────────────── */}
+        {/* ── NAVIGATION ARROWS (BOTTOM CORNERS) ──────────────────── */}
         <button
           onClick={prev}
           className="carousel-nav-btn"
           style={{
             position: 'absolute',
             left: 20,
-            top: '50%',
-            transform: 'translateY(-50%)',
+            bottom: 20,
           }}
           aria-label="Previous slide"
         >
@@ -545,8 +533,7 @@ export default function HeroCarousel() {
           style={{
             position: 'absolute',
             right: 20,
-            top: '50%',
-            transform: 'translateY(-50%)',
+            bottom: 20,
           }}
           aria-label="Next slide"
         >
@@ -562,7 +549,7 @@ export default function HeroCarousel() {
           </svg>
         </button>
 
-        {/* ── DOT INDICATORS ─────────────────────────────────────── */}
+        {/* ── DOT INDICATORS (CENTER BOTTOM) ─────────────────────── */}
         <div
           style={{
             position: 'absolute',
