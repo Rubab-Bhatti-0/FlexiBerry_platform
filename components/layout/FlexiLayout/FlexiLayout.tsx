@@ -125,6 +125,22 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
           text-decoration: none;
         }
         .flexi-btn-ind:hover { box-shadow: 0 6px 22px rgba(99,102,241,.55); transform: translateY(-1px) }
+        
+        /* Moveable Strip Animation */
+        @keyframes marquee {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        .flexi-marquee {
+          display: inline-block;
+          white-space: nowrap;
+          animation: marquee 20s linear infinite;
+          padding-left: 100%;
+        }
+        .flexi-marquee:hover {
+          animation-play-state: paused;
+        }
+
         @media(max-width: 768px) {
           .flexi-hide-sm { display: none !important }
           .flexi-show-sm { display: flex !important }
@@ -142,22 +158,63 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
         transition: 'all .25s',
         fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
       }}>
+        {/* Blue Moveable Strip */}
+        <div style={{ 
+          background: '#2563eb', 
+          color: '#fff', 
+          padding: '6px 0', 
+          fontSize: '12px', 
+          fontWeight: 700, 
+          overflow: 'hidden',
+          position: 'relative'
+        }}>
+          <div className="flexi-marquee">
+            🚀 Welcome to FlexiBerry! Shop now and pay in easy installments. ✨ Free delivery on your first order! 📦 New arrivals every week! ⚡ Flash sale starts every Friday!
+          </div>
+        </div>
+
         <div style={{ maxWidth: 1340, margin: '0 auto', padding: '0 16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, height: 64 }}>
 
             {/* Logo */}
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
-              <div style={{
-                width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'linear-gradient(135deg, #3730a3, #4338ca)',
-                boxShadow: '0 4px 14px rgba(67,56,202,.4)',
-              }}>
-                <ShoppingBag size={22} color="white" />
+              <div style={{ flexShrink: 0 }}>
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="h-bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#2563eb"/>
+                      <stop offset="100%" stop-color="#7c3aed"/>
+                    </linearGradient>
+                    <linearGradient id="h-sh" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="white" stop-opacity="0.18"/>
+                      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="100" height="100" rx="28" fill="url(#h-bg)"/>
+                  <rect width="100" height="100" rx="28" fill="url(#h-sh)"/>
+                  <g transform="rotate(-14, 50, 52)">
+                    <path d="M 8 20 L 17 20 L 23 40" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M 23 40 L 23 70 Q 23 76 29 76 L 79 76 Q 85 76 85 70 L 85 40 Q 85 34 79 34 L 35 34 Q 27 34 23 40 Z" fill="white"/>
+                    <circle cx="32" cy="39" r="4.5" fill="url(#h-bg)"/>
+                    <rect x="30" y="45" width="5" height="21" rx="2.5" fill="url(#h-bg)"/>
+                    <rect x="30" y="45" width="13" height="4.5" rx="2.25" fill="url(#h-bg)"/>
+                    <rect x="30" y="53.5" width="10" height="4" rx="2" fill="url(#h-bg)"/>
+                    <rect x="48" y="45" width="5" height="21" rx="2.5" fill="url(#h-bg)"/>
+                    <path d="M 53 45 Q 65 45 65 51.5 Q 65 57.5 53 57.5" stroke="url(#h-bg)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                    <path d="M 53 57.8 Q 67 57.8 67 64.5 Q 67 71 53 71" stroke="url(#h-bg)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                    <circle cx="35" cy="86" r="7.5" fill="white"/>
+                    <circle cx="35" cy="86" r="3.8" fill="url(#h-bg)"/>
+                    <circle cx="70" cy="86" r="7.5" fill="#10b981"/>
+                    <circle cx="70" cy="86" r="3.8" fill="white"/>
+                    <circle cx="43" cy="91" r="2.5" fill="white" opacity="0.7"/>
+                    <circle cx="52" cy="91" r="2.5" fill="white" opacity="0.4"/>
+                    <circle cx="61" cy="91" r="2.5" fill="white" opacity="0.18"/>
+                  </g>
+                </svg>
               </div>
               <div>
                 <div style={{ fontWeight: 900, fontSize: 18.5, color: '#111827', lineHeight: 1, letterSpacing: -0.6 }}>
-                  Flexi<span style={{ color: '#6366f1' }}>Berry</span>
+                  Flexi<span style={{ color: '#2563eb' }}>Berry</span>
                 </div>
                 <div style={{ fontSize: 9, color: '#9ca3af', letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 2 }}>
                   Shop · Pay · Smile
@@ -227,8 +284,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
 
               <button className="flexi-hide-sm" aria-label="Wishlist" style={{
                 width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                color: '#9ca3af', transition: 'all .15s',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
               }}>
                 <Heart size={16} />
               </button>
