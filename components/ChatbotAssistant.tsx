@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, Send, X, HelpCircle, MessageSquare, Zap } from "lucide-react";
+import { MessageCircle, Send, X } from "lucide-react";
 
 interface Message {
   id: number;
@@ -144,7 +144,7 @@ export const ChatbotAssistant = () => {
                 <MessageCircle size={28} className="text-white" />
               </div>
               <motion.div
-                className="absolute -top-2 -right-2 w-5 h-5 bg-blue-500 rounded-full border-2 border-white"
+                className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
@@ -161,50 +161,53 @@ export const ChatbotAssistant = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className="fixed bottom-6 right-6 z-50 w-96 bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden"
+            className="fixed bottom-6 right-6 z-50 w-[400px] bg-white rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-white p-4 border-b border-slate-200 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
-                  <MessageCircle size={20} className="text-white" />
+            <div className="bg-white p-5 border-b border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="relative w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
+                  <MessageCircle size={24} className="text-white" />
+                  <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900">ChatBot</h3>
-                  <p className="text-xs text-slate-500">Online</p>
+                  <h3 className="font-bold text-slate-900 text-lg">ChatBot</h3>
+                  <p className="text-sm text-slate-400">Online</p>
                 </div>
               </div>
               <motion.button
                 onClick={() => setIsOpen(false)}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-slate-100 rounded-full transition-colors"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <X size={20} className="text-slate-600" />
+                <X size={24} className="text-slate-400" />
               </motion.button>
             </div>
 
-            {/* Divider */}
-            <div className="h-1 bg-gradient-to-r from-slate-100 to-slate-200" />
-
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
+            <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-[#f4f7f9] min-h-[350px] max-h-[500px]">
               {messages.map((msg, idx) => (
                 <motion.div
                   key={msg.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} items-start gap-2`}
                 >
+                  {msg.sender === 'bot' && (
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <MessageCircle size={14} className="text-white" />
+                    </div>
+                  )}
                   <div
-                    className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
+                    className={`max-w-[85%] px-5 py-3 rounded-2xl text-[15px] leading-relaxed shadow-sm ${
                       msg.sender === 'user'
-                        ? 'bg-blue-500 text-white rounded-br-none'
-                        : 'bg-slate-100 text-slate-800 rounded-bl-none'
+                        ? 'bg-blue-600 text-white rounded-tr-none'
+                        : 'bg-white text-slate-700 rounded-tl-none border border-slate-100'
                     }`}
                   >
-                    <p className="break-words">{msg.text}</p>
+                    <p className="break-words font-medium">{msg.text}</p>
                   </div>
                 </motion.div>
               ))}
@@ -214,15 +217,18 @@ export const ChatbotAssistant = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-start"
+                  className="flex justify-start items-start gap-2"
                 >
-                  <div className="bg-slate-100 text-slate-800 px-4 py-2 rounded-lg rounded-bl-none flex items-center gap-2">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <MessageCircle size={14} className="text-white" />
+                  </div>
+                  <div className="bg-white text-slate-700 px-5 py-3 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm flex items-center gap-2">
                     <div className="flex gap-1">
                       {[0, 1, 2].map(i => (
                         <motion.div
                           key={i}
-                          className="w-2 h-2 bg-slate-400 rounded-full"
-                          animate={{ y: [0, -4, 0] }}
+                          className="w-1.5 h-1.5 bg-slate-400 rounded-full"
+                          animate={{ y: [0, -3, 0] }}
                           transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }}
                         />
                       ))}
@@ -231,58 +237,59 @@ export const ChatbotAssistant = () => {
                 </motion.div>
               )}
 
+              {/* Quick Actions - Always visible after initial messages */}
+              {!isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="pl-10 space-y-2 pt-2"
+                >
+                  {quickActions.map((action, idx) => (
+                    <motion.button
+                      key={action.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      onClick={() => handleQuickAction(action.id)}
+                      className="w-full px-5 py-2.5 border-2 border-blue-500 text-blue-600 rounded-full text-sm font-bold hover:bg-blue-50 transition-all text-center"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {action.label}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Actions */}
-            {messages.length <= 2 && !isLoading && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="px-4 py-3 bg-slate-50 border-t border-slate-200 space-y-2"
-              >
-                {quickActions.map((action, idx) => (
-                  <motion.button
-                    key={action.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    onClick={() => handleQuickAction(action.id)}
-                    className="w-full px-4 py-2.5 border-2 border-blue-500 text-blue-600 rounded-full text-sm font-semibold hover:bg-blue-50 transition-all"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {action.label}
-                  </motion.button>
-                ))}
-              </motion.div>
-            )}
-
             {/* Input Area */}
-            <div className="p-4 border-t border-slate-200 bg-white flex gap-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message here"
-                disabled={isLoading}
-                className="flex-1 px-4 py-2.5 border border-slate-300 rounded-full text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50"
-              />
-              <motion.button
-                onClick={handleSendMessage}
-                disabled={isLoading || !inputValue.trim()}
-                className="p-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Send size={18} />
-              </motion.button>
+            <div className="p-5 border-t border-slate-100 bg-white">
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message here"
+                  disabled={isLoading}
+                  className="w-full pl-5 pr-14 py-3.5 border border-slate-200 rounded-full text-[15px] outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50 font-medium"
+                />
+                <motion.button
+                  onClick={handleSendMessage}
+                  disabled={isLoading || !inputValue.trim()}
+                  className="absolute right-2 p-2.5 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Send size={20} className="transform rotate-45 -translate-y-0.5 translate-x-0.5" />
+                </motion.button>
+              </div>
             </div>
 
             {/* Footer */}
-            <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 text-center">
-              <p className="text-xs text-slate-500">Powered by <span className="text-blue-600 font-semibold">ChatBot</span></p>
+            <div className="px-5 py-3 bg-white border-t border-slate-50 text-center">
+              <p className="text-[13px] text-slate-400">Powered by <span className="text-blue-600 font-bold">ChatBot</span></p>
             </div>
           </motion.div>
         )}
