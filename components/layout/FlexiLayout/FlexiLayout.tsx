@@ -450,8 +450,8 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
 
       <main style={{ minHeight: '60vh' }}>{children}</main>
 
-      <footer style={{ background: '#0d1117', color: '#fff', fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif" }}>
-        <div style={{ background: 'linear-gradient(90deg, #312e81, #4c1d95)', padding: '18px 16px' }}>
+      <footer style={{ background: '#4c5aa0', color: '#fff', fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif" }}>
+        <div style={{ background: 'linear-gradient(90deg, #3d4a7f, #5c6eb8)', padding: '18px 16px' }}>
           <div style={{ maxWidth: 1340, margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 14 }}>
             <span style={{ fontSize: 14.5, color: 'rgba(255,255,255,.9)', fontWeight: 500 }}>
               🚀 Ready to start shopping on installments?
@@ -466,12 +466,42 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 36, marginBottom: 36 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 12, flexShrink: 0, background: 'linear-gradient(135deg, #3730a3, #4338ca)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ color: '#fff', fontWeight: 900, fontSize: 14 }}>FB</span>
-                </div>
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                  <defs>
+                    <linearGradient id="footer-logo-bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#ffffff"/>
+                      <stop offset="100%" stopColor="#f0f2ff"/>
+                    </linearGradient>
+                    <linearGradient id="footer-logo-sh" x1="0" y1="0" x2="0" y2="100" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="white" stopOpacity="0.18"/>
+                      <stop offset="100%" stopColor="white" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="100" height="100" rx="28" fill="url(#footer-logo-bg)"/>
+                  <rect width="100" height="100" rx="28" fill="url(#footer-logo-sh)"/>
+                  <g transform="rotate(-14, 50, 52)">
+                    <path d="M 8 20 L 17 20 L 23 40" stroke="#4c5aa0" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    <path d="M 23 40 L 23 70 Q 23 76 29 76 L 79 76 Q 85 76 85 70 L 85 40 Q 85 34 79 34 L 35 34 Q 27 34 23 40 Z" fill="#4c5aa0"/>
+                    <circle cx="32" cy="39" r="4.5" fill="#4c5aa0"/>
+                    <rect x="30" y="45" width="5" height="21" rx="2.5" fill="#4c5aa0"/>
+                    <rect x="30" y="45" width="13" height="4.5" rx="2.25" fill="#4c5aa0"/>
+                    <rect x="30" y="53.5" width="10" height="4" rx="2" fill="#4c5aa0"/>
+                    <rect x="48" y="45" width="5" height="21" rx="2.5" fill="#4c5aa0"/>
+                    <path d="M 53 45 Q 65 45 65 51.5 Q 65 57.5 53 57.5" stroke="#4c5aa0" strokeWidth="4.5" fill="none" strokeLinecap="round"/>
+                    <path d="M 53 57.8 Q 67 57.8 67 64.5 Q 67 71 53 71" stroke="#4c5aa0" strokeWidth="4.5" fill="none" strokeLinecap="round"/>
+                    <circle cx="35" cy="86" r="7.5" fill="#4c5aa0"/>
+                    <circle cx="35" cy="86" r="3.8" fill="white"/>
+                    <circle cx="70" cy="86" r="7.5" fill="#10b981"/>
+                    <circle cx="70" cy="86" r="3.8" fill="white"/>
+                    <circle cx="43" cy="91" r="2.5" fill="#4c5aa0" opacity="0.7"/>
+                    <circle cx="52" cy="91" r="2.5" fill="#4c5aa0" opacity="0.4"/>
+                    <circle cx="61" cy="91" r="2.5" fill="#4c5aa0" opacity="0.18"/>
+                  </g>
+                  <rect width="100" height="100" rx="28" fill="none" stroke="#4c5aa0" strokeWidth="0.8" strokeOpacity="0.1"/>
+                </svg>
                 <span style={{ fontSize: 18, fontWeight: 900, color: '#fff' }}>FlexiBerry</span>
               </div>
-              <p style={{ color: '#6b7280', fontSize: 13.5, lineHeight: 1.75, marginBottom: 20, maxWidth: 270 }}>
+              <p style={{ color: 'rgba(255,255,255,.8)', fontSize: 13.5, lineHeight: 1.75, marginBottom: 20, maxWidth: 270 }}>
                 Where Smart Shopping Meets Flexible Payments. Buy anything on easy installments across Pakistan.
               </p>
             </div>
@@ -484,14 +514,14 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
                 <h4 style={{ fontSize: 14, fontWeight: 800, color: '#fff', marginBottom: 16 }}>{col.h}</h4>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10, padding: 0, margin: 0 }}>
                   {col.links.map(([label, href]) => (
-                    <li key={label}><a href={href} style={{ color: '#6b7280', fontSize: 13.5, textDecoration: 'none' }}>{label}</a></li>
+                    <li key={label}><a href={href} style={{ color: 'rgba(255,255,255,.75)', fontSize: 13.5, textDecoration: 'none', transition: 'color .15s' }} onMouseOver={e => (e.currentTarget as HTMLElement).style.color='#fff'} onMouseOut={e => (e.currentTarget as HTMLElement).style.color='rgba(255,255,255,.75)'}>{label}</a></li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-          <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', paddingTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <p style={{ color: '#4b5563', fontSize: 13, margin: 0 }}>© 2026 FlexiBerry. All rights reserved.</p>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,.15)', paddingTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <p style={{ color: 'rgba(255,255,255,.65)', fontSize: 13, margin: 0 }}>© 2026 FlexiBerry. All rights reserved.</p>
           </div>
         </div>
       </footer>
