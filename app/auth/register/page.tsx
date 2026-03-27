@@ -19,7 +19,7 @@ function RegisterForm() {
   const searchParams = useSearchParams()
   const typeParam = searchParams.get('type')
   
-  const [step, setStep] = useState(0) // 0: Role Selection, 1: Basic, 2: Identity, 3: Shop/Docs, 4: Confirm, 5: Security
+  const [step, setStep] = useState(0) // 0: Role Selection, 1: Basic, 2: Identity, 3: Documents, 4: Confirm, 5: Security
   const [userType, setUserType] = useState<'buyer' | 'seller'>((typeParam as 'buyer' | 'seller') || 'buyer')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -73,11 +73,14 @@ function RegisterForm() {
       if (!formData.cnicNumber) newErrors.cnicNumber = 'CNIC is required'
       if (!formData.phoneNumber) newErrors.phoneNumber = 'Phone number is required'
       if (!formData.dob) newErrors.dob = 'Date of birth is required'
-    } else if (step === 3 && userType === 'seller') {
-      if (!formData.shopName) newErrors.shopName = 'Shop name is required'
-      if (!formData.shopLocation) newErrors.shopLocation = 'Shop location is required'
-      if (!formData.businessType) newErrors.businessType = 'Business type is required'
-      if (!formData.shopLicense) newErrors.shopLicense = 'Shop license is required'
+    } else if (step === 3) {
+      if (userType === 'seller') {
+        if (!formData.shopName) newErrors.shopName = 'Shop name is required'
+        if (!formData.shopLocation) newErrors.shopLocation = 'Shop location is required'
+        if (!formData.businessType) newErrors.businessType = 'Business type is required'
+        if (!formData.shopLicense) newErrors.shopLicense = 'Shop license is required'
+      }
+      // Documents validation would go here if we track uploads
     } else if (step === 4) {
       if (!formData.documentsConfirmed) newErrors.documentsConfirmed = 'You must confirm the information'
     } else if (step === 5) {
@@ -96,21 +99,13 @@ function RegisterForm() {
     }
     
     if (validateStep()) {
-      // For buyers, skip shop info step
-      if (step === 2 && userType === 'buyer') {
-        setStep(4)
-      } else {
-        setStep(prev => prev + 1)
-      }
+      setStep(prev => prev + 1)
     }
   }
 
   const prevStep = () => {
-    if (step === 4 && userType === 'buyer') {
-      setStep(2)
-    } else {
-      setStep(prev => prev - 1)
-    }
+    if (step === 0) return
+    setStep(prev => prev - 1)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,10 +136,17 @@ function RegisterForm() {
     }
   }
 
+  const getStepCount = () => {
+    if (userType === 'seller') return 6 // 0: Role, 1: Basic, 2: Identity, 3: Shop, 4: Confirm, 5: Security
+    return 6 // 0: Role, 1: Basic, 2: Identity, 3: Documents, 4: Confirm, 5: Security
+  }
+
   const steps = [
-    { id: 1, title: 'Basic', icon: <User size={18} /> },
+    { id: 1, title: 'Basic Info', icon: <User size={18} /> },
     { id: 2, title: 'Identity', icon: <ShieldCheck size={18} /> },
-    ...(userType === 'seller' ? [{ id: 3, title: 'Shop', icon: <Store size={18} /> }] : []),
+    userType === 'seller' 
+      ? { id: 3, title: 'Shop Info', icon: <Store size={18} /> }
+      : { id: 3, title: 'Documents', icon: <FileText size={18} /> },
     { id: 4, title: 'Confirm', icon: <FileCheck size={18} /> },
     { id: 5, title: 'Security', icon: <Lock size={18} /> },
   ]
@@ -260,7 +262,10 @@ function RegisterForm() {
         {step === 1 && (
           <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8">
-              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Basic Information</h2>
+              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-1">
+                {userType === 'buyer' ? 'Buyer Sign Up' : 'Vendor Sign Up'}
+              </h2>
+              <p className="text-lg font-bold text-[#6366f1] mb-4">Basic Information</p>
               <p className="text-[#6b7280]">Tell us who you are to get started</p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
@@ -304,12 +309,15 @@ function RegisterForm() {
         {step === 2 && (
           <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8">
-              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Identity Verification</h2>
+              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-1">
+                {userType === 'buyer' ? 'Buyer Sign Up' : 'Vendor Sign Up'}
+              </h2>
+              <p className="text-lg font-bold text-[#6366f1] mb-4">Identity Information</p>
               <p className="text-[#6b7280]">Secure your account with official identification</p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="md:col-span-2 space-y-2">
-                <label className="text-sm font-bold text-[#374151] ml-1">CNIC Number</label>
+                <label className="text-sm font-bold text-[#374151] ml-1">ID Card Number (CNIC)</label>
                 <div className="relative">
                   <Input name="cnicNumber" placeholder="12345-1234567-1" value={formData.cnicNumber} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
                   <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
@@ -317,7 +325,7 @@ function RegisterForm() {
                 {errors.cnicNumber && <p className="text-red-500 text-xs mt-1 ml-1">{errors.cnicNumber}</p>}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-[#374151] ml-1">Mobile Number</label>
+                <label className="text-sm font-bold text-[#374151] ml-1">Phone Number</label>
                 <div className="relative">
                   <Input name="phoneNumber" placeholder="0300-1234567" value={formData.phoneNumber} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
@@ -336,65 +344,103 @@ function RegisterForm() {
           </Card>
         )}
 
-        {/* Step 3: Shop Info (Vendor Only) */}
-        {step === 3 && userType === 'seller' && (
-          <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="mb-8">
-              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Shop Information</h2>
-              <p className="text-[#6b7280]">Tell us about your business and documents</p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="md:col-span-2 space-y-2">
-                <label className="text-sm font-bold text-[#374151] ml-1">Shop Name</label>
-                <div className="relative">
-                  <Input name="shopName" placeholder="Your Business Name" value={formData.shopName} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                  <Store className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+        {/* Step 3: Shop Info (Vendor) or Documents (Buyer) */}
+        {step === 3 && (
+          <>
+            {userType === 'seller' ? (
+              <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="mb-8">
+                  <h2 className="text-2xl font-serif font-bold text-[#111827] mb-1">Vendor Sign Up</h2>
+                  <p className="text-lg font-bold text-[#6366f1] mb-4">Shop Information</p>
+                  <p className="text-[#6b7280]">Tell us about your business</p>
                 </div>
-                {errors.shopName && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopName}</p>}
-              </div>
-              <div className="md:col-span-2 space-y-2">
-                <label className="text-sm font-bold text-[#374151] ml-1">Shop Location</label>
-                <div className="relative">
-                  <Input name="shopLocation" placeholder="Full physical address" value={formData.shopLocation} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="text-sm font-bold text-[#374151] ml-1">Shop Name</label>
+                    <div className="relative">
+                      <Input name="shopName" placeholder="Your Business Name" value={formData.shopName} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                      <Store className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                    </div>
+                    {errors.shopName && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopName}</p>}
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <label className="text-sm font-bold text-[#374151] ml-1">Shop Location</label>
+                    <div className="relative">
+                      <Input name="shopLocation" placeholder="Full physical address" value={formData.shopLocation} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                    </div>
+                    {errors.shopLocation && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopLocation}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#374151] ml-1">Business Type</label>
+                    <div className="relative">
+                      <select 
+                        name="businessType" 
+                        value={formData.businessType} 
+                        onChange={handleChange as any}
+                        className="w-full pl-11 h-13 rounded-2xl border-[#e5e7eb] bg-white text-sm focus:border-[#6366f1] focus:ring-[#6366f1]/10 outline-none appearance-none"
+                      >
+                        <option value="Retail">Retail</option>
+                        <option value="Wholesale">Wholesale</option>
+                        <option value="Manufacturer">Manufacturer</option>
+                        <option value="Service">Service</option>
+                      </select>
+                      <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                    </div>
+                    {errors.businessType && <p className="text-red-500 text-xs mt-1 ml-1">{errors.businessType}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-[#374151] ml-1">Shop License Number</label>
+                    <div className="relative">
+                      <Input name="shopLicense" placeholder="LIC-12345678" value={formData.shopLicense} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
+                      <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                    </div>
+                    {errors.shopLicense && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopLicense}</p>}
+                  </div>
                 </div>
-                {errors.shopLocation && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopLocation}</p>}
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-[#374151] ml-1">Business Type</label>
-                <div className="relative">
-                  <select 
-                    name="businessType" 
-                    value={formData.businessType} 
-                    onChange={handleChange as any}
-                    className="w-full pl-11 h-13 rounded-2xl border-[#e5e7eb] bg-white text-sm focus:border-[#6366f1] focus:ring-[#6366f1]/10 outline-none appearance-none"
-                  >
-                    <option value="Retail">Retail</option>
-                    <option value="Wholesale">Wholesale</option>
-                    <option value="Manufacturer">Manufacturer</option>
-                    <option value="Service">Service</option>
-                  </select>
-                  <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+              </Card>
+            ) : (
+              <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="mb-8">
+                  <h2 className="text-2xl font-serif font-bold text-[#111827] mb-1">Buyer Sign Up</h2>
+                  <p className="text-lg font-bold text-[#6366f1] mb-4">Document Upload</p>
+                  <p className="text-[#6b7280]">Upload required documents for verification</p>
                 </div>
-                {errors.businessType && <p className="text-red-500 text-xs mt-1 ml-1">{errors.businessType}</p>}
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-[#374151] ml-1">Shop License Number</label>
-                <div className="relative">
-                  <Input name="shopLicense" placeholder="LIC-12345678" value={formData.shopLicense} onChange={handleChange} className="pl-11 h-13 rounded-2xl border-[#e5e7eb]" />
-                  <FileText className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9ca3af]" size={18} />
+                
+                <div className="space-y-4">
+                  {[
+                    { label: 'CNIC Front Side', desc: 'Clear photo of the front' },
+                    { label: 'CNIC Back Side', desc: 'Clear photo of the back' },
+                    { label: 'Salary Slip', desc: 'Latest month salary slip' },
+                    { label: 'Bank Statement', desc: 'Last 3 months statement' },
+                  ].map((doc) => (
+                    <div key={doc.label} className="border-2 border-dashed border-[#e5e7eb] rounded-2xl p-5 flex items-center justify-between hover:border-[#6366f1] transition-all group cursor-pointer bg-white">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-[#f9fafb] rounded-xl flex items-center justify-center text-[#9ca3af] group-hover:bg-[#f5f3ff] group-hover:text-[#6366f1] transition-colors">
+                          <Upload size={22} />
+                        </div>
+                        <div>
+                          <p className="font-bold text-[#111827] text-sm">{doc.label}</p>
+                          <p className="text-xs text-[#6b7280]">{doc.desc}</p>
+                        </div>
+                      </div>
+                      <Button type="button" variant="outline" className="rounded-xl border-[#e5e7eb] text-[#6366f1] font-bold text-xs h-9">Browse</Button>
+                    </div>
+                  ))}
                 </div>
-                {errors.shopLicense && <p className="text-red-500 text-xs mt-1 ml-1">{errors.shopLicense}</p>}
-              </div>
-            </div>
-          </Card>
+              </Card>
+            )}
+          </>
         )}
 
         {/* Step 4: Confirmation */}
         {step === 4 && (
           <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8">
-              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Confirmation</h2>
+              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-1">
+                {userType === 'buyer' ? 'Buyer Sign Up' : 'Vendor Sign Up'}
+              </h2>
+              <p className="text-lg font-bold text-[#6366f1] mb-4">Confirmation</p>
               <p className="text-[#6b7280]">Please confirm your details</p>
             </div>
             
@@ -433,7 +479,10 @@ function RegisterForm() {
         {step === 5 && (
           <Card className="p-8 border-[#e5e7eb] shadow-xl shadow-indigo-50/50 rounded-3xl animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="mb-8">
-              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-2">Secure Your Account</h2>
+              <h2 className="text-2xl font-serif font-bold text-[#111827] mb-1">
+                {userType === 'buyer' ? 'Buyer Sign Up' : 'Vendor Sign Up'}
+              </h2>
+              <p className="text-lg font-bold text-[#6366f1] mb-4">Security</p>
               <p className="text-[#6b7280]">Create a strong password to protect your data</p>
             </div>
             <div className="space-y-6">
@@ -452,7 +501,7 @@ function RegisterForm() {
                   <button 
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#6366f1]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#6366f1] transition-colors"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -474,7 +523,7 @@ function RegisterForm() {
                   <button 
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#6366f1]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#6366f1] transition-colors"
                   >
                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -492,19 +541,21 @@ function RegisterForm() {
 
         {/* Navigation Buttons */}
         <div className="flex gap-4">
-          <Button 
-            type="button" 
-            onClick={prevStep} 
-            variant="outline" 
-            className="flex-1 h-14 rounded-2xl border-[#e5e7eb] text-[#374151] font-bold hover:bg-[#f9fafb] transition-all flex items-center justify-center gap-2"
-          >
-            <ChevronLeft size={20} /> Back
-          </Button>
+          {step > 0 && (
+            <Button 
+              type="button" 
+              onClick={prevStep} 
+              variant="outline" 
+              className="flex-1 h-14 rounded-2xl border-[#e5e7eb] text-[#374151] font-bold hover:bg-[#f9fafb] transition-all flex items-center justify-center gap-2"
+            >
+              <ChevronLeft size={20} /> Back
+            </Button>
+          )}
           {step < 5 ? (
             <Button 
               type="button" 
               onClick={nextStep} 
-              className="flex-[2] h-14 bg-[#6366f1] text-white hover:bg-[#4f46e5] rounded-2xl text-lg font-bold shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2"
+              className={`${step > 0 ? 'flex-[2]' : 'flex-1'} h-14 bg-[#6366f1] text-white hover:bg-[#4f46e5] rounded-2xl text-lg font-bold shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2`}
             >
               Next Step <ChevronRight size={20} />
             </Button>
@@ -512,9 +563,9 @@ function RegisterForm() {
             <Button 
               type="submit" 
               disabled={loading}
-              className="flex-[2] h-14 bg-[#6366f1] text-white hover:bg-[#4f46e5] rounded-2xl text-lg font-bold shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2"
+              className={`${step > 0 ? 'flex-[2]' : 'flex-1'} h-14 bg-[#6366f1] text-white hover:bg-[#4f46e5] rounded-2xl text-lg font-bold shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2`}
             >
-              {loading ? 'Creating Account...' : 'Complete Sign Up'} <CheckCircle2 size={20} />
+              {loading ? 'Creating Account...' : 'Sign Up'} <CheckCircle2 size={20} />
             </Button>
           )}
         </div>
