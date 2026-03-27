@@ -134,7 +134,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
         .flexi-marquee {
           display: inline-block;
           white-space: nowrap;
-          animation: marquee 20s linear infinite;
+          animation: marquee 30s linear infinite;
           padding-left: 100%;
         }
         .flexi-marquee:hover {
@@ -158,7 +158,23 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
         transition: 'all .25s',
         fontFamily: "'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
       }}>
-        {/* Blue Moveable Strip */}
+        {/* Deep Blue Moveable Strip (Moved to Top) */}
+        <div style={{ 
+          background: '#1a1b3a', 
+          color: '#fff', 
+          padding: '8px 0', 
+          fontSize: '12.5px', 
+          fontWeight: 600, 
+          overflow: 'hidden',
+          position: 'relative',
+          borderBottom: '1px solid rgba(255,255,255,0.05)'
+        }}>
+          <div className="flexi-marquee">
+            📦 Jahez Packages — Bundle & Save 50% &nbsp;&nbsp; • &nbsp;&nbsp; ☀️ Solar Systems — Go Green Today &nbsp;&nbsp; • &nbsp;&nbsp; 🚚 Free Nationwide Delivery &nbsp;&nbsp; • &nbsp;&nbsp; 💸 0% Commission for first 90 days! &nbsp;&nbsp; • &nbsp;&nbsp; 📱 iPhone 15 Pro — Starting PKR 45,833/mo
+          </div>
+        </div>
+
+        {/* Light Blue Strip (Now below the deep blue one) */}
         <div style={{ 
           background: '#2563eb', 
           color: '#fff', 
@@ -168,7 +184,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
           overflow: 'hidden',
           position: 'relative'
         }}>
-          <div className="flexi-marquee">
+          <div className="flexi-marquee" style={{ animationDuration: '20s' }}>
             🚀 Welcome to FlexiBerry! Shop now and pay in easy installments. ✨ Free delivery on your first order! 📦 New arrivals every week! ⚡ Flash sale starts every Friday!
           </div>
         </div>
