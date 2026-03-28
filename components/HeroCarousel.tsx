@@ -204,8 +204,8 @@ const HeroCarousel = () => {
 
       {/* ── LEFT TEXT CONTENT ── */}
       <div className="relative h-full flex items-center" style={{ zIndex: 10 }}>
-        <div className="container mx-auto px-6 md:px-12 lg:px-16">
-          <div style={{ maxWidth: 500 }}>
+        <div className="container mx-auto" style={{ paddingLeft: "clamp(24px, 5vw, 80px)", paddingRight: "clamp(24px, 5vw, 80px)" }}>
+          <div style={{ maxWidth: 500, marginLeft: 0 }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
@@ -273,27 +273,27 @@ const HeroCarousel = () => {
       </div>
 
       {/* ── PREV / NEXT ARROWS ── */}
-      {[{ fn: prev, Icon: ChevronLeft, side: "left-4" }, { fn: next, Icon: ChevronRight, side: "right-4" }].map(
+      {[{ fn: prev, Icon: ChevronLeft, side: "left-6 md:left-8" }, { fn: next, Icon: ChevronRight, side: "right-6 md:right-8" }].map(
         ({ fn, Icon, side }) => (
           <button
             key={side}
             onClick={fn}
-            className={`absolute ${side} top-1/2 -translate-y-1/2 h-9 w-9 rounded-full flex items-center justify-center transition-all hover:scale-110`}
+            className={`absolute ${side} top-1/2 -translate-y-1/2 h-10 w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center transition-all hover:scale-110`}
             style={{
               zIndex: 20,
-              background: "rgba(255,255,255,0.07)",
-              border: "1px solid rgba(255,255,255,0.13)",
-              backdropFilter: "blur(10px)",
+              background: "rgba(255,255,255,0.08)",
+              border: "1.5px solid rgba(255,255,255,0.15)",
+              backdropFilter: "blur(12px)",
               color: "#fff",
             }}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-5 w-5" />
           </button>
         )
       )}
 
       {/* ── DOTS ── */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 items-center" style={{ zIndex: 20 }}>
+      <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 items-center" style={{ zIndex: 20 }}>
         {slides.map((_, i) => (
           <button
             key={i}
@@ -303,10 +303,10 @@ const HeroCarousel = () => {
             }}
             className="rounded-full transition-all duration-300"
             style={{
-              height: 5,
-              width: i === current ? 26 : 5,
-              background: i === current ? slide.accent : "rgba(255,255,255,0.22)",
-              boxShadow: i === current ? `0 0 8px ${slide.accent}80` : "none",
+              height: 6,
+              width: i === current ? 28 : 6,
+              background: i === current ? slide.accent : "rgba(255,255,255,0.25)",
+              boxShadow: i === current ? `0 0 12px ${slide.accent}88` : "none",
             }}
           />
         ))}
@@ -314,8 +314,8 @@ const HeroCarousel = () => {
 
       {/* ── SLIDE COUNTER ── */}
       <div
-        className="absolute bottom-5 right-6 text-xs font-bold tabular-nums"
-        style={{ zIndex: 20, color: "rgba(255,255,255,0.28)" }}
+        className="absolute bottom-6 md:bottom-8 right-6 md:right-8 text-xs font-bold tabular-nums tracking-wider"
+        style={{ zIndex: 20, color: "rgba(255,255,255,0.35)" }}
       >
         {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
       </div>
