@@ -26,7 +26,7 @@ const team = [
   },
   {
     name: 'Hadia Akbar',
-    role: 'Developer',
+    role: 'Lead Developer',
     avatar: '👩‍💻',
     bio: 'Passionate developer focused on creating intuitive user experiences. Hadia contributes to frontend and backend development, making FlexiBerry user-friendly.',
     social: { linkedin: '#', github: '#' }
