@@ -51,7 +51,7 @@ const values = [
 export default function AboutPage() {
   return (
     <FlexiLayout>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-blue-50">
         {/* Hero Section */}
         <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-blue-50 via-white to-indigo-50 text-center border-b border-blue-100">
           <div className="max-w-4xl mx-auto">
