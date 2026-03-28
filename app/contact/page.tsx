@@ -49,7 +49,7 @@ export default function ContactPage() {
     <FlexiLayout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-indigo-50 via-white to-purple-50 text-center border-b border-indigo-100">
+        <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-blue-50 via-white to-indigo-50 text-center border-b border-blue-100">
           <div className="max-w-3xl mx-auto">
             <div className="text-5xl md:text-6xl mb-6 inline-block animate-bounce">📬</div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">Get in Touch</h1>
@@ -112,7 +112,7 @@ export default function ContactPage() {
               </div>
 
               {/* Quick Info */}
-              <Card className="p-6 bg-gradient-to-br from-indigo-50 to-purple-50 border-indigo-200">
+              <Card className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
                 <h3 className="font-bold text-gray-900 mb-3">Response Time</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   We typically respond to all inquiries within 24 hours during business hours. For urgent matters, please call us directly.

@@ -53,7 +53,7 @@ export default function AboutPage() {
     <FlexiLayout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-indigo-50 via-white to-purple-50 text-center border-b border-indigo-100">
+        <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-blue-50 via-white to-indigo-50 text-center border-b border-blue-100">
           <div className="max-w-4xl mx-auto">
             <div className="mb-6 inline-block animate-bounce">
               <FlexiBerryLogo size={80} />
@@ -190,7 +190,7 @@ export default function AboutPage() {
         </section>
 
         {/* Why Choose FlexiBerry */}
-        <section className="py-16 md:py-20 px-4 bg-indigo-50">
+        <section className="py-16 md:py-20 px-4 bg-blue-50">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-12">
               Why Choose FlexiBerry?
