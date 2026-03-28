@@ -414,7 +414,7 @@ const ProductCard = ({ product, index }: { product: any; index: number }) => {
 
         {/* Image */}
         <div style={{ position: "relative", aspectRatio: "1", background: "linear-gradient(to bottom right, #f9fafb, #f3f4f6)", overflow: "hidden" }}>
-          <Image src={product.image} alt={product.name} fill style={{ objectFit: 'cover' }} />
+          <Image src={product.image} alt={product.name} fill style={{ objectFit: 'contain', padding: '12px' }} />
           <div style={{ position: "absolute", inset: 0, bottom: 0, height: 64, background: "linear-gradient(to top, rgba(0,0,0,0.2), transparent)" }} />
         </div>
 
@@ -808,7 +808,7 @@ export default function ProductsPage() {
                           display: "flex", alignItems: "center", justifyContent: "center",
                           position: "relative", overflow: "hidden",
                         }}>
-                          <Image src={product.image} alt={product.name} fill style={{ objectFit: 'cover' }} />
+                          <Image src={product.image} alt={product.name} fill style={{ objectFit: 'contain', padding: '12px' }} />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "3px", flexWrap: "wrap" }}>
