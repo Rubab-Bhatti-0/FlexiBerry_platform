@@ -16,7 +16,7 @@ export default function OrderSuccessContent() {
   React.useEffect(() => {
     setOrderDate(new Date().toLocaleDateString('en-PK', {
       day: 'numeric',
-      month: 'long',
+      month: 'short',
       year: 'numeric'
     }));
   }, []);
@@ -26,185 +26,137 @@ export default function OrderSuccessContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f5fb] py-12 md:py-24 px-4 print:bg-white print:py-0">
-      <div className="max-w-3xl mx-auto">
-        {/* Success Header */}
-        <div className="text-center mb-12 print:hidden">
-          <div className="w-24 h-24 bg-green-100 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-xl shadow-green-100/50 scale-110">
-            <CheckCircle2 className="w-14 h-14 text-green-600" />
+    <div className="min-h-screen bg-[#f4f5fb] py-6 md:py-10 px-4 print:bg-white print:py-0">
+      <div className="max-w-2xl mx-auto">
+        {/* Compact Success Header */}
+        <div className="text-center mb-6 print:hidden">
+          <div className="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-green-100/50">
+            <CheckCircle2 className="w-10 h-10 text-green-600" />
           </div>
-          <h1 className="text-5xl md:text-6xl font-serif font-black text-[#111827] mb-6 tracking-tight">Payment Confirmed!</h1>
-          <p className="text-xl text-[#6b7280] font-medium max-w-lg mx-auto leading-relaxed">
-            Your order has been secured and your initial down payment was processed successfully.
-          </p>
+          <h1 className="text-3xl md:text-4xl font-serif font-black text-[#111827] mb-2 tracking-tight">Order Confirmed!</h1>
+          <p className="text-[#6b7280] font-bold text-sm uppercase tracking-widest">Digital Receipt & Confirmation</p>
         </div>
 
-        {/* Receipt Card */}
-        <Card className="overflow-hidden border-none shadow-2xl shadow-indigo-100/50 rounded-[3rem] bg-white relative">
-          {/* Decorative Top Bar */}
-          <div className="h-4 bg-gradient-to-r from-[#6366f1] via-[#7c3aed] to-[#4f46e5]" />
+        {/* Condensed Receipt Card */}
+        <Card className="overflow-hidden border-none shadow-2xl shadow-indigo-100/30 rounded-[2rem] bg-white relative">
+          <div className="h-2 bg-gradient-to-r from-[#6366f1] via-[#7c3aed] to-[#4f46e5]" />
           
-          <div className="p-8 md:p-16">
-            {/* Receipt Branding */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16 border-b border-dashed border-[#e5e7eb] pb-12">
+          <div className="p-6 md:p-10">
+            {/* Header: Brand & Order Ref */}
+            <div className="flex justify-between items-center mb-8 border-b border-dashed border-[#e5e7eb] pb-6">
               <div>
-                <h2 className="text-4xl font-serif font-black text-[#111827] tracking-tight">FlexiBerry</h2>
-                <p className="text-[#6b7280] text-sm font-bold mt-1 uppercase tracking-widest">Official Digital Receipt</p>
+                <h2 className="text-2xl font-serif font-black text-[#111827] tracking-tight">FlexiBerry</h2>
+                <p className="text-[#9ca3af] text-[10px] font-black uppercase tracking-widest">Transaction Success</p>
               </div>
-              <div className="text-left md:text-right">
-                <p className="text-[#9ca3af] text-xs uppercase tracking-[0.2em] font-black mb-2">Order Reference</p>
-                <p className="text-3xl font-mono font-black text-[#6366f1]">{orderId}</p>
+              <div className="text-right">
+                <p className="text-[#9ca3af] text-[10px] uppercase tracking-widest font-black mb-1">Order Ref</p>
+                <p className="text-xl font-mono font-black text-[#6366f1]">{orderId}</p>
               </div>
             </div>
 
-            {/* Transaction Info Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-16">
-              <div className="space-y-2">
-                <p className="text-[#9ca3af] text-[10px] uppercase tracking-widest font-black">Date</p>
-                <p className="font-black text-[#111827] text-lg">{orderDate || '...'}</p>
+            {/* Compact Info Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+              <div className="space-y-1">
+                <p className="text-[#9ca3af] text-[9px] uppercase tracking-widest font-black">Date</p>
+                <p className="font-black text-[#111827] text-sm">{orderDate || '...'}</p>
               </div>
-              <div className="space-y-2">
-                <p className="text-[#9ca3af] text-[10px] uppercase tracking-widest font-black">Status</p>
-                <div className="font-black text-green-600 flex items-center gap-2 text-lg">
-                  <span className="w-3 h-3 bg-green-600 rounded-full animate-pulse" />
+              <div className="space-y-1">
+                <p className="text-[#9ca3af] text-[9px] uppercase tracking-widest font-black">Status</p>
+                <div className="font-black text-green-600 flex items-center gap-1.5 text-sm">
+                  <span className="w-2 h-2 bg-green-600 rounded-full" />
                   Paid
                 </div>
               </div>
-              <div className="space-y-2">
-                <p className="text-[#9ca3af] text-[10px] uppercase tracking-widest font-black">Method</p>
-                <p className="font-black text-[#111827] flex items-center gap-2 text-lg">
-                  <CreditCard className="w-5 h-5 text-[#6366f1]" />
+              <div className="space-y-1">
+                <p className="text-[#9ca3af] text-[9px] uppercase tracking-widest font-black">Method</p>
+                <p className="font-black text-[#111827] flex items-center gap-1.5 text-sm">
+                  <CreditCard className="w-3.5 h-3.5 text-[#6366f1]" />
                   Card
                 </p>
               </div>
-              <div className="space-y-2">
-                <p className="text-[#9ca3af] text-[10px] uppercase tracking-widest font-black">Plan</p>
-                <p className="font-black text-[#6366f1] text-lg">12 Months</p>
+              <div className="space-y-1">
+                <p className="text-[#9ca3af] text-[9px] uppercase tracking-widest font-black">Plan</p>
+                <p className="font-black text-[#6366f1] text-sm">12 Months</p>
               </div>
             </div>
 
-            {/* Order Items */}
-            <div className="space-y-8 mb-16">
-              <h3 className="text-2xl font-serif font-black text-[#111827] flex items-center gap-3">
-                <Package className="w-6 h-6 text-[#6366f1]" />
-                Purchased Items
-              </h3>
-              <div className="bg-[#f8f9fd] rounded-[2rem] p-8 md:p-10 space-y-6 border border-[#f0f0f6]">
+            {/* Items Summary (Compact) */}
+            <div className="mb-8">
+              <div className="bg-[#f8f9fd] rounded-2xl p-5 border border-[#f0f0f6] space-y-3">
                 <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm border border-[#f0f0f6]">📺</div>
-                    <div>
-                      <p className="font-black text-[#111827] text-xl">Samsung 55" Smart TV</p>
-                      <p className="text-sm font-bold text-[#9ca3af] uppercase tracking-widest">Quantity: 1</p>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">📺</span>
+                    <span className="font-bold text-[#111827] text-sm">Samsung 55" Smart TV</span>
                   </div>
-                  <span className="font-black text-[#111827] text-xl">₨45,000</span>
+                  <span className="font-black text-[#111827] text-sm">₨45,000</span>
                 </div>
-                <div className="flex justify-between items-center pt-6 border-t border-[#e5e7eb]">
-                  <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm border border-[#f0f0f6]">🛏️</div>
-                    <div>
-                      <p className="font-black text-[#111827] text-xl">Complete Bedroom Set</p>
-                      <p className="text-sm font-bold text-[#9ca3af] uppercase tracking-widest">Quantity: 1</p>
-                    </div>
+                <div className="flex justify-between items-center pt-3 border-t border-[#e5e7eb]">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">🛏️</span>
+                    <span className="font-bold text-[#111827] text-sm">Complete Bedroom Set</span>
                   </div>
-                  <span className="font-black text-[#111827] text-xl">₨85,000</span>
+                  <span className="font-black text-[#111827] text-sm">₨85,000</span>
                 </div>
               </div>
             </div>
 
-            {/* Payment Summary */}
-            <div className="space-y-6 mb-16">
-              <div className="flex justify-between items-center text-[#6b7280] font-bold">
-                <span className="uppercase tracking-widest text-xs">Order Subtotal</span>
-                <span className="text-xl text-[#111827]">₨130,000</span>
-              </div>
-              <div className="flex justify-between items-center text-[#6b7280] font-bold">
-                <span className="uppercase tracking-widest text-xs">Shipping Fee</span>
-                <span className="text-green-600 uppercase tracking-widest text-xs font-black">Free Delivery</span>
-              </div>
-              <div className="flex justify-between items-center pt-8 border-t border-[#f3f4f6]">
-                <span className="text-2xl font-serif font-black text-[#111827]">Total Order Value</span>
-                <span className="text-3xl font-black text-[#111827]">₨130,000</span>
-              </div>
-              
-              <div className="bg-gradient-to-br from-[#6366f1] to-[#4f46e5] rounded-[2.5rem] p-10 text-white shadow-2xl shadow-indigo-200 mt-12 relative overflow-hidden">
-                <div className="absolute top-[-20%] right-[-10%] w-60 h-60 bg-white/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-[-20%] left-[-10%] w-60 h-60 bg-black/10 rounded-full blur-3xl" />
-                
-                <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-10">
-                  <div className="text-center md:text-left">
-                    <p className="text-indigo-100 text-[10px] uppercase tracking-[0.2em] font-black mb-3">Down Payment Processed</p>
-                    <p className="text-6xl font-black">₨26,000</p>
-                  </div>
-                  <div className="h-16 w-px bg-white/20 hidden md:block" />
-                  <div className="text-center md:text-right">
-                    <p className="text-indigo-100 text-[10px] uppercase tracking-[0.2em] font-black mb-3">Monthly Installment</p>
-                    <p className="text-4xl font-black">₨10,833<span className="text-lg font-medium opacity-80 ml-1">/mo</span></p>
-                  </div>
+            {/* Payment Highlights (Single Row) */}
+            <div className="bg-gradient-to-br from-[#6366f1] to-[#4f46e5] rounded-2xl p-6 text-white shadow-xl shadow-indigo-100 mb-8 relative overflow-hidden">
+              <div className="relative z-10 flex justify-between items-center">
+                <div>
+                  <p className="text-indigo-100 text-[9px] uppercase tracking-widest font-black mb-1">Down Payment Paid</p>
+                  <p className="text-3xl font-black">₨26,000</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-indigo-100 text-[9px] uppercase tracking-widest font-black mb-1">Monthly EMI</p>
+                  <p className="text-xl font-black">₨10,833<span className="text-xs font-medium opacity-80 ml-1">/mo</span></p>
                 </div>
               </div>
             </div>
 
-            {/* Next Payment Info */}
-            <div className="flex items-start gap-6 p-8 bg-[#f5f3ff] rounded-[2rem] border border-[#ddd6fe] mb-16">
-              <div className="p-3 bg-white rounded-xl shadow-sm">
-                <Calendar className="w-8 h-8 text-[#6366f1]" />
-              </div>
-              <div>
-                <p className="font-black text-[#4f46e5] mb-2 uppercase tracking-widest text-sm">Next Installment Due</p>
-                <p className="text-lg text-[#1e1b4b] leading-relaxed font-bold">
-                  Your first monthly installment of ₨10,833 is scheduled for {new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('en-PK', { day: 'numeric', month: 'long', year: 'numeric' })}.
-                </p>
-                <p className="text-[#6b7280] text-sm mt-2 font-medium">We will send a reminder to your email 3 days before the due date.</p>
-              </div>
+            {/* Next Step Info (Condensed) */}
+            <div className="flex items-center gap-4 p-4 bg-[#f5f3ff] rounded-2xl border border-[#ddd6fe] mb-8">
+              <Calendar className="w-5 h-5 text-[#6366f1] flex-shrink-0" />
+              <p className="text-xs text-[#1e1b4b] font-bold">
+                Next payment of <span className="text-[#6366f1]">₨10,833</span> due on {new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('en-PK', { day: 'numeric', month: 'short' })}. We'll email you a reminder.
+              </p>
             </div>
 
-            {/* Footer Actions */}
-            <div className="flex flex-col sm:flex-row gap-6 print:hidden">
-              <Button onClick={handlePrint} variant="outline" className="flex-1 h-16 rounded-2xl border-2 font-black text-lg flex items-center justify-center gap-3 hover:bg-[#f8f9fd] transition-all">
-                <Printer className="w-6 h-6" />
-                Print Receipt
+            {/* Quick Actions */}
+            <div className="flex gap-4 print:hidden">
+              <Button onClick={handlePrint} variant="outline" className="flex-1 h-12 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-2 hover:bg-[#f8f9fd] transition-all">
+                <Printer className="w-4 h-4" />
+                Print
               </Button>
-              <Button variant="outline" className="flex-1 h-16 rounded-2xl border-2 font-black text-lg flex items-center justify-center gap-3 hover:bg-[#f8f9fd] transition-all">
-                <Download className="w-6 h-6" />
-                Download PDF
+              <Button variant="outline" className="flex-1 h-12 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-2 hover:bg-[#f8f9fd] transition-all">
+                <Download className="w-4 h-4" />
+                Save PDF
               </Button>
             </div>
           </div>
-          
-          {/* Receipt Bottom Cutout Effect */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-8 bg-[#f4f5fb] rounded-t-full print:hidden" />
         </Card>
 
-        {/* Post-Checkout Navigation */}
-        <div className="mt-16 flex flex-col items-center gap-10 print:hidden">
-          <div className="flex flex-wrap justify-center gap-6">
+        {/* Simple Navigation */}
+        <div className="mt-8 flex flex-col items-center gap-6 print:hidden">
+          <div className="flex gap-4">
             <Link href="/buyer/dashboard">
-              <Button className="px-10 h-16 bg-white text-[#111827] hover:bg-muted rounded-2xl font-black text-lg shadow-xl shadow-gray-200/50 flex items-center gap-3 transition-all hover:scale-105 active:scale-95">
-                <Home className="w-6 h-6 text-[#6366f1]" />
-                Go to Dashboard
+              <Button className="h-12 px-6 bg-white text-[#111827] hover:bg-muted rounded-xl font-black text-xs shadow-md flex items-center gap-2 transition-all hover:scale-105">
+                <Home className="w-4 h-4 text-[#6366f1]" />
+                Dashboard
               </Button>
             </Link>
             <Link href="/products">
-              <Button className="px-10 h-16 bg-gradient-to-r from-[#6366f1] to-[#4f46e5] text-white hover:from-[#4f46e5] hover:to-[#4338ca] rounded-2xl font-black text-lg shadow-xl shadow-indigo-200 flex items-center gap-3 transition-all hover:scale-105 active:scale-95">
-                <ShoppingBag className="w-6 h-6" />
+              <Button className="h-12 px-6 bg-gradient-to-r from-[#6366f1] to-[#4f46e5] text-white rounded-xl font-black text-xs shadow-lg shadow-indigo-100 flex items-center gap-2 transition-all hover:scale-105">
+                <ShoppingBag className="w-4 h-4" />
                 Continue Shopping
               </Button>
             </Link>
           </div>
-          
-          <div className="flex items-center gap-3 text-[#9ca3af] text-sm font-black uppercase tracking-widest">
-            <ShieldCheck className="w-5 h-5 text-green-500" />
+          <div className="flex items-center gap-2 text-[#9ca3af] text-[10px] font-black uppercase tracking-widest">
+            <ShieldCheck className="w-4 h-4 text-green-500" />
             Verified Secure Transaction
           </div>
         </div>
-      </div>
-      
-      {/* Print Footer */}
-      <div className="hidden print:block mt-16 text-center text-[#9ca3af] text-xs font-bold uppercase tracking-[0.2em]">
-        <p>This is an automated digital receipt generated by FlexiBerry Platform.</p>
-        <p className="mt-2">© {new Date().getFullYear()} FlexiBerry - Pakistan's Leading Installment Marketplace</p>
       </div>
     </div>
   );
