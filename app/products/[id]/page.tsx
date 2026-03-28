@@ -7,286 +7,7 @@ import { useParams } from 'next/navigation'
 import FlexiLayout, { CATEGORY_THEMES } from '@/components/layout/FlexiLayout/FlexiLayout'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-
-// Extended mock product data with category-specific theming
-const PRODUCTS_DATA: Record<string, {
-  id: string
-  name: string
-  category: string
-  categorySlug: string
-  vendor: string
-  vendorVerified: boolean
-  vendorLocation: string
-  reference: string
-  price: number
-  originalPrice: number | null
-  discount: number | null
-  rating: number
-  reviewCount: number
-  images: string[]
-  description: string
-  features: string[]
-  specifications: Record<string, string>
-  colors: { name: string; hex: string }[]
-  variants: { label: string; options: string[] }[]
-  installmentPlans: { months: number; monthly: number }[]
-  inStock: boolean
-  stockCount: number
-  warranty: string
-  deliveryInfo: string
-  reviews: { id: string; name: string; initials: string; rating: number; date: string; comment: string }[]
-}> = {
-  '1': {
-    id: '1',
-    name: 'Samsung Galaxy S24 Ultra',
-    category: 'Electronics',
-    categorySlug: 'smartphones',
-    vendor: 'TechZone Official Store',
-    vendorVerified: true,
-    vendorLocation: 'Lahore',
-    reference: 'SM-S928BZKQPK',
-    price: 449999,
-    originalPrice: 499999,
-    discount: 10,
-    rating: 4.8,
-    reviewCount: 234,
-    images: ['/assets/carousel-1.jpg', '/assets/carousel-1.jpg', '/assets/carousel-1.jpg', '/assets/carousel-1.jpg'],
-    description: 'Experience the ultimate flagship smartphone with AI-powered features, S Pen integration, and the most advanced camera system ever in a Galaxy device.',
-    features: [
-      'Top-grade materials and certified build quality',
-      'Manufacturer tested - shipped in original packaging',
-      'Compatible with all standard accessories',
-      'Energy-efficient modern design',
-      "Backed by FlexiBerry's 7-day return policy"
-    ],
-    specifications: {
-      'Display': '6.8" Dynamic AMOLED 2X, 120Hz',
-      'Processor': 'Snapdragon 8 Gen 3 for Galaxy',
-      'RAM': '12GB',
-      'Storage': '256GB / 512GB / 1TB',
-      'Camera': '200MP + 12MP + 50MP + 10MP',
-      'Battery': '5000mAh with 45W Fast Charging',
-    },
-    colors: [
-      { name: 'Titanium Black', hex: '#1a1a1a' },
-      { name: 'Titanium Gray', hex: '#7a7a7a' },
-      { name: 'Titanium Violet', hex: '#9d8ec9' },
-      { name: 'Titanium Yellow', hex: '#e8d084' },
-    ],
-    variants: [
-      { label: 'Storage', options: ['256GB', '512GB', '1TB'] }
-    ],
-    installmentPlans: [
-      { months: 6, monthly: 75000 },
-      { months: 12, monthly: 37500 },
-    ],
-    inStock: true,
-    stockCount: 15,
-    warranty: '1 Year Official Warranty',
-    deliveryInfo: 'Free delivery within 24-48 hours in all major cities',
-    reviews: [
-      { id: '1', name: 'Ahmed Raza', initials: 'AR', rating: 5, date: 'March 5, 2026', comment: 'Absolutely amazing product! Flexiberry delivered it next day and the installment plan was hassle-free. Build quality is exceptional and performance is unreal.' },
-      { id: '2', name: 'Fatima Sheikh', initials: 'FS', rating: 5, date: 'February 28, 2026', comment: 'Got it on 12-month installment - totally worth it. Packaging was perfect and support team was very helpful explaining all the features.' },
-      { id: '3', name: 'Hassan Ali', initials: 'HA', rating: 4, date: 'February 20, 2026', comment: 'Great phone, excellent camera quality. The S Pen is a game changer for productivity. Minor issue with delivery timing but overall satisfied.' },
-    ]
-  },
-  '2': {
-    id: '2',
-    name: 'Honda City 2024 Aspire',
-    category: 'Vehicles',
-    categorySlug: 'cars',
-    vendor: 'AutoMart Pakistan',
-    vendorVerified: true,
-    vendorLocation: 'Karachi',
-    reference: 'HC-2024-ASP',
-    price: 4850000,
-    originalPrice: 5100000,
-    discount: 5,
-    rating: 4.9,
-    reviewCount: 89,
-    images: ['/assets/carousel-8.jpg', '/assets/carousel-8.jpg', '/assets/carousel-8.jpg', '/assets/carousel-8.jpg'],
-    description: 'The all-new Honda City 2024 Aspire combines elegant design with powerful performance. Featuring the latest safety technologies and premium comfort features.',
-    features: [
-      'Honda Sensing safety suite included',
-      'Factory warranty with authorized service',
-      'Genuine Honda accessories package',
-      'Fuel-efficient 1.5L VTEC engine',
-      "Backed by FlexiBerry's 7-day return policy"
-    ],
-    specifications: {
-      'Engine': '1.5L i-VTEC',
-      'Transmission': 'CVT Automatic',
-      'Fuel Economy': '14-16 km/l',
-      'Seating': '5 passengers',
-      'Features': 'Sunroof, Leather Seats, Navigation',
-    },
-    colors: [
-      { name: 'Platinum White', hex: '#f5f5f5' },
-      { name: 'Crystal Black', hex: '#1a1a1a' },
-      { name: 'Lunar Silver', hex: '#c0c0c0' },
-      { name: 'Radiant Red', hex: '#c41e3a' },
-    ],
-    variants: [],
-    installmentPlans: [
-      { months: 6, monthly: 808334 },
-      { months: 12, monthly: 404167 },
-    ],
-    inStock: true,
-    stockCount: 3,
-    warranty: '3 Years / 100,000 km Warranty',
-    deliveryInfo: 'Vehicle registration and delivery within 7 days',
-    reviews: []
-  },
-  '3': {
-    id: '3',
-    name: 'Royal Bedroom Set',
-    category: 'Furniture',
-    categorySlug: 'furniture',
-    vendor: 'CraftHouse Furniture',
-    vendorVerified: true,
-    vendorLocation: 'Multan',
-    reference: '6-001',
-    price: 285000,
-    originalPrice: 320000,
-    discount: 11,
-    rating: 4.4,
-    reviewCount: 67,
-    images: ['/assets/carousel-6.jpg', '/assets/carousel-6.jpg', '/assets/carousel-6.jpg', '/assets/carousel-6.jpg'],
-    description: 'Complete bedroom furniture. Premium quality product with manufacturer warranty, fast nationwide delivery, and easy installment plans with 0% markup.',
-    features: [
-      'Top-grade materials and certified build quality',
-      'Manufacturer tested - shipped in original packaging',
-      'Compatible with all standard accessories',
-      'Energy-efficient modern design',
-      "Backed by FlexiBerry's 7-day return policy"
-    ],
-    specifications: {
-      'Material': 'Solid Sheesham Wood',
-      'Finish': 'Premium Lacquer',
-      'Bed Size': 'King Size (6x7 ft)',
-      'Includes': 'Bed, 2 Side Tables, Dresser, Mirror',
-      'Assembly': 'Free Professional Installation',
-    },
-    colors: [
-      { name: 'Natural Titanium', hex: '#c9b896' },
-      { name: 'Dark Walnut', hex: '#1a1a1a' },
-      { name: 'Oak White', hex: '#f5ebe0' },
-      { name: 'Teal Green', hex: '#2d7a7a' },
-    ],
-    variants: [
-      { label: 'Storage', options: ['128GB', '256GB', '512GB', '1TB'] }
-    ],
-    installmentPlans: [
-      { months: 6, monthly: 47500 },
-      { months: 12, monthly: 23750 },
-    ],
-    inStock: true,
-    stockCount: 8,
-    warranty: '5 Years Manufacturer Warranty',
-    deliveryInfo: 'Free Home Delivery within 24-48 hours - All major cities covered',
-    reviews: [
-      { id: '1', name: 'Ahmed Raza', initials: 'AR', rating: 5, date: 'March 5, 2026', comment: 'Absolutely amazing product! Flexiberry delivered it next day and the installment plan was hassle-free. Build quality is exceptional and performance is unreal.' },
-      { id: '2', name: 'Fatima Sheikh', initials: 'FS', rating: 5, date: 'February 28, 2026', comment: 'Got it on 12-month installment - totally worth it. Packaging was perfect and support team was very helpful explaining all the features.' },
-    ]
-  },
-  '4': {
-    id: '4',
-    name: 'Complete Jahez Package Gold',
-    category: 'Jahez Packages',
-    categorySlug: 'jahez',
-    vendor: 'HomeKart Pakistan',
-    vendorVerified: true,
-    vendorLocation: 'Faisalabad',
-    reference: 'JP-GOLD-001',
-    price: 850000,
-    originalPrice: 950000,
-    discount: 11,
-    rating: 4.3,
-    reviewCount: 28,
-    images: ['/assets/carousel-7.jpg', '/assets/carousel-7.jpg', '/assets/carousel-7.jpg', '/assets/carousel-7.jpg'],
-    description: 'Complete wedding package including furniture, appliances, and electronics. Everything you need for your new home in one convenient bundle.',
-    features: [
-      'Complete 4-5 item bundle package',
-      'Premium quality products only',
-      'Free delivery and installation',
-      'Extended warranty on all items',
-      "Backed by FlexiBerry's 7-day return policy"
-    ],
-    specifications: {
-      'Bedroom Set': 'King Size Complete Set',
-      'Living Room': 'Sofa Set + Center Table',
-      'Appliances': 'LED TV 55" + AC 1.5 Ton + Refrigerator',
-      'Kitchen': 'Microwave + Oven',
-    },
-    colors: [],
-    variants: [
-      { label: 'Package', options: ['Gold', 'Platinum', 'Diamond'] }
-    ],
-    installmentPlans: [
-      { months: 6, monthly: 141667 },
-      { months: 12, monthly: 70834 },
-    ],
-    inStock: true,
-    stockCount: 5,
-    warranty: 'Individual warranties on all items',
-    deliveryInfo: 'Scheduled delivery within 5-7 business days',
-    reviews: []
-  },
-  '5': {
-    id: '5',
-    name: '5KW Solar Panel System',
-    category: 'Solar Systems',
-    categorySlug: 'solar',
-    vendor: 'GreenPower Solutions',
-    vendorVerified: true,
-    vendorLocation: 'Islamabad',
-    reference: 'SP-5KW-001',
-    price: 650000,
-    originalPrice: null,
-    discount: null,
-    rating: 4.7,
-    reviewCount: 45,
-    images: ['/assets/carousel-4.jpg', '/assets/carousel-4.jpg', '/assets/carousel-4.jpg', '/assets/carousel-4.jpg'],
-    description: 'Complete 5KW on-grid solar system with premium panels, inverter, and professional installation. Start saving on electricity bills immediately.',
-    features: [
-      'Tier-1 solar panels with 25-year warranty',
-      'High-efficiency inverter included',
-      'Net metering assistance provided',
-      'Professional installation included',
-      "Backed by FlexiBerry's 7-day return policy"
-    ],
-    specifications: {
-      'Capacity': '5kW System',
-      'Panels': '10x 550W Mono PERC',
-      'Inverter': 'Hybrid 5kW',
-      'Average Generation': '20-25 units/day',
-      'Installation': 'Professional team, 2-3 days',
-    },
-    colors: [],
-    variants: [
-      { label: 'System Size', options: ['3KW', '5KW', '10KW', '15KW'] }
-    ],
-    installmentPlans: [
-      { months: 6, monthly: 108334 },
-      { months: 12, monthly: 54167 },
-    ],
-    inStock: true,
-    stockCount: 12,
-    warranty: '25 Years Panel Warranty, 5 Years Inverter',
-    deliveryInfo: 'Site survey within 48 hours, installation within 1 week',
-    reviews: []
-  },
-}
-
-// Recently viewed products
-const RECENTLY_VIEWED = [
-  { id: 'r1', name: 'Samsung Galaxy S24 Ultra', brand: 'SAMSUNG', price: 449999, originalPrice: 499999, rating: 4.8, image: '/assets/carousel-1.jpg', badge: '-10%', categorySlug: 'smartphones' },
-  { id: 'r2', name: 'MacBook Pro M3 14"', brand: 'APPLE', price: 649999, originalPrice: null, rating: 5, image: '/assets/carousel-2.jpg', badge: 'New', categorySlug: 'laptops' },
-  { id: 'r3', name: 'Sony WH-1000XM5', brand: 'SONY', price: 89999, originalPrice: 109999, rating: 5, image: '/assets/carousel-1.jpg', badge: '-18%', categorySlug: 'electronics' },
-  { id: 'r4', name: 'iPad Pro M2 12.9"', brand: 'APPLE', price: 379999, originalPrice: null, rating: 5, image: '/assets/carousel-2.jpg', badge: 'New', categorySlug: 'electronics' },
-  { id: 'r5', name: 'Google Pixel 8 Pro', brand: 'GOOGLE', price: 199999, originalPrice: 229999, rating: 4.9, image: '/assets/carousel-1.jpg', badge: '-13%', categorySlug: 'smartphones' },
-  { id: 'r6', name: 'Samsung 65" QLED 4K', brand: 'SAMSUNG', price: 329999, originalPrice: 389999, rating: 4.7, image: '/assets/carousel-5.jpg', badge: '-15%', categorySlug: 'appliances' },
-]
+import { PRODUCTS_DATA, ProductDetail } from '@/lib/products'
 
 export default function ProductDetailPage() {
   const params = useParams()
@@ -299,19 +20,42 @@ export default function ProductDetailPage() {
   const [selectedPlan, setSelectedPlan] = useState(12)
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<'description' | 'details' | 'reviews'>('description')
-  const [reviewForm, setReviewForm] = useState({ name: '', email: '', rating: 5, comment: '' })
+  const [reviewForm, setReviewForm] = useState({ name: '', rating: 5, comment: '', photo: null as File | null })
   const [isZoomed, setIsZoomed] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
   const [addedToWishlist, setAddedToWishlist] = useState(false)
+  const [recentlyViewed, setRecentlyViewed] = useState<ProductDetail[]>([])
 
-  // Initialize variants
+  // Initialize variants and handle recently viewed
   useEffect(() => {
-    if (product?.variants) {
-      const initial: Record<string, string> = {}
-      product.variants.forEach(v => {
-        initial[v.label] = v.options[0]
-      })
-      setSelectedVariants(initial)
+    if (product) {
+      // Initialize variants
+      if (product.variants) {
+        const initial: Record<string, string> = {}
+        product.variants.forEach(v => {
+          initial[v.label] = v.options[0]
+        })
+        setSelectedVariants(initial)
+      }
+
+      // Handle recently viewed
+      const stored = localStorage.getItem('recentlyViewed')
+      let list: string[] = stored ? JSON.parse(stored) : []
+      
+      // Remove current if exists and add to front
+      list = list.filter(id => id !== product.id)
+      list.unshift(product.id)
+      
+      // Keep only last 6
+      list = list.slice(0, 6)
+      localStorage.setItem('recentlyViewed', JSON.stringify(list))
+      
+      // Load full product data for recently viewed
+      const fullList = list
+        .filter(id => id !== product.id) // Don't show current product in recently viewed
+        .map(id => PRODUCTS_DATA[id])
+        .filter(Boolean)
+      setRecentlyViewed(fullList)
     }
   }, [product])
 
@@ -322,8 +66,8 @@ export default function ProductDetailPage() {
           <div className="text-center">
             <div className="text-6xl mb-4">404</div>
             <h1 className="text-2xl font-serif font-bold mb-4">Product Not Found</h1>
-            <Link href="/products">
-              <Button>Back to Products</Button>
+            <Link href="/">
+              <Button>Back to Home</Button>
             </Link>
           </div>
         </div>
@@ -334,18 +78,15 @@ export default function ProductDetailPage() {
   const theme = CATEGORY_THEMES[product.categorySlug as keyof typeof CATEGORY_THEMES] || CATEGORY_THEMES.default
   const plan = product.installmentPlans.find(p => p.months === selectedPlan)
 
-  // Calculate rating distribution (mock)
-  const ratingDist = [
-    { stars: 5, count: Math.floor(product.reviewCount * 0.7), pct: 70 },
-    { stars: 4, count: Math.floor(product.reviewCount * 0.2), pct: 20 },
-    { stars: 3, count: Math.floor(product.reviewCount * 0.07), pct: 7 },
-    { stars: 2, count: Math.floor(product.reviewCount * 0.02), pct: 2 },
-    { stars: 1, count: Math.floor(product.reviewCount * 0.01), pct: 1 },
-  ]
-
   const handleAddToCart = () => {
     setAddedToCart(true)
     setTimeout(() => setAddedToCart(false), 2000)
+  }
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    alert('Review submitted successfully! (Mock)')
+    setReviewForm({ name: '', rating: 5, comment: '', photo: null })
   }
 
   return (
@@ -370,7 +111,6 @@ export default function ProductDetailPage() {
             
             {/* Image Gallery */}
             <div>
-              {/* Main Image */}
               <div style={{
                 position: 'relative', borderRadius: 20, overflow: 'hidden',
                 background: '#fff', border: '1.5px solid #e5e7eb',
@@ -399,7 +139,6 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              {/* Thumbnails */}
               <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
                 {product.images.map((img, i) => (
                   <button
@@ -417,7 +156,6 @@ export default function ProductDetailPage() {
                 ))}
               </div>
 
-              {/* Trust Badges */}
               <Card style={{ marginTop: 32, padding: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                 {[
                   { title: 'Official Warranty', sub: product.warranty, icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
@@ -453,7 +191,6 @@ export default function ProductDetailPage() {
                 {product.name}
               </h1>
 
-              {/* Vendor Info */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
                 <div style={{
                   width: 36, height: 36, borderRadius: 10,
@@ -482,7 +219,6 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              {/* Price Section */}
               <Card style={{ padding: 24, background: theme.bg, border: `1.5px solid ${theme.border}`, marginBottom: 24 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 8 }}>
                   <span style={{ fontSize: 32, fontWeight: 900, color: '#111827' }}>₨{product.price.toLocaleString()}</span>
@@ -498,7 +234,6 @@ export default function ProductDetailPage() {
                 </div>
               </Card>
 
-              {/* Installment Plans */}
               <div style={{ marginBottom: 24 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                   <h3 style={{ fontWeight: 700, color: '#111827' }}>Select Installment Plan</h3>
@@ -522,7 +257,6 @@ export default function ProductDetailPage() {
                 </div>
               </div>
 
-              {/* Variants */}
               {product.variants.map(v => (
                 <div key={v.label} style={{ marginBottom: 24 }}>
                   <h3 style={{ fontWeight: 700, color: '#111827', marginBottom: 12 }}>{v.label}</h3>
@@ -544,7 +278,6 @@ export default function ProductDetailPage() {
                 </div>
               ))}
 
-              {/* Quantity & Actions */}
               <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 12, padding: '0 12px',
@@ -634,6 +367,48 @@ export default function ProductDetailPage() {
 
               {activeTab === 'reviews' && (
                 <div>
+                  {/* Add Review Form */}
+                  <Card style={{ padding: 24, marginBottom: 40, background: '#fff' }}>
+                    <h3 style={{ fontWeight: 700, marginBottom: 20 }}>Add a Review</h3>
+                    <form onSubmit={handleReviewSubmit} style={{ display: 'grid', gap: 16 }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                        <input
+                          type="text"
+                          placeholder="Your Name"
+                          required
+                          value={reviewForm.name}
+                          onChange={e => setReviewForm({ ...reviewForm, name: e.target.value })}
+                          style={{ padding: '12px', borderRadius: 8, border: '1.5px solid #e5e7eb' }}
+                        />
+                        <select
+                          value={reviewForm.rating}
+                          onChange={e => setReviewForm({ ...reviewForm, rating: parseInt(e.target.value) })}
+                          style={{ padding: '12px', borderRadius: 8, border: '1.5px solid #e5e7eb' }}
+                        >
+                          {[5, 4, 3, 2, 1].map(s => <option key={s} value={s}>{s} Stars</option>)}
+                        </select>
+                      </div>
+                      <textarea
+                        placeholder="Your Review"
+                        required
+                        rows={4}
+                        value={reviewForm.comment}
+                        onChange={e => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                        style={{ padding: '12px', borderRadius: 8, border: '1.5px solid #e5e7eb', resize: 'none' }}
+                      />
+                      <div>
+                        <label style={{ display: 'block', fontSize: 14, fontWeight: 600, marginBottom: 8 }}>Add Photo</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={e => setReviewForm({ ...reviewForm, photo: e.target.files?.[0] || null })}
+                          style={{ fontSize: 14 }}
+                        />
+                      </div>
+                      <Button type="submit" style={{ background: theme.primary }}>Submit Review</Button>
+                    </form>
+                  </Card>
+
                   {product.reviews.length > 0 ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
                       {product.reviews.map(r => (
@@ -655,6 +430,15 @@ export default function ProductDetailPage() {
                             </div>
                           </div>
                           <p style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>{r.comment}</p>
+                          {r.images && r.images.length > 0 && (
+                            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+                              {r.images.map((img, i) => (
+                                <div key={i} style={{ width: 80, height: 80, borderRadius: 8, overflow: 'hidden', border: '1px solid #e5e7eb' }}>
+                                  <Image src={img} alt="Review" width={80} height={80} style={{ objectFit: 'cover' }} />
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -667,6 +451,28 @@ export default function ProductDetailPage() {
               )}
             </div>
           </div>
+
+          {/* Recently Viewed Section */}
+          {recentlyViewed.length > 0 && (
+            <div style={{ marginTop: 80 }}>
+              <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 24, fontFamily: "'Playfair Display', serif" }}>Recently Viewed</h2>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 20 }}>
+                {recentlyViewed.map(p => (
+                  <Link href={`/products/${p.id}`} key={p.id} style={{ textDecoration: 'none' }}>
+                    <Card style={{ padding: 16, height: '100%', transition: 'transform 0.2s' }} className="hover:scale-105">
+                      <div style={{ aspectRatio: '1', position: 'relative', marginBottom: 12 }}>
+                        <Image src={p.images[0]} alt={p.name} fill style={{ objectFit: 'contain' }} />
+                      </div>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: '#111827', marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        {p.name}
+                      </div>
+                      <div style={{ color: theme.primary, fontWeight: 800 }}>₨{p.price.toLocaleString()}</div>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </FlexiLayout>

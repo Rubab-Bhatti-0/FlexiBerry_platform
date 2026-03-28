@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import FlexiLayout from "@/components/layout/FlexiLayout/FlexiLayout";
+import { PRODUCTS_DATA } from "@/lib/products";
 import {
   Search, SlidersHorizontal, X, Grid3X3, List,
   ChevronDown, Sparkles, Package, Star, TrendingUp, Zap,
@@ -70,20 +71,20 @@ const categories = [
   { id: 'general',     name: 'General',     e: '🛒', bg: '#fffbeb', bd: '#fde68a' },
 ];
 
-const featuredProducts = [
-  { id: '1', name: 'Samsung 55" Smart TV', categoryId: 'appliances', price: 45000, originalPrice: 50000, downPayment: 9000, installment: 3750, rating: 4.8, reviews: 324, image: '📺', badge: 'Best Seller', inStock: true },
-  { id: '2', name: 'Honda City 2023', categoryId: 'cars', price: 3500000, originalPrice: 3800000, downPayment: 700000, installment: 233333, rating: 4.9, reviews: 156, image: '🚗', badge: 'Popular', inStock: true },
-  { id: '3', name: 'Complete Bedroom Set', categoryId: 'furniture', price: 85000, originalPrice: 95000, downPayment: 17000, installment: 7083, rating: 4.6, reviews: 89, image: '🛏️', badge: '', inStock: true },
-  { id: '4', name: 'Solar Panel System 5kW', categoryId: 'solar', price: 450000, originalPrice: 500000, downPayment: 90000, installment: 37500, rating: 4.7, reviews: 212, image: '⚡', badge: 'Hot Deal', inStock: true },
-  { id: '5', name: 'Office Furniture Bundle', categoryId: 'business', price: 125000, originalPrice: 140000, downPayment: 25000, installment: 10417, rating: 4.5, reviews: 67, image: '🖥️', badge: '', inStock: true },
-  { id: '6', name: 'High-End Washing Machine', categoryId: 'appliances', price: 95000, originalPrice: 110000, downPayment: 19000, installment: 7917, rating: 4.8, reviews: 178, image: '🧺', badge: 'New', inStock: true },
-  { id: '7', name: 'iPhone 15 Pro Max 256GB', categoryId: 'smartphones', price: 320000, originalPrice: 350000, downPayment: 64000, installment: 26667, rating: 4.9, reviews: 543, image: '📱', badge: 'Premium', inStock: true },
-  { id: '8', name: 'Split AC 1.5 Ton Inverter', categoryId: 'appliances', price: 75000, originalPrice: 85000, downPayment: 15000, installment: 6250, rating: 4.7, reviews: 291, image: '❄️', badge: '', inStock: false },
-  { id: '9', name: 'Suzuki Cultus 2024', categoryId: 'cars', price: 2800000, originalPrice: 3000000, downPayment: 560000, installment: 186667, rating: 4.6, reviews: 98, image: '🚙', badge: '', inStock: true },
-  { id: '10', name: 'L-Shaped Office Sofa', categoryId: 'furniture', price: 65000, originalPrice: 75000, downPayment: 13000, installment: 5417, rating: 4.4, reviews: 44, image: '🛋️', badge: '', inStock: true },
-  { id: '11', name: '10kW Solar System Complete', categoryId: 'solar', price: 850000, originalPrice: 950000, downPayment: 170000, installment: 70833, rating: 4.8, reviews: 132, image: '☀️', badge: 'Eco Choice', inStock: true },
-  { id: '12', name: 'POS & Billing System', categoryId: 'business', price: 45000, originalPrice: 55000, downPayment: 9000, installment: 3750, rating: 4.6, reviews: 55, image: '💻', badge: '', inStock: true },
-];
+const featuredProducts = Object.values(PRODUCTS_DATA).map(p => ({
+  id: p.id,
+  name: p.name,
+  categoryId: p.categorySlug,
+  price: p.price,
+  originalPrice: p.originalPrice || p.price,
+  downPayment: Math.floor(p.price * 0.2),
+  installment: p.installmentPlans[0]?.monthly || 0,
+  rating: p.rating,
+  reviews: p.reviewCount,
+  image: p.images[0],
+  badge: p.discount ? `${p.discount}% OFF` : '',
+  inStock: p.inStock
+}));
 
 /* ─── Components ─────────────────────────────────────── */
 const Chip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (

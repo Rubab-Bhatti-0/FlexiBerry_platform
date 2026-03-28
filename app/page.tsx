@@ -6,6 +6,7 @@ import Image from 'next/image'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
 import HeroCarousel from '@/components/HeroCarousel'
 import { VENDORS } from '@/lib/vendors'
+import { PRODUCTS_DATA } from '@/lib/products'
 
 /* ── DATA ───────────────────────────────────────────────────────────────── */
 const TICKER = [
@@ -42,13 +43,18 @@ const CATS = [
   { name:'General Store',  sub:'Everything Else',            e:'🛒', bg:'#fffbeb', bd:'#fde68a', slug:'general'     },
 ]
 
-const PRODUCTS = [
-  { id:'1', img:'/assets/carousel-1.jpg', vendor:'TechZone Official Store', name:'iPhone 15 Pro Max 256GB',     price:549999, orig:599999,  mo:45834, rat:4.8, rv:234, disc:-8  },
-  { id:'2', img:'/assets/carousel-2.jpg', vendor:'DigiWorld Electronics',   name:'MacBook Air M3 15"',          price:429999, orig:null,    mo:35834, rat:4.9, rv:156, disc:-6  },
-  { id:'3', img:'/assets/carousel-3.jpg', vendor:'SpeedRiders Pk',          name:'Honda CD 70 2026',            price:155000, orig:165000,  mo:12917, rat:4.5, rv:89,  disc:-6  },
-  { id:'4', img:'/assets/carousel-7.jpg', vendor:'StyleHub Fashion',        name:'Complete Jahez Package Gold', price:850000, orig:950000,  mo:70834, rat:4.3, rv:28,  disc:-11 },
-  { id:'5', img:'/assets/carousel-4.jpg', vendor:'GreenPower Solutions',    name:'5KW Solar Panel System',      price:650000, orig:null,    mo:54167, rat:4.7, rv:45,  disc:null },
-]
+const PRODUCTS = Object.values(PRODUCTS_DATA).slice(0, 5).map(p => ({
+  id: p.id,
+  img: p.images[0],
+  vendor: p.vendor,
+  name: p.name,
+  price: p.price,
+  orig: p.originalPrice,
+  mo: p.installmentPlans[0]?.monthly || 0,
+  rat: p.rating,
+  rv: p.reviewCount,
+  disc: p.discount ? -p.discount : null
+}))
 
 const FAQS = [
   { q:'How do installment plans work on FlexiBerry?',    a:'Choose any product, select 6 or 12 month plan, pay a small down payment today, and the rest splits into equal monthly installments. No hidden charges, no credit card needed.' },
@@ -316,11 +322,13 @@ export default function HomePage() {
             {PRODUCTS.map((p, idx) => {
               const vendorColor = p.vendor.includes('TechZone') ? '#2563eb' : p.vendor.includes('DigiWorld') ? '#2563eb' : p.vendor.includes('SpeedRiders') ? '#f97316' : p.vendor.includes('StyleHub') ? '#be185d' : p.vendor.includes('GreenPower') ? '#ea580c' : '#6366f1';
               return (
-              <div key={p.id} className="lift" style={{
+              <Link href={`/products/${p.id}`} key={p.id} style={{ textDecoration: 'none' }}>
+              <div className="lift" style={{
                 background:'#fff', borderRadius:16, border:'1px solid #e5e7eb',
                 overflow:'hidden', display:'flex', flexDirection:'column',
                 boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
                 transition: 'all 0.3s ease',
+                height: '100%',
               }}
               onMouseEnter={e => {
                 const el = e.currentTarget as HTMLElement;
@@ -407,6 +415,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+              </Link>
             );
             })}
           </div>
