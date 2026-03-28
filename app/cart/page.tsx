@@ -29,6 +29,15 @@ export default function CartPage() {
   };
   const handlePromo = () => { if (promoCode === 'SAVE10') setDiscount(Math.round(subtotal * 0.1)) };
 
+  const handleProceedToCheckout = (e: React.MouseEvent) => {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      e.preventDefault();
+      // Store current path to redirect back after login if needed, though simple redirect is fine
+      router.push('/auth/login?redirect=/checkout');
+    }
+  };
+
   return (
     <FlexiLayout>
       <div className="min-h-screen bg-background">
@@ -144,7 +153,7 @@ export default function CartPage() {
                 </div>
 
                 <div className="space-y-3">
-                  <Link href="/checkout">
+                  <Link href="/checkout" onClick={handleProceedToCheckout}>
                     <Button className="w-full bg-gradient-to-r from-[#6366f1] to-[#4f46e5] hover:from-[#4f46e5] hover:to-[#4338ca] text-white text-base h-14 rounded-2xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98] font-bold">
                       Proceed to Checkout
                     </Button>
