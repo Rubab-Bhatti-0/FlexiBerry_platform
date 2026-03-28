@@ -508,15 +508,69 @@ export default function ShopsPage() {
             </div>
           </div>
 
-          {/* Curved bottom edge */}
+          {/* Scroll Down Button */}
           <div style={{
-            position: "absolute", bottom: -1, left: 0, right: 0, height: "40px",
-            background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)",
-            borderRadius: "60% 60% 0 0 / 100% 100% 0 0",
-          }} />
+            marginTop: "48px",
+            display: "flex",
+            justifyContent: "center",
+            opacity: heroVisible ? 1 : 0,
+            transform: heroVisible ? "none" : "translateY(12px)",
+            transition: "all 0.55s ease 0.30s",
+            animation: "bounce 2s infinite",
+          }}>
+            <button
+              onClick={() => {
+                const element = document.querySelector('main');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.20)",
+                border: "1.5px solid rgba(255,255,255,0.40)",
+                backdropFilter: "blur(8px)",
+                cursor: "pointer",
+                color: "white",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.30)";
+                (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.1)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.20)";
+                (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          </div>
         </section>
 
-        {/* ── FILTERS TOOLBAR ── */}
+        {/* Curved bottom edge */}
+        <div style={{
+          position: "absolute", bottom: -1, left: 0, right: 0, height: "40px",
+          background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)",
+          borderRadius: "60% 60% 0 0 / 100% 100% 0 0",
+        }} />
+      </section>
+
+      <style>{`
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+      `}</style>
+
+      {/* ── FILTERS TOOLBAR ── */}
         <div style={{ maxWidth: "1400px", margin: "-10px auto 0", padding: "0 16px 0" }}>
           <div style={{
             background: "white",

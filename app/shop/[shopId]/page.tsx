@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { use } from 'react'
 import Link from 'next/link'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
-import { ArrowLeft, Star, MapPin, BadgeCheck, ShoppingCart, Heart, Flame, TrendingUp, Package, Sparkles, Grid3X3, List, Search, X, Zap, Shield } from 'lucide-react'
+import { ArrowLeft, Star, MapPin, BadgeCheck, ShoppingCart, Heart, Flame, TrendingUp, Package, Sparkles, Grid3X3, List, Search, X, Zap, Shield, ChevronRight } from 'lucide-react'
 import { VENDORS as VENDORS_ARRAY } from '@/lib/vendors'
 
 // Convert array to object for easy lookup
@@ -12,10 +12,8 @@ const VENDORS: Record<string, any> = {}
 VENDORS_ARRAY.forEach(v => {
   VENDORS[v.id] = {
     ...v,
-    established: `Since ${v.established}`,
     themeBgLight: v.themeBgLight || '#f8f9fd',
     themeColor: v.categoryColor,
-    categoryBg: v.categoryBg,
     subCategories: [
       { name: 'Category 1', count: Math.floor(v.products * 0.3), icon: '📦' },
       { name: 'Category 2', count: Math.floor(v.products * 0.3), icon: '📦' },
@@ -28,14 +26,14 @@ VENDORS_ARRAY.forEach(v => {
 /* Mock Product Data */
 const generateProducts = (shopId: string, category: string) => {
   const products = [
-    { id: '1', name: 'Premium Flagship Phone', price: 549999, original: 599999, discount: -8, rating: 4.8, reviews: 234, featured: true, sale: true, mo: 45834 },
-    { id: '2', name: 'Ultra Slim Laptop 15"', price: 429999, original: null, discount: -6, rating: 4.9, reviews: 156, featured: true, sale: false, mo: 35834 },
-    { id: '3', name: 'Wireless Earbuds Pro', price: 24999, original: 29999, discount: -17, rating: 4.5, reviews: 89, featured: false, sale: true, mo: 2083 },
-    { id: '4', name: 'Smart Watch Series X', price: 34999, original: 39999, discount: -13, rating: 4.7, reviews: 123, featured: false, sale: true, mo: 2917 },
-    { id: '5', name: 'Tablet 12" Display', price: 149999, original: 179999, discount: -17, rating: 4.6, reviews: 201, featured: true, sale: false, mo: 12500 },
-    { id: '6', name: 'Phone Camera Lens', price: 8999, original: 10999, discount: -18, rating: 4.4, reviews: 67, featured: false, sale: true, mo: 750 },
-    { id: '7', name: 'Portable Charger 50K', price: 6999, original: null, discount: null, rating: 4.5, reviews: 45, featured: false, sale: false, mo: 583 },
-    { id: '8', name: 'Gaming Laptop RTX 4090', price: 799999, original: 899999, discount: -11, rating: 4.9, reviews: 189, featured: true, sale: true, mo: 66667 },
+    { id: '1', name: 'Premium Flagship Phone', price: 549999, original: 599999, discount: -8, rating: 4.8, reviews: 234, featured: true, sale: true, mo: 45834, image: '📱' },
+    { id: '2', name: 'Ultra Slim Laptop 15"', price: 429999, original: null, discount: -6, rating: 4.9, reviews: 156, featured: true, sale: false, mo: 35834, image: '💻' },
+    { id: '3', name: 'Wireless Earbuds Pro', price: 24999, original: 29999, discount: -17, rating: 4.5, reviews: 89, featured: false, sale: true, mo: 2083, image: '🎧' },
+    { id: '4', name: 'Smart Watch Series X', price: 34999, original: 39999, discount: -13, rating: 4.7, reviews: 123, featured: false, sale: true, mo: 2917, image: '⌚' },
+    { id: '5', name: 'Tablet 12" Display', price: 149999, original: 179999, discount: -17, rating: 4.6, reviews: 201, featured: true, sale: false, mo: 12500, image: '📲' },
+    { id: '6', name: 'Phone Camera Lens', price: 8999, original: 10999, discount: -18, rating: 4.4, reviews: 67, featured: false, sale: true, mo: 750, image: '📷' },
+    { id: '7', name: 'Portable Charger 50K', price: 6999, original: null, discount: null, rating: 4.5, reviews: 45, featured: false, sale: false, mo: 583, image: '🔋' },
+    { id: '8', name: 'Gaming Laptop RTX 4090', price: 799999, original: 899999, discount: -11, rating: 4.9, reviews: 189, featured: true, sale: true, mo: 66667, image: '🎮' },
   ]
   return products
 }
@@ -72,7 +70,7 @@ const ProductCard = ({ product, themeColor }: { product: any; themeColor: string
         position: 'relative',
         overflow: 'hidden',
       }}>
-        📦
+        {product.image}
         {product.featured && (
           <div style={{
             position: 'absolute',
@@ -307,7 +305,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
             <div className="stat-card" style={{ background: '#fff', padding: '32px 24px', borderRadius: '16px', border: `2px solid ${shop.categoryBg}`, borderTopColor: shop.themeColor, textAlign: 'center' }}>
               <div style={{ fontSize: '40px', marginBottom: '16px' }}>🏢</div>
               <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>Established</div>
-              <div style={{ fontSize: '28px', fontWeight: 800, color: shop.themeColor, marginBottom: '6px' }}>{shop.established}</div>
+              <div style={{ fontSize: '28px', fontWeight: 800, color: shop.themeColor, marginBottom: '6px' }}>Since {shop.established}</div>
               <div style={{ fontSize: '13px', color: '#6b7280' }}>{shop.city}</div>
             </div>
 
@@ -435,7 +433,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
               </div>
               <div>
                 <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>Established</div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a' }}>{shop.established}</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a' }}>Since {shop.established}</div>
               </div>
               <div>
                 <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>Status</div>
