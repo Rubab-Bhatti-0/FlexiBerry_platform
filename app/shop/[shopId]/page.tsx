@@ -50,10 +50,13 @@ const ProductCard = ({ product, themeColor }: { product: any; themeColor: string
   const [imgLoaded, setImgLoaded] = useState(false)
 
   return (
-    <div
+    <NextLink
+      href={`/products/${product.id}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
+        textDecoration: 'none',
+        color: 'inherit',
         background: 'white',
         borderRadius: '16px',
         border: `1.5px solid ${hovered ? `${themeColor}33` : 'rgba(37,99,235,0.08)'}`,
@@ -201,7 +204,7 @@ const ProductCard = ({ product, themeColor }: { product: any; themeColor: string
           <ShoppingCart size={12} /> Add to Cart
         </button>
       </div>
-    </div>
+    </NextLink>
   )
 }
 
