@@ -35,8 +35,8 @@ export default function CartPage() {
   const handleProceedToCheckout = () => {
     const user = localStorage.getItem('user');
     if (!user) {
-      // Redirect to login with return path
-      router.push('/auth/login?redirect=/checkout');
+      // Redirect to login with return path back to cart
+      router.push('/auth/login?redirect=/cart');
     } else {
       router.push('/checkout');
     }
