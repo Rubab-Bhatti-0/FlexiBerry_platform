@@ -561,7 +561,6 @@ export default function ShopsPage() {
           background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)",
           borderRadius: "60% 60% 0 0 / 100% 100% 0 0",
         }} />
-      </section>
 
       <style>{`
         @keyframes bounce {
