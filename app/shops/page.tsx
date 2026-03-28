@@ -11,6 +11,30 @@ import {
 } from "lucide-react";
 import { VENDORS } from "@/lib/vendors";
 
+/* Global scrollbar styling */
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(37, 99, 235, 0.4);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(37, 99, 235, 0.6);
+    }
+  `;
+  if (document.head) {
+    document.head.appendChild(style);
+  }
+}
+
 const CATEGORIES = ["All", ...Array.from(new Set(VENDORS.map(v => v.category)))];
 const CITIES = ["All Cities", ...Array.from(new Set(VENDORS.map(v => v.city)))];
 
