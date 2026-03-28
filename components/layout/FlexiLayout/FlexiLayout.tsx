@@ -198,7 +198,7 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
 
             {/* Logo */}
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
-              <div style={{ flexShrink: 0 }}>
+              <div style={{ flexShrink: 0 }} className="animate-bounce">
                 <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <linearGradient id="h-bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">

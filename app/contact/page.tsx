@@ -52,9 +52,6 @@ export default function ContactPage() {
         {/* Hero Section */}
         <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-blue-50 via-white to-indigo-50 text-center border-b border-blue-100">
           <div className="max-w-3xl mx-auto">
-            <div className="mb-6 flex justify-center">
-              <FlexiBerryLogo size={80} />
-            </div>
             <div className="text-5xl md:text-6xl mb-6 inline-block animate-bounce">📬</div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4">Get in Touch</h1>
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
