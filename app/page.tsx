@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
 import HeroCarousel from '@/components/HeroCarousel'
+import HowItWorks from '@/components/HowItWorks'
 import { VENDORS } from '@/lib/vendors'
 import { PRODUCTS_DATA } from '@/lib/products'
 
@@ -510,57 +511,7 @@ export default function HomePage() {
       </section>
 
       {/* ── HOW IT WORKS ──────────────────────────────────────────────── */}
-      <section id="how-it-works" style={{
-        padding:'64px 16px', background:'linear-gradient(180deg,#eef2ff,#f4f5fb)',
-      }}>
-        <div style={{ maxWidth:1340, margin:'0 auto', textAlign:'center' }}>
-          <div style={{ fontSize:11, fontWeight:900, letterSpacing:'0.18em', textTransform:'uppercase', color:'#6366f1', marginBottom:8 }}>
-            SIMPLE PROCESS
-          </div>
-          <h2 style={{ fontSize:'clamp(20px,2.8vw,32px)', fontWeight:900, color:'#111827', letterSpacing:-.5, marginBottom:8 }}>
-            How FlexiBerry Works
-          </h2>
-          <p style={{ color:'#9ca3af', fontSize:14.5, maxWidth:400, margin:'0 auto 12px' }}>
-            Get started in 4 simple steps and start shopping on easy installments
-          </p>
-          <div style={{ width:48, height:3, background:'linear-gradient(90deg,#6366f1,#8b5cf6)',
-                         borderRadius:99, margin:'0 auto 44px' }} />
-
-          <div className="sg" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:18 }}>
-            {[
-              { n:1, g1:'#3b82f6', g2:'#4f46e5', e:'👤', t:'Create Account',       d:'Sign up in minutes with your basic details. No paperwork, no hassle.' },
-              { n:2, g1:'#8b5cf6', g2:'#6d28d9', e:'📄', t:'Upload Documents',     d:'Submit CNIC, selfie & salary slip for fast KYC verification.' },
-              { n:3, g1:'#10b981', g2:'#0d9488', e:'✅', t:'Get Approved',         d:'Our team reviews and approves your application in 3–5 business days.' },
-              { n:4, g1:'#f59e0b', g2:'#ea580c', e:'🛒', t:'Shop on Installments', d:'Purchase anything with flexible 6 or 12 month monthly plans.' },
-            ].map((step,i) => (
-              <div key={step.n} className="lift" style={{
-                background:'#fff', borderRadius:20, border:'1.5px solid #eeeef4',
-                padding:'26px 20px', textAlign:'left', position:'relative', overflow:'hidden',
-              }}>
-                <div style={{ position:'absolute', top:8, right:12, fontSize:62, fontWeight:900,
-                               color:'#f5f3ff', lineHeight:1, userSelect:'none', pointerEvents:'none' }}>
-                  {String(step.n).padStart(2,'0')}
-                </div>
-                <span style={{
-                  display:'inline-flex', gap:5, padding:'5px 11px', borderRadius:999,
-                  fontSize:10.5, fontWeight:900, color:'#fff', marginBottom:14,
-                  background:`linear-gradient(135deg,${step.g1},${step.g2})`,
-                }}>STEP {step.n}</span>
-                <div style={{
-                  width:46, height:46, borderRadius:13, marginBottom:14, fontSize:22,
-                  background:`linear-gradient(135deg,${step.g1},${step.g2})`,
-                  display:'flex', alignItems:'center', justifyContent:'center',
-                  boxShadow:`0 6px 18px ${step.g1}55`,
-                }}>{step.e}</div>
-                <h3 style={{ fontSize:15, fontWeight:900, color:'#111827', marginBottom:8, letterSpacing:-.2 }}>
-                  {step.t}
-                </h3>
-                <p style={{ fontSize:13, color:'#9ca3af', lineHeight:1.65 }}>{step.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowItWorks />
 
             {/* ── FEATURED SHOPS ROW (1 ROW OF 4 SHOPS) ────────────────────────── */}
       <section style={{ padding:'60px 16px', background:'#fff' }}>
