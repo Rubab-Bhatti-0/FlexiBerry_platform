@@ -124,6 +124,12 @@ export default function ProductDetailPage() {
   const [wishlist, setWishlist]         = useState(false);
   const [addedToCart, setAddedToCart]   = useState(false);
   const [recentlyViewed, setRecentlyViewed] = useState<ProductDetail[]>([]);
+  const [youMayAlsoLike, setYouMayAlsoLike] = useState<ProductDetail[]>([]);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewEmail, setReviewEmail] = useState("");
+  const [reviewComment, setReviewComment] = useState("");
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -140,6 +146,9 @@ export default function ProductDetailPage() {
       localStorage.setItem('recentlyViewed', JSON.stringify(list));
       const fullList = list.filter(id => id !== product.id).map(id => PRODUCTS_DATA[id]).filter(Boolean);
       setRecentlyViewed(fullList);
+
+      const allProducts = Object.values(PRODUCTS_DATA).filter(p => p && p.id !== product.id && p.categorySlug === product.categorySlug).slice(0, 6);
+      setYouMayAlsoLike(allProducts);
     }
   }, [product]);
 
@@ -160,6 +169,16 @@ export default function ProductDetailPage() {
   const discount = product.originalPrice ? Math.round(((product.originalPrice - product.price) * 100) / product.originalPrice) : 0;
   const formatPrice = (p: number) => "₨" + p.toLocaleString();
   const getMonthlyInstallment = (p: number, m: number) => "₨" + Math.round(p / m).toLocaleString();
+
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    setReviewName("");
+    setReviewEmail("");
+    setReviewComment("");
+    setReviewRating(5);
+    setShowReviewForm(false);
+    alert("Thank you for your review!");
+  };
 
   return (
     <FlexiLayout>
@@ -218,6 +237,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="text-[14px] text-gray-500 leading-7 mb-5 pt-4 border-t border-gray-100">
                   <p className="mb-2">{product.description}</p>
+                  <p className="text-[13px] text-gray-600 mb-3">This premium {product.category.toLowerCase()} delivers exceptional performance and reliability. Engineered with cutting-edge technology, it combines durability with elegance. Perfect for professionals and enthusiasts alike, this product is backed by our comprehensive warranty and customer support.</p>
                 </div>
                 <div className="rounded-xl p-4 mb-5 border" style={{ background: theme.bg, borderColor: theme.primary + "20" }}>
                   <div className="flex items-center gap-2 mb-3">
@@ -254,7 +274,12 @@ export default function ProductDetailPage() {
               ))}
             </div>
             <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm min-h-[300px]">
-              {activeTab === "desc" && <p className="text-gray-600 leading-relaxed">{product.description}</p>}
+              {activeTab === "desc" && (
+                <div>
+                  <p className="text-gray-600 leading-relaxed mb-4">{product.description}</p>
+                  <p className="text-gray-600 leading-relaxed">Experience the perfect blend of innovation and quality with this exceptional {product.category.toLowerCase()}. Designed for those who demand the best, it features premium materials and advanced engineering. Whether you're a professional or an enthusiast, this product will exceed your expectations.</p>
+                </div>
+              )}
               {activeTab === "details" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
                   {Object.entries(product.specifications).map(([key, val]) => (
@@ -266,21 +291,173 @@ export default function ProductDetailPage() {
                 </div>
               )}
               {activeTab === "reviews" && (
-                <div className="space-y-6">
-                  {product.reviews.map((rev, i) => (
-                    <div key={i} className="p-6 rounded-2xl bg-gray-50 border border-gray-100">
-                      <div className="flex items-center justify-between mb-4">
-                        <p className="text-sm font-bold text-gray-900">{rev.name}</p>
-                        <Stars rating={rev.rating} size={14} />
+                <div>
+                  <div className="flex items-center justify-between mb-8">
+                    <div>
+                      <h3 className="text-2xl font-black text-gray-900 mb-1">{product.rating} {"/"} 5.0</h3>
+                      <div className="flex items-center gap-2">
+                        <Stars rating={product.rating} size={18} />
+                        <span className="text-sm text-gray-400">Based on {product.reviewCount} reviews</span>
                       </div>
-                      <p className="text-[14px] text-gray-600 leading-relaxed">{rev.comment}</p>
                     </div>
-                  ))}
+                    <button onClick={() => setShowReviewForm(!showReviewForm)} className="px-6 py-3 rounded-xl text-white text-sm font-bold transition-all hover:opacity-90" style={{ background: theme.primary }}>
+                      Write a Review
+                    </button>
+                  </div>
+
+                  {showReviewForm && (
+                    <form onSubmit={handleSubmitReview} className="bg-gray-50 rounded-2xl p-8 border border-gray-100 mb-8">
+                      <h4 className="text-2xl font-black text-gray-900 mb-6">Write a Review</h4>
+                      <div className="mb-6">
+                        <label className="text-[13px] font-bold text-gray-600 mb-3 block">Your rating:</label>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setReviewRating(star)}
+                              className="transition-transform hover:scale-110"
+                            >
+                              <Star
+                                size={32}
+                                style={{
+                                  fill: star <= reviewRating ? "#f59e0b" : "#e5e7eb",
+                                  color: star <= reviewRating ? "#f59e0b" : "#e5e7eb",
+                                }}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <input
+                          type="text"
+                          placeholder="Your Name"
+                          value={reviewName}
+                          onChange={(e) => setReviewName(e.target.value)}
+                          required
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+                        />
+                        <input
+                          type="email"
+                          placeholder="Your Email"
+                          value={reviewEmail}
+                          onChange={(e) => setReviewEmail(e.target.value)}
+                          required
+                          className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+                        />
+                      </div>
+                      <textarea
+                        placeholder="Share your experience with this product..."
+                        value={reviewComment}
+                        onChange={(e) => setReviewComment(e.target.value)}
+                        required
+                        rows={5}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 mb-6"
+                      />
+                      <div className="flex gap-3">
+                        <button
+                          type="submit"
+                          className="flex-1 px-6 py-3 rounded-xl text-white font-bold transition-all hover:opacity-90"
+                          style={{ background: theme.primary }}
+                        >
+                          Submit Review
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShowReviewForm(false)}
+                          className="px-6 py-3 rounded-xl border border-gray-200 font-bold transition-all hover:bg-gray-100"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
+
+                  <div className="space-y-6">
+                    {product.reviews.map((rev, i) => (
+                      <div key={i} className="p-6 rounded-2xl bg-gray-50 border border-gray-100">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ background: theme.primary }}>
+                              {rev.initials}
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-gray-900">{rev.name}</p>
+                              <p className="text-[11px] text-gray-400">{rev.date}</p>
+                            </div>
+                          </div>
+                          <Stars rating={rev.rating} size={14} />
+                        </div>
+                        <p className="text-[14px] text-gray-600 leading-relaxed">{rev.comment}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
           </div>
         </div>
+
+        {youMayAlsoLike.length > 0 && (
+          <div className="max-w-[1240px] mx-auto px-5 py-16">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-black text-gray-900" style={{ fontFamily: "'Nunito', sans-serif" }}>You May Also Like</h2>
+              <Link href={"/products?category=" + product.categorySlug} className="text-sm font-bold hover:underline" style={{ color: theme.primary }}>View All</Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {youMayAlsoLike.map((item) => (
+                <Link 
+                  key={item.id} 
+                  href={"/products/" + item.id}
+                  className="group"
+                >
+                  <div className="aspect-square rounded-2xl overflow-hidden border border-gray-100 bg-white mb-4 relative">
+                    <Image src={item.images[0]} alt={item.name} fill className="object-contain p-6 transition-transform group-hover:scale-110" />
+                  </div>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">{item.category}</p>
+                  <h4 className="text-[15px] font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">{item.name}</h4>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-black" style={{ color: theme.primary }}>{formatPrice(item.price)}</span>
+                    {item.originalPrice && <span className="text-sm text-gray-400 line-through">{formatPrice(item.originalPrice)}</span>}
+                  </div>
+                  <div className="flex items-center gap-1 mt-2">
+                    <Stars rating={item.rating} size={12} />
+                    <span className="text-[11px] text-gray-400">({item.reviewCount})</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {recentlyViewed.length > 0 && (
+          <div className="max-w-[1240px] mx-auto px-5 py-16">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-black text-gray-900" style={{ fontFamily: "'Nunito', sans-serif" }}>Recently Viewed</h2>
+              <Link href="/products" className="text-sm font-bold hover:underline" style={{ color: theme.primary }}>View All</Link>
+            </div>
+            <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide">
+              {recentlyViewed.map((rv) => (
+                <Link 
+                  key={rv.id} 
+                  href={"/products/" + rv.id}
+                  className="w-[240px] shrink-0 group"
+                >
+                  <div className="aspect-square rounded-2xl overflow-hidden border border-gray-100 bg-white mb-4 relative">
+                    <Image src={rv.images[0]} alt={rv.name} fill className="object-contain p-6 transition-transform group-hover:scale-110" />
+                  </div>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-1">{rv.category}</p>
+                  <h4 className="text-[15px] font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">{rv.name}</h4>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-black" style={{ color: theme.primary }}>{formatPrice(rv.price)}</span>
+                    {rv.originalPrice && <span className="text-sm text-gray-400 line-through">{formatPrice(rv.originalPrice)}</span>}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {lightboxOpen && <ZoomLightbox images={product.images} activeIndex={activeImg} onClose={() => setLightboxOpen(false)} onChangeIndex={setActiveImg} theme={theme} />}
       </div>
