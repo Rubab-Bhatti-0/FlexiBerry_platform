@@ -1,11 +1,15 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { use } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import Link from 'next/image'
+import NextLink from 'next/link'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
-import { ArrowLeft, Star, MapPin, BadgeCheck, ShoppingCart, Heart, Flame, TrendingUp, Package, Sparkles, Grid3X3, List, Search, X, Zap, Shield, ChevronRight } from 'lucide-react'
+import { 
+  ArrowLeft, Star, MapPin, BadgeCheck, ShoppingCart, Heart, 
+  Flame, TrendingUp, Package, Sparkles, Grid3X3, List, 
+  Search, X, Zap, Shield, ChevronRight, ArrowRight, Truck
+} from 'lucide-react'
 import { VENDORS as VENDORS_ARRAY } from '@/lib/vendors'
 
 // Convert array to object for easy lookup
@@ -16,10 +20,10 @@ VENDORS_ARRAY.forEach(v => {
     themeBgLight: v.themeBgLight || '#f8f9fd',
     themeColor: v.categoryColor,
     subCategories: [
-      { name: 'Category 1', count: Math.floor(v.products * 0.3), icon: '📦' },
-      { name: 'Category 2', count: Math.floor(v.products * 0.3), icon: '📦' },
-      { name: 'Category 3', count: Math.floor(v.products * 0.2), icon: '📦' },
-      { name: 'Category 4', count: Math.floor(v.products * 0.2), icon: '📦' },
+      { name: 'Smartphones', sub: 'Latest iPhones & Android', e: '📱', bg: '#fff0f0', bd: '#fecdd3', slug: 'smartphones' },
+      { name: 'Laptops', sub: 'MacBooks, Gaming & More', e: '💻', bg: '#f5f3ff', bd: '#ddd6fe', slug: 'laptops' },
+      { name: 'Appliances', sub: 'AC, LED, Fridge & More', e: '🌀', bg: '#eff6ff', bd: '#bfdbfe', slug: 'appliances' },
+      { name: 'Solar Systems', sub: 'Complete Solar Solutions', e: '☀️', bg: '#fefce8', bd: '#fef08a', slug: 'solar' },
     ],
   }
 })
@@ -214,9 +218,9 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
         <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8f9fd' }}>
           <div style={{ textAlign: 'center' }}>
             <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#111827' }}>Shop Not Found</h1>
-            <Link href="/shops" style={{ color: '#6366f1', textDecoration: 'none', marginTop: '16px', display: 'inline-block' }}>
+            <NextLink href="/shops" style={{ color: '#6366f1', textDecoration: 'none', marginTop: '16px', display: 'inline-block' }}>
               Back to All Shops
-            </Link>
+            </NextLink>
           </div>
         </div>
       </FlexiLayout>
@@ -229,7 +233,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
 
   return (
     <FlexiLayout>
-      <div style={{ background: shop.themeBgLight, minHeight: '100vh' }}>
+      <div style={{ background: '#f4f5fb', minHeight: '100vh' }}>
         <style>{`
           * { box-sizing: border-box }
           body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0 }
@@ -239,12 +243,13 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
           .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; animation: fadeIn 0.4s ease }
           .stat-card { 
             transition: all 0.3s ease;
-            border-top: 4px solid transparent;
           }
           .stat-card:hover { 
             transform: translateY(-6px);
             box-shadow: 0 12px 28px rgba(0,0,0,0.12);
           }
+          .cat-lift { transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s ease }
+          .cat-lift:hover { transform:translateY(-4px) scale(1.025); box-shadow:0 10px 28px -6px rgba(0,0,0,.13) }
           /* Scrollbar styling */
           ::-webkit-scrollbar {
             width: 8px;
@@ -267,86 +272,208 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
 
         {/* ─────────────── BREADCRUMB ─────────────── */}
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '16px 20px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Link href="/" style={{ color: shop.themeColor, textDecoration: 'none', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <NextLink href="/" style={{ color: shop.themeColor, textDecoration: 'none', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
             <ArrowLeft size={14} /> Home
-          </Link>
+          </NextLink>
           <span style={{ color: '#d1d5db', fontSize: '13px' }}>/</span>
-          <Link href="/shops" style={{ color: shop.themeColor, textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>All Shops</Link>
+          <NextLink href="/shops" style={{ color: shop.themeColor, textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}>All Shops</NextLink>
           <span style={{ color: '#d1d5db', fontSize: '13px' }}>/</span>
           <span style={{ color: '#6b7280', fontSize: '13px', fontWeight: 600 }}>{shop.name}</span>
         </div>
 
-        {/* ─────────────── SHOP HERO BANNER ─────────────── */}
-        <div style={{ background: shop.bannerGrad, color: '#fff', padding: '60px 20px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '300px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%', transform: 'translate(50%, -50%)' }} />
-          <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-            <div style={{ fontSize: '80px', marginBottom: '24px', display: 'inline-block', animation: 'bounce 2.5s ease-in-out infinite', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}>
-              {shop.emoji}
-            </div>
-            <h1 style={{ fontSize: '48px', fontWeight: 900, margin: '0 0 16px 0', letterSpacing: '-1.5px', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-              {shop.name}
-            </h1>
-            <p style={{ fontSize: '18px', opacity: 0.95, margin: '0 0 32px 0', maxWidth: '700px', margin: '0 auto 32px', lineHeight: 1.6 }}>
-              {shop.description}
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '48px', flexWrap: 'wrap', fontSize: '16px', fontWeight: 600 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: '12px', backdropFilter: 'blur(10px)' }}>
-                <Star size={20} fill="#fff" /> {shop.rating} ({shop.reviews.toLocaleString()})
+        {/* ─────────────── NEW HERO BANNER DESIGN ─────────────── */}
+        <section style={{ padding: '40px 20px', maxWidth: '1400px', margin: '0 auto' }}>
+          <div style={{ 
+            background: shop.bannerGrad, 
+            borderRadius: '32px', 
+            padding: '60px 50px', 
+            color: 'white', 
+            position: 'relative', 
+            overflow: 'hidden',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            minHeight: '400px'
+          }}>
+            {/* Left Content */}
+            <div style={{ position: 'relative', zIndex: 2, maxWidth: '600px' }}>
+              <div style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                background: 'rgba(255,255,255,0.15)', 
+                padding: '8px 16px', 
+                borderRadius: '99px', 
+                backdropFilter: 'blur(10px)',
+                border: '1.5px solid rgba(255,255,255,0.2)',
+                marginBottom: '24px'
+              }}>
+                <span style={{ fontSize: '18px' }}>{shop.emoji}</span>
+                <span style={{ fontSize: '14px', fontWeight: 700 }}>{shop.name}</span>
+                <BadgeCheck size={16} fill="white" color={shop.themeColor} />
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: '12px', backdropFilter: 'blur(10px)' }}>
-                <Package size={20} /> {shop.products} Products
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: '12px', backdropFilter: 'blur(10px)' }}>
-                <MapPin size={20} /> {shop.city}
-              </div>
-              {shop.verified && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: '12px', backdropFilter: 'blur(10px)' }}>
-                  <BadgeCheck size={20} /> Verified
+              
+              <h1 style={{ 
+                fontSize: 'clamp(40px, 6vw, 72px)', 
+                fontWeight: 900, 
+                lineHeight: 1, 
+                margin: '0 0 16px 0',
+                letterSpacing: '-2px',
+                fontFamily: "'Space Grotesk', sans-serif"
+              }}>
+                New Arrivals 2026
+              </h1>
+              
+              <p style={{ fontSize: '20px', opacity: 0.9, marginBottom: '32px', fontWeight: 500 }}>
+                Latest products just landed
+              </p>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
+                <button style={{
+                  padding: '16px 32px',
+                  borderRadius: '16px',
+                  background: '#4ade80',
+                  color: '#064e3b',
+                  border: 'none',
+                  fontSize: '16px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 10px 25px rgba(74,222,128,0.3)'
+                }}
+                onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)'}
+                onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.transform = 'none'}>
+                  Shop Now <ArrowRight size={18} />
+                </button>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '15px', fontWeight: 600 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Star size={18} fill="#fbbf24" color="#fbbf24" /> {shop.rating}
+                  </div>
+                  <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
+                  <div>{shop.products} Products</div>
+                  <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'rgba(255,255,255,0.4)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <BadgeCheck size={18} /> Verified
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ─────────────── SHOP STATS CARDS ─────────────── */}
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px', marginBottom: '60px' }}>
-            {/* Rating Card */}
-            <div className="stat-card" style={{ background: '#fff', padding: '32px 24px', borderRadius: '16px', border: `2px solid ${shop.categoryBg}`, borderTopColor: shop.themeColor, textAlign: 'center' }}>
-              <div style={{ fontSize: '40px', marginBottom: '16px' }}>⭐</div>
-              <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>Customer Rating</div>
-              <div style={{ fontSize: '28px', fontWeight: 800, color: shop.themeColor, marginBottom: '6px' }}>{shop.rating}</div>
-              <div style={{ fontSize: '13px', color: '#6b7280' }}>Based on {shop.reviews.toLocaleString()} reviews</div>
-            </div>
-
-            {/* Products Card */}
-            <div className="stat-card" style={{ background: '#fff', padding: '32px 24px', borderRadius: '16px', border: `2px solid ${shop.categoryBg}`, borderTopColor: shop.themeColor, textAlign: 'center' }}>
-              <div style={{ fontSize: '40px', marginBottom: '16px' }}>📦</div>
-              <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>Total Products</div>
-              <div style={{ fontSize: '28px', fontWeight: 800, color: shop.themeColor, marginBottom: '6px' }}>{shop.products}</div>
-              <div style={{ fontSize: '13px', color: '#6b7280' }}>Available on easy installments</div>
-            </div>
-
-            {/* Established Card */}
-            <div className="stat-card" style={{ background: '#fff', padding: '32px 24px', borderRadius: '16px', border: `2px solid ${shop.categoryBg}`, borderTopColor: shop.themeColor, textAlign: 'center' }}>
-              <div style={{ fontSize: '40px', marginBottom: '16px' }}>🏢</div>
-              <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>Established</div>
-              <div style={{ fontSize: '28px', fontWeight: 800, color: shop.themeColor, marginBottom: '6px' }}>Since {shop.established}</div>
-              <div style={{ fontSize: '13px', color: '#6b7280' }}>{shop.city}</div>
-            </div>
-
-            {/* Status Card */}
-            <div className="stat-card" style={{ background: '#fff', padding: '32px 24px', borderRadius: '16px', border: `2px solid ${shop.categoryBg}`, borderTopColor: shop.verified ? shop.themeColor : '#f97316', textAlign: 'center' }}>
-              <div style={{ fontSize: '40px', marginBottom: '16px' }}>{shop.verified ? '✅' : '⏳'}</div>
-              <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>Verification</div>
-              <div style={{ fontSize: '28px', fontWeight: 800, color: shop.verified ? shop.themeColor : '#f97316', marginBottom: '6px' }}>
-                {shop.verified ? 'Verified' : 'Pending'}
               </div>
-              <div style={{ fontSize: '13px', color: '#6b7280' }}>Trusted seller badge</div>
             </div>
-          </div>
 
-          {/* ─────────────── FEATURED PRODUCTS SECTION ─────────────── */}
+            {/* Right Stats Cards */}
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(2, 1fr)', 
+              gap: '16px', 
+              position: 'relative', 
+              zIndex: 2 
+            }}>
+              {[
+                { icon: Package, label: 'Products', value: `${shop.products}+` },
+                { icon: Star, label: 'Rating', value: `${shop.rating}/5` },
+                { icon: Shield, label: 'Verified', value: 'KYC ✓' },
+                { icon: Truck, label: 'Delivery', value: 'Free' },
+              ].map((stat, idx) => (
+                <div key={idx} style={{
+                  width: '140px',
+                  height: '140px',
+                  background: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(12px)',
+                  borderRadius: '24px',
+                  border: '1.5px solid rgba(255,255,255,0.15)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  textAlign: 'center'
+                }}>
+                  <stat.icon size={24} color="white" />
+                  <div style={{ fontSize: '20px', fontWeight: 800 }}>{stat.value}</div>
+                  <div style={{ fontSize: '12px', opacity: 0.7, fontWeight: 600 }}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Background Decorations */}
+            <div style={{ position: 'absolute', top: '50%', left: '50%', width: '600px', height: '600px', background: 'rgba(255,255,255,0.05)', borderRadius: '50%', transform: 'translate(-50%, -50%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: '-100px', right: '-100px', width: '400px', height: '400px', background: 'rgba(0,0,0,0.1)', borderRadius: '50%', pointerEvents: 'none' }} />
+          </div>
+        </section>
+
+        {/* ─────────────── TRUST BAR ─────────────── */}
+        <section style={{ padding: '0 20px 40px', maxWidth: '1400px', margin: '0 auto' }}>
+          <div style={{ 
+            background: 'white', 
+            borderRadius: '24px', 
+            padding: '24px', 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', 
+            gap: '24px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
+          }}>
+            {[
+              { icon: Truck, title: 'Free Nationwide Delivery', desc: 'On orders PKR 5000+', bg: '#ecfdf5', color: '#10b981' },
+              { icon: Zap, title: '7-Day Returns', desc: 'Hassle-free policy', bg: '#f0fdfa', color: '#14b8a6' },
+              { icon: Shield, title: 'KYC Verified Shop', desc: '100% secure', bg: '#eff6ff', color: '#3b82f6' },
+              { icon: Zap, title: '24/7 Support', desc: '+92 300 1234567', bg: '#f5f3ff', color: '#8b5cf6' },
+            ].map((item, idx) => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ 
+                  width: '48px', 
+                  height: '48px', 
+                  borderRadius: '12px', 
+                  background: item.bg, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  color: item.color
+                }}>
+                  <item.icon size={24} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#111827' }}>{item.title}</div>
+                  <div style={{ fontSize: '13px', color: '#9ca3af' }}>{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─────────────── SHOP BY CATEGORY (HOME PAGE STYLE) ─────────────── */}
+        <section style={{ padding: '40px 20px', maxWidth: '1400px', margin: '0 auto' }}>
+          <div style={{ marginBottom: '28px' }}>
+            <h2 style={{ fontSize: 'clamp(20px, 2.8vw, 26px)', fontWeight: 900, color: '#111827', letterSpacing: '-.5px' }}>
+              Shop by Category
+            </h2>
+            <p style={{ color: '#9ca3af', fontSize: '13.5px', marginTop: '4px' }}>
+              Find what you need across {shop.name} categories
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
+            {shop.subCategories.map((cat: any) => (
+              <NextLink key={cat.slug} href={`/products?category=${cat.slug}`} className="cat-lift"
+                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                             padding: '22px 10px 18px', borderRadius: '18px', textDecoration: 'none',
+                             background: cat.bg, border: `1.5px solid ${cat.bd}` }}>
+                <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: '#fff',
+                               boxShadow: `0 4px 16px ${cat.bd}80`, display: 'flex',
+                               alignItems: 'center', justifyContent: 'center', fontSize: '26px',
+                               marginBottom: '10px', border: `1px solid ${cat.bd}` }}>
+                  {cat.e}
+                </div>
+                <div style={{ fontSize: '13px', fontWeight: 800, color: '#111827', lineHeight: 1.3 }}>{cat.name}</div>
+                <div style={{ fontSize: '11.5px', color: '#9ca3af', marginTop: '3px', lineHeight: 1.4 }}>{cat.sub}</div>
+              </NextLink>
+            ))}
+          </div>
+        </section>
+
+        {/* ─────────────── FEATURED PRODUCTS SECTION ─────────────── */}
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
           <div style={{ marginBottom: '60px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -399,32 +526,6 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
             </div>
           </div>
 
-          {/* ─────────────── CATEGORIES SECTION ─────────────── */}
-          <div style={{ marginBottom: '60px' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: 900, margin: '0 0 24px', color: '#111827' }}>Shop by Category</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-              {shop.subCategories.map((cat: any, idx: number) => (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedSubcat(cat.name)}
-                  style={{
-                    padding: '20px',
-                    borderRadius: '16px',
-                    background: selectedSubcat === cat.name ? `${shop.themeColor}15` : '#fff',
-                    border: `1.5px solid ${selectedSubcat === cat.name ? shop.themeColor : 'rgba(37,99,235,0.08)'}`,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    boxShadow: selectedSubcat === cat.name ? `0 8px 24px ${shop.themeColor}22` : '0 2px 8px rgba(0,0,0,0.04)',
-                    transform: selectedSubcat === cat.name ? 'translateY(-4px)' : 'none',
-                  }}>
-                  <div style={{ fontSize: '32px', marginBottom: '8px' }}>{cat.icon}</div>
-                  <h3 style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: '0 0 4px' }}>{cat.name}</h3>
-                  <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0 }}>{cat.count} products</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* ─────────────── SALE PRODUCTS SECTION ─────────────── */}
           {sale.length > 0 && (
             <div style={{ marginBottom: '60px' }}>
@@ -444,52 +545,6 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
               </div>
             </div>
           )}
-
-          {/* ─────────────── SHOP INFO SECTION ─────────────── */}
-          <div style={{ marginTop: '60px', padding: '40px', borderRadius: '20px', background: 'white', border: `1.5px solid ${shop.categoryBg}` }}>
-            <h2 style={{ fontSize: '24px', fontWeight: 900, margin: '0 0 24px', color: '#111827' }}>About {shop.name}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
-              <div>
-                <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>Category</div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a' }}>{shop.category}</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>Location</div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a' }}>{shop.city}</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>Established</div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a' }}>Since {shop.established}</div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.5px' }}>Status</div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: shop.verified ? '#10b981' : '#f97316' }}>
-                  {shop.verified ? '✓ Verified' : 'Pending'}
-                </div>
-              </div>
-            </div>
-
-            {/* Features */}
-            <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1.5px solid rgba(37,99,235,0.08)' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 800, margin: '0 0 16px', color: '#111827' }}>Why Shop Here?</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
-                {[
-                  { icon: '⚡', title: 'Easy Installments', desc: 'Flexible payment plans available' },
-                  { icon: '🛡️', title: 'Verified Seller', desc: 'Trusted & KYC verified' },
-                  { icon: '📦', title: 'Fast Delivery', desc: 'Quick shipping across Pakistan' },
-                  { icon: '💬', title: 'Support', desc: '24/7 customer support available' },
-                ].map((feature, idx) => (
-                  <div key={idx} style={{ display: 'flex', gap: '12px' }}>
-                    <div style={{ fontSize: '24px' }}>{feature.icon}</div>
-                    <div>
-                      <div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a' }}>{feature.title}</div>
-                      <div style={{ fontSize: '12px', color: '#94a3b8' }}>{feature.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </FlexiLayout>
