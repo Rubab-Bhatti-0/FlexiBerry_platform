@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import FlexiLayout from "@/components/layout/FlexiLayout/FlexiLayout";
 import { PRODUCTS_DATA } from "@/lib/products";
 import {
