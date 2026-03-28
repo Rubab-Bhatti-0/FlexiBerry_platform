@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
+import { FlexiBerryLogo } from '@/components/ui/FlexiBerryLogo'
 
 export const metadata: Metadata = {
   title: 'About Us - FlexiBerry',
@@ -54,7 +55,9 @@ export default function AboutPage() {
         {/* Hero Section */}
         <section className="py-16 md:py-24 px-4 bg-gradient-to-br from-indigo-50 via-white to-purple-50 text-center border-b border-indigo-100">
           <div className="max-w-4xl mx-auto">
-            <div className="text-5xl md:text-6xl mb-6 inline-block animate-bounce">🫐</div>
+            <div className="mb-6 inline-block animate-bounce">
+              <FlexiBerryLogo size={80} />
+            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Our Story
             </h1>

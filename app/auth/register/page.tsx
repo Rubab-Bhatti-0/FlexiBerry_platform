@@ -45,6 +45,7 @@ function RegisterForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [apiError, setApiError] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
 
   useEffect(() => {
     if (typeParam === 'seller' || typeParam === 'buyer') {
@@ -116,7 +117,7 @@ function RegisterForm() {
     setApiError('')
     
     try {
-      const user = await registerUser(
+      await registerUser(
         formData.email, 
         formData.password, 
         formData.firstName, 
@@ -124,11 +125,7 @@ function RegisterForm() {
         formData.userType
       )
       
-      localStorage.setItem('user', JSON.stringify(user))
-      window.dispatchEvent(new Event('storage'))
-      
-      if (user.role === 'seller') router.push('/vendor/dashboard')
-      else router.push('/buyer/dashboard')
+      setIsSuccess(true)
     } catch (error: any) {
       setApiError(error.message || 'Registration failed. Please try again.')
     } finally {
@@ -150,6 +147,25 @@ function RegisterForm() {
     { id: 4, title: 'Confirm', icon: <FileCheck size={18} /> },
     { id: 5, title: 'Security', icon: <Lock size={18} /> },
   ]
+
+  if (isSuccess) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-16 text-center">
+        <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 size={48} />
+        </div>
+        <h1 className="text-3xl font-serif font-bold text-[#111827] mb-4">Registration Successful!</h1>
+        <p className="text-lg text-[#6b7280] mb-8">
+          Your account has been created successfully. Please log in to start using your {userType === 'seller' ? 'vendor' : 'buyer'} account.
+        </p>
+        <Link href="/auth/login">
+          <Button className="w-full h-12 bg-[#6366f1] text-white rounded-xl font-bold hover:bg-[#4f46e5] transition-all">
+            Go to Login
+          </Button>
+        </Link>
+      </div>
+    )
+  }
 
   if (step === 0) {
     return (

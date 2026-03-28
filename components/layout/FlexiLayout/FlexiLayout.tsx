@@ -302,18 +302,22 @@ export default function FlexiLayout({ children }: FlexiLayoutProps) {
                 </>
               )}
 
-              <Link href="/wishlist" className="flexi-hide-sm" aria-label="Wishlist" style={{
-                width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                color: 'inherit', textDecoration: 'none'
-              }}>
-                <Heart size={16} />
-              </Link>
+              {user?.role !== 'seller' && (
+                <>
+                  <Link href="/wishlist" className="flexi-hide-sm" aria-label="Wishlist" style={{
+                    width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb', background: '#fff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
+                    color: 'inherit', textDecoration: 'none'
+                  }}>
+                    <Heart size={16} />
+                  </Link>
 
-              <Link href="/cart" className="flexi-btn-ind" style={{ padding: '9px 18px', fontSize: 13.5 }}>
-                <ShoppingBag size={15} />
-                <span className="flexi-hide-sm">Cart</span>
-              </Link>
+                  <Link href="/cart" className="flexi-btn-ind" style={{ padding: '9px 18px', fontSize: 13.5 }}>
+                    <ShoppingBag size={15} />
+                    <span className="flexi-hide-sm">Cart</span>
+                  </Link>
+                </>
+              )}
 
               <button className="flexi-show-sm" onClick={() => setMenuOpen(!menuOpen)} style={{
                 width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e5e7eb',

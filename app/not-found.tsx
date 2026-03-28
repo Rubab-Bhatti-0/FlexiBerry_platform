@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Button } from '@/components/ui/button'
+import { FlexiBerryLogo } from '@/components/ui/FlexiBerryLogo'
 
 export const metadata: Metadata = {
   title: '404 — Page Not Found',
@@ -14,7 +15,7 @@ export default function NotFound() {
       {/* Nav */}
       <nav className="bg-background/95 backdrop-blur border-b border-border px-4 h-16 flex items-center justify-between max-w-7xl mx-auto w-full">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl">🫐</span>
+          <FlexiBerryLogo size={24} />
           <span className="text-xl font-serif font-bold">FlexiBerry</span>
         </Link>
         <Link href="/auth/login" className="px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90 transition-all">
@@ -26,7 +27,9 @@ export default function NotFound() {
       <main className="flex-1 flex items-center justify-center px-4 py-20">
         <div className="text-center max-w-lg">
           {/* Animated emoji */}
-          <div className="text-8xl md:text-9xl mb-6 animate-float select-none">🫐</div>
+          <div className="mb-6 animate-float select-none">
+            <FlexiBerryLogo size={120} />
+          </div>
 
           <div className="text-8xl font-serif font-bold text-accent/20 mb-2">404</div>
 
