@@ -1,585 +1,326 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { useState, useEffect, useCallback } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
-/* ── CAROUSEL SLIDE DATA WITH CORRECTED IMAGE MAPPING ──────────────────── */
-interface CarouselSlide {
-  id: number
-  img: string
-  badge: string
-  h: string
-  a: string
-  sub: string
-  cta: string
-  href: string
-  accentColor: string
-  gradientStart: string
-  solidColor: string
-}
+const slides = [
+  {
+    image: "/assets/carousel-1.jpg",
+    titleLine1: "Buy Smart,",
+    titleLine2: "Pay Easy",
+    description: "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
+    cta: "Shop Smartphones",
+    link: "/products?category=smartphones",
+    accent: "#FF6B6B",
+    bg: "#1a0a0a",
+  },
+  {
+    image: "/assets/carousel-2.jpg",
+    titleLine1: "Power Up",
+    titleLine2: "Your Work",
+    description: "MacBooks, Gaming Laptops & more on easy installment plans for every budget.",
+    cta: "Shop Laptops",
+    link: "/products?category=laptops",
+    accent: "#A78BFA",
+    bg: "#0f0a1e",
+  },
+  {
+    image: "/assets/carousel-3.jpg",
+    titleLine1: "Ride Your",
+    titleLine2: "Dream Bike",
+    description: "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
+    cta: "Shop Motorcycles",
+    link: "/products?category=bikes",
+    accent: "#FB923C",
+    bg: "#1a0d04",
+  },
+  {
+    image: "/assets/carousel-4.jpg",
+    titleLine1: "Home",
+    titleLine2: "Essentials",
+    description: "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
+    cta: "Shop Appliances",
+    link: "/products?category=appliances",
+    accent: "#F87171",
+    bg: "#1a0808",
+  },
+  {
+    image: "/assets/carousel-5.jpg",
+    titleLine1: "Go",
+    titleLine2: "Solar",
+    description: "Complete Solar Panel Systems — save on electricity bills with easy installments.",
+    cta: "Shop Solar",
+    link: "/products?category=solar",
+    accent: "#FBBF24",
+    bg: "#141004",
+  },
+  {
+    image: "/assets/carousel-6.jpg",
+    titleLine1: "Complete",
+    titleLine2: "Jahez Package",
+    description: "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
+    cta: "Shop Bundles",
+    link: "/products?category=jahez",
+    accent: "#F472B6",
+    bg: "#1a0812",
+  },
+  {
+    image: "/assets/carousel-7.jpg",
+    titleLine1: "Furnish Your",
+    titleLine2: "Dream Home",
+    description: "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
+    cta: "Shop Furniture",
+    link: "/products?category=furniture",
+    accent: "#34D399",
+    bg: "#041410",
+  },
+  {
+    image: "/assets/carousel-8.jpg",
+    titleLine1: "Drive Your",
+    titleLine2: "Dream Car",
+    description: "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
+    cta: "Shop Cars",
+    link: "/products?category=cars",
+    accent: "#38BDF8",
+    bg: "#041018",
+  },
+  {
+    image: "/assets/carousel-9.jpg",
+    titleLine1: "Grow Your",
+    titleLine2: "Business",
+    description: "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
+    cta: "Shop B2B",
+    link: "/products?category=business",
+    accent: "#A3E635",
+    bg: "#0a1204",
+  },
+];
 
-const CAROUSEL_SLIDES: CarouselSlide[] = [
-  {
-    id: 1,
-    img: '/assets/carousel-1.jpg', // Smartphones
-    badge: '📱 Smartphones',
-    h: 'Buy Smart,',
-    a: 'Pay Easy',
-    sub: 'Latest iPhones & Samsung Galaxy with 6–12 month plans. No credit card needed.',
-    cta: 'Shop Smartphones',
-    href: '/products?category=smartphones',
-    accentColor: '#ef4444',
-    gradientStart: '#dc2626',
-    solidColor: 'rgba(31, 41, 55, 0.92)',
-  },
-  {
-    id: 2,
-    img: '/assets/carousel-2.jpg', // Laptops
-    badge: '💻 Laptops',
-    h: 'Work Smarter,',
-    a: 'Pay Later',
-    sub: 'MacBooks, Dell, HP & more — premium laptops on easy monthly plans.',
-    cta: 'Shop Laptops',
-    href: '/products?category=laptops',
-    accentColor: '#8b5cf6',
-    gradientStart: '#7c3aed',
-    solidColor: 'rgba(30, 27, 75, 0.92)',
-  },
-  {
-    id: 3,
-    img: '/assets/carousel-3.jpg', // Bikes
-    badge: '🏍️ Bikes',
-    h: 'Ride Free,',
-    a: 'Pay Monthly',
-    sub: 'Honda CD 70, Yamaha, Suzuki — get your bike on easy installments today.',
-    cta: 'Shop Bikes',
-    href: '/products?category=bikes',
-    accentColor: '#f97316',
-    gradientStart: '#ea580c',
-    solidColor: 'rgba(54, 33, 0, 0.92)',
-  },
-  {
-    id: 4,
-    img: '/assets/carousel-4.jpg', // SOLAR - Yellow/Golden
-    badge: '☀️ Solar',
-    h: 'Go Green,',
-    a: 'Save More',
-    sub: '5kW–20kW solar systems. Slash your electricity bill with flexible payment plans.',
-    cta: 'Shop Solar',
-    href: '/products?category=solar',
-    accentColor: '#eab308',
-    gradientStart: '#ca8a04',
-    solidColor: 'rgba(51, 40, 0, 0.92)',
-  },
-  {
-    id: 5,
-    img: '/assets/carousel-5.jpg', // Appliances
-    badge: '🏠 Appliances',
-    h: 'Upgrade Home,',
-    a: 'Affordably',
-    sub: 'AC, Fridge, Washing Machine — top brands on 6 or 12 month installments.',
-    cta: 'Shop Appliances',
-    href: '/products?category=appliances',
-    accentColor: '#06b6d4',
-    gradientStart: '#0891b2',
-    solidColor: 'rgba(6, 41, 58, 0.92)',
-  },
-  {
-    id: 6,
-    img: '/assets/carousel-6.jpg', // Furniture
-    badge: '🛋️ Furniture',
-    h: 'Furnish Dreams,',
-    a: 'Pay Easy',
-    sub: 'Complete home & office furniture sets. Beautiful spaces, flexible payments.',
-    cta: 'Shop Furniture',
-    href: '/products?category=furniture',
-    accentColor: '#14b8a6',
-    gradientStart: '#0d9488',
-    solidColor: 'rgba(5, 46, 41, 0.92)',
-  },
-  {
-    id: 7,
-    img: '/assets/carousel-7.jpg', // Jahez
-    badge: '📦 Jahez',
-    h: 'Bundle Up,',
-    a: 'Save Big',
-    sub: '4–5 item Jahez packages for weddings & new homes. Save up to 50%.',
-    cta: 'Shop Packages',
-    href: '/products?category=jahez',
-    accentColor: '#ec4899',
-    gradientStart: '#db2777',
-    solidColor: 'rgba(63, 13, 34, 0.92)',
-  },
-  {
-    id: 8,
-    img: '/assets/carousel-8.jpg', // Cars
-    badge: '🚗 Cars',
-    h: 'Drive Today,',
-    a: 'Pay Monthly',
-    sub: 'Car financing made easy. Honda, Toyota, Suzuki on flexible installment plans.',
-    cta: 'Car Financing',
-    href: '/products?category=cars',
-    accentColor: '#3b82f6',
-    gradientStart: '#1d4ed8',
-    solidColor: 'rgba(15, 23, 42, 0.92)',
-  },
-  {
-    id: 9,
-    img: '/assets/carousel-9.jpg', // Business
-    badge: '💼 Business',
-    h: 'Grow Business,',
-    a: 'Smart Way',
-    sub: 'Raw materials, stock & business equipment. Fund your growth today.',
-    cta: 'Shop Business',
-    href: '/products?category=business',
-    accentColor: '#10b981',
-    gradientStart: '#059669',
-    solidColor: 'rgba(5, 46, 22, 0.92)',
-  },
-]
+const HeroCarousel = () => {
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
 
-/* ── COMPONENT ──────────────────────────────────────────────────────────── */
-export default function HeroCarousel() {
-  const [slide, setSlide] = useState(0)
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const next = useCallback(() => {
+    setDirection(1);
+    setCurrent((p) => (p + 1) % slides.length);
+  }, []);
 
-  // Auto-play carousel
-  const startTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current)
-    timerRef.current = setInterval(() => setSlide(p => (p + 1) % CAROUSEL_SLIDES.length), 5200)
-  }, [])
+  const prev = useCallback(() => {
+    setDirection(-1);
+    setCurrent((p) => (p - 1 + slides.length) % slides.length);
+  }, []);
 
   useEffect(() => {
-    startTimer()
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current)
-    }
-  }, [startTimer])
+    const timer = setInterval(next, 5500);
+    return () => clearInterval(timer);
+  }, [next]);
 
-  const goTo = (i: number) => {
-    setSlide(i)
-    startTimer()
-  }
-
-  const prev = () => goTo((slide - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length)
-  const next = () => goTo((slide + 1) % CAROUSEL_SLIDES.length)
-
-  const currentSlide = CAROUSEL_SLIDES[slide]
+  const slide = slides[current];
 
   return (
-    <>
-      <style>{`
-        /* ── Carousel text entrance animation ─────────────────── */
-        @keyframes carouselIn {
-          from {
-            opacity: 0;
-            transform: translateY(22px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .carousel-badge {
-          animation: carouselIn 0.5s 0.05s ease both;
-        }
-
-        .carousel-heading {
-          animation: carouselIn 0.5s 0.18s ease both;
-        }
-
-        .carousel-accent {
-          animation: carouselIn 0.5s 0.18s ease both;
-        }
-
-        .carousel-description {
-          animation: carouselIn 0.5s 0.3s ease both;
-        }
-
-        .carousel-cta {
-          animation: carouselIn 0.5s 0.42s ease both;
-        }
-
-        /* ── Navigation button styles ─────────────────────────── */
-        .carousel-nav-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 52px;
-          height: 52px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.18);
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          color: #fff;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          backdrop-filter: blur(12px);
-          z-index: 30;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        .carousel-nav-btn:hover {
-          background: rgba(255, 255, 255, 0.28);
-          border-color: rgba(255, 255, 255, 0.5);
-          transform: scale(1.15);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .carousel-nav-btn:active {
-          transform: scale(0.92);
-        }
-
-        .carousel-nav-btn svg {
-          width: 24px;
-          height: 24px;
-          stroke-width: 2.5;
-        }
-
-        /* ── Dot indicators ──────────────────────────────────── */
-        .carousel-dot {
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.35);
-          border: 1.5px solid rgba(255, 255, 255, 0.5);
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .carousel-dot.active {
-          background: #fff;
-          box-shadow: 0 0 16px rgba(255, 255, 255, 0.7);
-          transform: scale(1.2);
-        }
-
-        .carousel-dot:hover {
-          background: rgba(255, 255, 255, 0.7);
-        }
-
-        /* ── CTA Button ──────────────────────────────────────── */
-        .carousel-cta-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 14px 32px;
-          font-size: 15px;
-          font-weight: 700;
-          color: #fff;
-          border: none;
-          border-radius: 999px;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          text-decoration: none;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-          letter-spacing: 0.3px;
-        }
-
-        .carousel-cta-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
-        }
-
-        .carousel-cta-btn:active {
-          transform: translateY(-1px);
-        }
-
-        /* ── Responsive ──────────────────────────────────────── */
-        @media (max-width: 768px) {
-          .carousel-heading {
-            font-size: 36px !important;
-          }
-
-          .carousel-accent {
-            font-size: 36px !important;
-          }
-
-          .carousel-description {
-            font-size: 14px !important;
-          }
-
-          .carousel-nav-btn {
-            width: 44px;
-            height: 44px;
-          }
-
-          .carousel-nav-btn svg {
-            width: 20px;
-            height: 20px;
-          }
-
-          .carousel-cta-btn {
-            padding: 12px 26px;
-            font-size: 14px;
-          }
-        }
-
-        @media (max-width: 500px) {
-          .carousel-heading {
-            font-size: 28px !important;
-          }
-
-          .carousel-accent {
-            font-size: 28px !important;
-          }
-
-          .carousel-description {
-            font-size: 13px !important;
-          }
-
-          .carousel-nav-btn {
-            width: 40px;
-            height: 40px;
-          }
-
-          .carousel-nav-btn svg {
-            width: 18px;
-            height: 18px;
-          }
-
-          .carousel-cta-btn {
-            padding: 11px 22px;
-            font-size: 13px;
-          }
-        }
-      `}</style>
-
-      {/* ── CAROUSEL CONTAINER ─────────────────────────────────── */}
-      <section
-        className="relative w-full overflow-hidden"
-        style={{
-          height: '460px',
-          background: '#07040f',
-        }}
-      >
-        {/* ── SLIDES ─────────────────────────────────────────────── */}
-        {CAROUSEL_SLIDES.map((sl, i) => (
-          <div
-            key={sl.id}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              opacity: i === slide ? 1 : 0,
-              transition: 'opacity 0.75s ease',
-              pointerEvents: i === slide ? 'auto' : 'none',
-            }}
-          >
-            {/* ── BACKGROUND IMAGE (RIGHT SIDE) ──────────────────── */}
-            <div style={{ position: 'absolute', inset: 0 }}>
-              <Image
-                src={sl.img}
-                alt={sl.badge}
-                fill
-                style={{ objectFit: 'cover', objectPosition: 'center right' }}
-                priority={i === 0}
-                sizes="100vw"
-                onError={e => {
-                  ;(e.target as HTMLImageElement).style.display = 'none'
-                }}
-              />
-            </div>
-
-            {/* ── LEFT GRADIENT OVERLAY (PRODUCT-SPECIFIC, SMOOTH BLEND) ─────── */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `linear-gradient(90deg, ${sl.solidColor} 0%, ${sl.solidColor} 32%, rgba(0,0,0,0.5) 55%, transparent 85%)`,
-              }}
+    <section
+      className="relative overflow-hidden"
+      style={{
+        height: "clamp(400px, 52vw, 560px)",
+        backgroundColor: slide.bg,
+        transition: "background-color 0.9s ease",
+      }}
+    >
+      {/* ── FULL BLEED IMAGE on right, fading into background colour ── */}
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={current + "-bg"}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="absolute inset-0"
+          style={{ zIndex: 1 }}
+        >
+          {/* Image occupies right 60% of the banner */}
+          <div className="absolute top-0 right-0 h-full" style={{ width: "62%" }}>
+            <img
+              src={slide.image}
+              alt=""
+              className="w-full h-full object-cover"
+              style={{ objectPosition: "center center" }}
             />
+          </div>
 
-            {/* ── CONTENT (LEFT SIDE) ────────────────────────────── */}
-            {i === slide && (
-              <div
-                style={{
-                  position: 'relative',
-                  zIndex: 20,
-                  maxWidth: 1340,
-                  margin: '0 auto',
-                  padding: '0 24px',
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                }}
+          {/* Left-to-right gradient: solid bg colour → transparent */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(
+                to right,
+                ${slide.bg} 0%,
+                ${slide.bg} 36%,
+                ${slide.bg}f0 45%,
+                ${slide.bg}bb 52%,
+                ${slide.bg}66 60%,
+                ${slide.bg}22 72%,
+                transparent 85%
+              )`,
+            }}
+          />
+
+          {/* Top vignette */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to bottom, ${slide.bg}88 0%, transparent 18%, transparent 78%, ${slide.bg}dd 100%)`,
+            }}
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* ── ACCENT GLOW blob top-left ── */}
+      <div
+        className="absolute rounded-full blur-[160px] pointer-events-none"
+        style={{
+          zIndex: 2,
+          width: "40%",
+          aspectRatio: "1",
+          top: "-25%",
+          left: "-8%",
+          background: slide.accent,
+          opacity: 0.13,
+          transition: "background 0.7s ease",
+        }}
+      />
+
+      {/* ── SUBTLE GRID OVERLAY ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          zIndex: 2,
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)`,
+          backgroundSize: "48px 48px",
+        }}
+      />
+
+      {/* ── LEFT TEXT CONTENT ── */}
+      <div className="relative h-full flex items-center" style={{ zIndex: 10 }}>
+        <div className="container mx-auto px-6 md:px-12 lg:px-16">
+          <div style={{ maxWidth: 500 }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={current}
+                initial={{ opacity: 0, x: direction * -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * 30 }}
+                transition={{ duration: 0.42, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="space-y-5"
               >
-                <div style={{ maxWidth: 500, paddingRight: 60 }}>
-                  {/* ── BADGE ──────────────────────────────────────── */}
-                  <span
-                    className="carousel-badge"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      padding: '8px 18px',
-                      marginBottom: 20,
-                      borderRadius: 999,
-                      background: 'rgba(255,255,255,.14)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1.5px solid rgba(255,255,255,.25)',
-                      color: '#fff',
-                      fontSize: 13,
-                      fontWeight: 700,
-                      letterSpacing: '0.2px',
-                    }}
-                  >
-                    {sl.badge}
-                  </span>
-
-                  {/* ── MAIN HEADING ──────────────────────────────── */}
+                {/* Headline */}
+                <div>
                   <h1
-                    className="carousel-heading"
-                    style={{
-                      fontSize: 'clamp(32px, 5vw, 56px)',
-                      fontWeight: 900,
-                      color: '#fff',
-                      lineHeight: 1.15,
-                      letterSpacing: -1.2,
-                      marginBottom: 0,
-                    }}
+                    className="font-black text-white"
+                    style={{ fontSize: "clamp(2.2rem, 5.2vw, 4.8rem)", lineHeight: 1.04 }}
                   >
-                    {sl.h}
+                    {slide.titleLine1}
                   </h1>
-
-                  {/* ── ACCENT HEADING (COLORED) ──────────────────── */}
                   <h1
-                    className="carousel-accent"
+                    className="font-black"
                     style={{
-                      fontSize: 'clamp(32px, 5vw, 56px)',
-                      fontWeight: 900,
-                      background: `linear-gradient(135deg, ${sl.accentColor}, ${sl.gradientStart})`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                      lineHeight: 1.15,
-                      letterSpacing: -1.2,
-                      marginBottom: 18,
+                      fontSize: "clamp(2.2rem, 5.2vw, 4.8rem)",
+                      lineHeight: 1.04,
+                      color: slide.accent,
+                      textShadow: `0 0 48px ${slide.accent}55`,
+                      transition: "color 0.5s, text-shadow 0.5s",
                     }}
                   >
-                    {sl.a}
+                    {slide.titleLine2}
                   </h1>
+                </div>
 
-                  {/* ── DESCRIPTION ────────────────────────────────── */}
-                  <p
-                    className="carousel-description"
-                    style={{
-                      color: 'rgba(255,255,255,.85)',
-                      fontSize: 'clamp(13px, 1.8vw, 15px)',
-                      lineHeight: 1.8,
-                      marginBottom: 32,
-                      maxWidth: 450,
-                      fontWeight: 400,
-                      letterSpacing: '0.2px',
-                    }}
-                  >
-                    {sl.sub}
-                  </p>
+                {/* Description */}
+                <p
+                  style={{
+                    color: "rgba(255,255,255,0.58)",
+                    fontSize: "clamp(0.8rem, 1.4vw, 0.95rem)",
+                    lineHeight: 1.7,
+                    maxWidth: 390,
+                  }}
+                >
+                  {slide.description}
+                </p>
 
-                  {/* ── CTA BUTTON ────────────────────────────────── */}
-                  <Link
-                    href={sl.href}
-                    className="carousel-cta carousel-cta-btn"
-                    style={{
-                      background: `linear-gradient(135deg, ${sl.accentColor}, ${sl.gradientStart})`,
-                    }}
-                  >
-                    {sl.cta}
-                    <svg
-                      width="18"
-                      height="18"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      viewBox="0 0 24 24"
+                {/* CTA + pill */}
+                <div className="flex items-center gap-3 pt-1 flex-wrap">
+                  <Link href={slide.link}>
+                    <button
+                      className="group flex items-center gap-2 font-bold text-sm px-7 py-3.5 rounded-2xl hover:scale-[1.03] transition-transform"
+                      style={{
+                        background: slide.accent,
+                        color: "#fff",
+                        boxShadow: `0 8px 28px ${slide.accent}45`,
+                        transition: "background 0.4s, box-shadow 0.4s",
+                      }}
                     >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                      {slide.cta}
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </button>
                   </Link>
                 </div>
-              </div>
-            )}
-
-            {/* ── SLIDE COUNTER ──────────────────────────────────── */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 24,
-                right: 24,
-                color: 'rgba(255,255,255,.4)',
-                fontSize: 13,
-                fontWeight: 600,
-                zIndex: 25,
-                letterSpacing: '1.5px',
-                fontFamily: 'monospace',
-              }}
-            >
-              {String(slide + 1).padStart(2, '0')} / {String(CAROUSEL_SLIDES.length).padStart(2, '0')}
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
-        ))}
-
-        {/* ── NAVIGATION ARROWS (BOTTOM CORNERS) ──────────────────── */}
-        <button
-          onClick={prev}
-          className="carousel-nav-btn"
-          style={{
-            position: 'absolute',
-            left: 24,
-            bottom: 24,
-          }}
-          aria-label="Previous slide"
-        >
-          <svg
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <button
-          onClick={next}
-          className="carousel-nav-btn"
-          style={{
-            position: 'absolute',
-            right: 24,
-            bottom: 24,
-          }}
-          aria-label="Next slide"
-        >
-          <svg
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-
-        {/* ── DOT INDICATORS (CENTER BOTTOM) ─────────────────────── */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 24,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: 12,
-            zIndex: 25,
-          }}
-        >
-          {CAROUSEL_SLIDES.map((_, i) => (
-            <button
-              key={i}
-              className={`carousel-dot ${i === slide ? 'active' : ''}`}
-              onClick={() => goTo(i)}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
         </div>
-      </section>
-    </>
-  )
-}
+      </div>
+
+      {/* ── PREV / NEXT ARROWS ── */}
+      {[{ fn: prev, Icon: ChevronLeft, side: "left-4" }, { fn: next, Icon: ChevronRight, side: "right-4" }].map(
+        ({ fn, Icon, side }) => (
+          <button
+            key={side}
+            onClick={fn}
+            className={`absolute ${side} top-1/2 -translate-y-1/2 h-9 w-9 rounded-full flex items-center justify-center transition-all hover:scale-110`}
+            style={{
+              zIndex: 20,
+              background: "rgba(255,255,255,0.07)",
+              border: "1px solid rgba(255,255,255,0.13)",
+              backdropFilter: "blur(10px)",
+              color: "#fff",
+            }}
+          >
+            <Icon className="h-4 w-4" />
+          </button>
+        )
+      )}
+
+      {/* ── DOTS ── */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 items-center" style={{ zIndex: 20 }}>
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setDirection(i > current ? 1 : -1);
+              setCurrent(i);
+            }}
+            className="rounded-full transition-all duration-300"
+            style={{
+              height: 5,
+              width: i === current ? 26 : 5,
+              background: i === current ? slide.accent : "rgba(255,255,255,0.22)",
+              boxShadow: i === current ? `0 0 8px ${slide.accent}80` : "none",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* ── SLIDE COUNTER ── */}
+      <div
+        className="absolute bottom-5 right-6 text-xs font-bold tabular-nums"
+        style={{ zIndex: 20, color: "rgba(255,255,255,0.28)" }}
+      >
+        {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+      </div>
+    </section>
+  );
+};
+
+export default HeroCarousel;
