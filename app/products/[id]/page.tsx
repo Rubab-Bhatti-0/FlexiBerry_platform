@@ -74,7 +74,7 @@ export default function ProductDetailPage() {
     )
   }
 
-  const theme = CATEGORY_THEMES[product.categorySlug as keyof typeof CATEGORY_THEMES] || CATEGORY_THEMES.default
+  const theme = CATEGORY_THEMES[product.categorySlug as keyof typeof CATEGORY_THEMES] || CATEGORY_THEMES.general
 
   const handleAddToCart = () => {
     setAddedToCart(true)
@@ -290,7 +290,7 @@ export default function ProductDetailPage() {
                     ))}
                   </div>
                 </div>
-              )}
+              ))}
 
               <div style={{ display: 'flex', gap: 16, marginTop: 40 }}>
                 <div style={{
