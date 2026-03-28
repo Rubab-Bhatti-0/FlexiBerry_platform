@@ -10,6 +10,7 @@ import {
   Flame, TrendingUp, Package, Sparkles, Grid3X3, List, 
   Search, X, Zap, Shield, ChevronRight, ArrowRight, Truck
 } from 'lucide-react'
+import ShopCategory from '@/components/ShopCategory'
 import { VENDORS as VENDORS_ARRAY } from '@/lib/vendors'
 
 // Convert array to object for easy lookup
@@ -453,23 +454,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
               Find what you need across {shop.name} categories
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
-            {shop.subCategories.map((cat: any) => (
-              <NextLink key={cat.slug} href={`/products?category=${cat.slug}`} className="cat-lift"
-                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
-                             padding: '22px 10px 18px', borderRadius: '18px', textDecoration: 'none',
-                             background: cat.bg, border: `1.5px solid ${cat.bd}` }}>
-                <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: '#fff',
-                               boxShadow: `0 4px 16px ${cat.bd}80`, display: 'flex',
-                               alignItems: 'center', justifyContent: 'center', fontSize: '26px',
-                               marginBottom: '10px', border: `1px solid ${cat.bd}` }}>
-                  {cat.e}
-                </div>
-                <div style={{ fontSize: '13px', fontWeight: 800, color: '#111827', lineHeight: 1.3 }}>{cat.name}</div>
-                <div style={{ fontSize: '11.5px', color: '#9ca3af', marginTop: '3px', lineHeight: 1.4 }}>{cat.sub}</div>
-              </NextLink>
-            ))}
-          </div>
+          <ShopCategory />
         </section>
 
         {/* ─────────────── FEATURED PRODUCTS SECTION ─────────────── */}
