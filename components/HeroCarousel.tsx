@@ -255,18 +255,19 @@ const HeroCarousel = () => {
                 <div className="flex items-center gap-3 pt-4 flex-wrap">
                   <Link href={slide.link}>
                     <button
-                      className="group flex items-center gap-3 font-bold text-base px-12 py-4.5 rounded-full hover:scale-[1.05] transition-transform whitespace-nowrap"
+                      className="group flex items-center gap-4 font-bold text-lg px-16 py-5 rounded-full hover:scale-[1.06] transition-transform whitespace-nowrap"
                       style={{
                         background: slide.accent,
                         color: "#fff",
                         boxShadow: `0 12px 36px ${slide.accent}50`,
                         transition: "background 0.4s, box-shadow 0.4s, transform 0.3s",
-                        letterSpacing: "0.4px",
+                        letterSpacing: "0.5px",
                         minWidth: "fit-content",
+                        fontWeight: 700,
                       }}
                     >
                       {slide.cta}
-                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" />
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
                     </button>
                   </Link>
                 </div>
