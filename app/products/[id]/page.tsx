@@ -1,518 +1,289 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useParams } from 'next/navigation'
-import FlexiLayout, { CATEGORY_THEMES } from '@/components/layout/FlexiLayout/FlexiLayout'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { PRODUCTS_DATA, ProductDetail } from '@/lib/products'
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import FlexiLayout from "@/components/layout/FlexiLayout/FlexiLayout";
+import { CATEGORY_THEMES } from "@/components/ui/carousel";
+import { PRODUCTS_DATA, ProductDetail } from "@/lib/products";
+import {
+  Star,
+  Heart,
+  ShoppingCart,
+  CreditCard,
+  Shield,
+  Truck,
+  RefreshCw,
+  ChevronRight,
+  ChevronLeft,
+  Share2,
+  Minus,
+  Plus,
+  MessageSquare,
+  Facebook,
+  Twitter,
+  BadgeCheck,
+  Store,
+  MapPin,
+  X,
+  Search,
+} from "lucide-react";
+
+function Stars({ rating, size = 14 }: { rating: number; size?: number }) {
+  return (
+    <span style={{ display: "flex", gap: 1 }}>
+      {[1, 2, 3, 4, 5].map((s) => (
+        <Star
+          key={s}
+          style={{
+            width: size, height: size,
+            fill: s <= Math.round(rating) ? "#f59e0b" : "#e5e7eb",
+            color: s <= Math.round(rating) ? "#f59e0b" : "#e5e7eb",
+          }}
+        />
+      ))}
+    </span>
+  );
+}
+
+interface LightboxProps {
+  images: string[];
+  activeIndex: number;
+  onClose: () => void;
+  onChangeIndex: (i: number) => void;
+  theme: any;
+}
+
+function ZoomLightbox({ images, activeIndex, onClose, onChangeIndex, theme }: LightboxProps) {
+  const [scale, setScale]       = useState(1);
+  const [pos, setPos]           = useState({ x: 0, y: 0 });
+  const [dragging, setDragging] = useState(false);
+  const dragOrigin              = useRef({ mx: 0, my: 0, px: 0, py: 0 });
+
+  useEffect(() => {
+    setScale(1);
+    setPos({ x: 0, y: 0 });
+  }, [activeIndex]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") onChangeIndex((activeIndex + 1) % images.length);
+      if (e.key === "ArrowLeft") onChangeIndex((activeIndex - 1 + images.length) % images.length);
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [activeIndex, images.length, onClose, onChangeIndex]);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (scale <= 1) return;
+    setDragging(true);
+    dragOrigin.current = { mx: e.clientX, my: e.clientY, px: pos.x, py: pos.y };
+  };
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!dragging) return;
+    setPos({
+      x: dragOrigin.current.px + (e.clientX - dragOrigin.current.mx),
+      y: dragOrigin.current.py + (e.clientY - dragOrigin.current.my),
+    });
+  };
+  const onMouseUp = () => setDragging(false);
+
+  return (
+    <>
+      <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.93)", zIndex: 9998 }} />
+      <button onClick={onClose} style={{ position: "fixed", top: 16, right: 16, zIndex: 10001, width: 42, height: 42, borderRadius: "50%", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "white", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <X size={20} />
+      </button>
+      <div onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp} style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: scale > 1 ? (dragging ? "grabbing" : "grab") : "default" }}>
+        <div onMouseDown={onMouseDown} style={{ transform: "translate(" + pos.x + "px, " + pos.y + "px) scale(" + scale + ")", transition: dragging ? "none" : "transform 0.2s ease-out", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <img src={images[activeIndex]} alt="" onClick={(e) => { e.stopPropagation(); setScale(scale === 1 ? 2 : 1); setPos({ x: 0, y: 0 }); }} style={{ maxWidth: "90vw", maxHeight: "85vh", objectFit: "contain", userSelect: "none", pointerEvents: "auto" }} />
+        </div>
+      </div>
+    </>
+  );
+}
 
 export default function ProductDetailPage() {
-  const params = useParams()
-  const productId = params.id as string
-  const product = PRODUCTS_DATA[productId]
-  
-  const [selectedImage, setSelectedImage] = useState(0)
-  const [selectedColor, setSelectedColor] = useState(0)
-  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({})
-  const [selectedPlan, setSelectedPlan] = useState(12)
-  const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState<'description' | 'details' | 'reviews'>('description')
-  const [reviewForm, setReviewForm] = useState({ name: '', email: '', rating: 5, comment: '' })
-  const [addedToCart, setAddedToCart] = useState(false)
-  const [addedToWishlist, setAddedToWishlist] = useState(false)
-  const [recentlyViewed, setRecentlyViewed] = useState<ProductDetail[]>([])
+  const params = useParams();
+  const productId = params.id as string;
+  const product = PRODUCTS_DATA[productId];
 
-  // Initialize variants and handle recently viewed
+  const [activeImg, setActiveImg]       = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [qty, setQty]                   = useState(1);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedStorage, setSelectedStorage] = useState("");
+  const [activeTab, setActiveTab]       = useState<"desc" | "details" | "reviews">("desc");
+  const [wishlist, setWishlist]         = useState(false);
+  const [addedToCart, setAddedToCart]   = useState(false);
+  const [recentlyViewed, setRecentlyViewed] = useState<ProductDetail[]>([]);
+
   useEffect(() => {
     if (product) {
-      // Initialize variants
-      if (product.variants) {
-        const initial: Record<string, string> = {}
-        product.variants.forEach(v => {
-          initial[v.label] = v.options[0]
-        })
-        setSelectedVariants(initial)
+      if (product.colors && product.colors.length > 0) setSelectedColor(product.colors[0].name);
+      if (product.variants && product.variants.length > 0) {
+        const storageVariant = product.variants.find(v => v.label.toLowerCase() === 'storage');
+        if (storageVariant) setSelectedStorage(storageVariant.options[0]);
       }
-
-      // Handle recently viewed
-      const stored = localStorage.getItem('recentlyViewed')
-      let list: string[] = stored ? JSON.parse(stored) : []
-      
-      // Remove current if exists and add to front
-      list = list.filter(id => id !== product.id)
-      list.unshift(product.id)
-      
-      // Keep only last 6
-      list = list.slice(0, 6)
-      localStorage.setItem('recentlyViewed', JSON.stringify(list))
-      
-      // Load full product data for recently viewed
-      const fullList = list
-        .filter(id => id !== product.id) // Don't show current product in recently viewed
-        .map(id => PRODUCTS_DATA[id])
-        .filter(Boolean)
-      setRecentlyViewed(fullList)
+      const stored = localStorage.getItem('recentlyViewed');
+      let list: string[] = stored ? JSON.parse(stored) : [];
+      list = list.filter(id => id !== product.id);
+      list.unshift(product.id);
+      list = list.slice(0, 10);
+      localStorage.setItem('recentlyViewed', JSON.stringify(list));
+      const fullList = list.filter(id => id !== product.id).map(id => PRODUCTS_DATA[id]).filter(Boolean);
+      setRecentlyViewed(fullList);
     }
-  }, [product])
+  }, [product]);
 
   if (!product) {
     return (
       <FlexiLayout>
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="text-6xl mb-4">404</div>
-            <h1 className="text-2xl font-serif font-bold mb-4">Product Not Found</h1>
-            <Link href="/">
-              <Button>Back to Home</Button>
-            </Link>
+            <h1 className="text-4xl font-bold mb-4">Product Not Found</h1>
+            <Link href="/" className="text-blue-600 hover:underline">Back to Home</Link>
           </div>
         </div>
       </FlexiLayout>
-    )
+    );
   }
 
-  const theme = CATEGORY_THEMES[product.categorySlug as keyof typeof CATEGORY_THEMES] || CATEGORY_THEMES.general
-
-  const handleAddToCart = () => {
-    setAddedToCart(true)
-    setTimeout(() => setAddedToCart(false), 2000)
-  }
-
-  const handleReviewSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    alert('Review submitted successfully!')
-    setReviewForm({ name: '', email: '', rating: 5, comment: '' })
-  }
-
-  // Calculate rating distribution for display
-  const ratingCounts = [0, 0, 0, 0, 0]
-  product.reviews.forEach(r => {
-    if (r.rating >= 1 && r.rating <= 5) {
-      ratingCounts[5 - r.rating]++
-    }
-  })
-  const totalReviews = product.reviews.length || product.reviewCount
+  const theme = CATEGORY_THEMES[product.categorySlug] || CATEGORY_THEMES.general;
+  const discount = product.originalPrice ? Math.round(((product.originalPrice - product.price) * 100) / product.originalPrice) : 0;
+  const formatPrice = (p: number) => "₨" + p.toLocaleString();
+  const getMonthlyInstallment = (p: number, m: number) => "₨" + Math.round(p / m).toLocaleString();
 
   return (
     <FlexiLayout>
-      <div style={{ background: '#fcfcfc', minHeight: '100vh' }}>
-        {/* Breadcrumb */}
-        <div style={{ background: '#fff', borderBottom: '1px solid #f1f1f1', padding: '16px 0' }}>
-          <div style={{ maxWidth: 1340, margin: '0 auto', padding: '0 16px' }}>
-            <nav style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: '#6b7280' }}>
-              <Link href="/" style={{ color: '#6b7280', textDecoration: 'none' }}>Home</Link>
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-              <Link href={`/products?category=${product.categorySlug}`} style={{ color: '#6b7280', textDecoration: 'none' }}>{product.category}</Link>
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-              <span style={{ color: theme.primary, fontWeight: 600 }}>{product.name}</span>
-            </nav>
+      <div style={{ background: "#fff", minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        <div className="border-b border-gray-100 py-3.5">
+          <div className="max-w-[1240px] mx-auto px-5 flex items-center gap-2 text-[13px] text-gray-400 font-medium">
+            <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
+            <ChevronRight size={12} />
+            <Link href={"/products?category=" + product.categorySlug} className="hover:text-gray-900 transition-colors">{product.category}</Link>
+            <ChevronRight size={12} />
+            <span className="text-gray-900 font-bold truncate">{product.name}</span>
           </div>
         </div>
 
-        {/* Main Product Section */}
-        <div style={{ maxWidth: 1340, margin: '0 auto', padding: '40px 16px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))', gap: 60 }}>
-            
-            {/* Image Gallery */}
-            <div>
-              <div style={{
-                position: 'relative', borderRadius: 24, overflow: 'hidden',
-                background: '#fff', border: '1px solid #f1f1f1',
-                aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center'
-              }}>
-                {product.discount && (
-                  <span style={{
-                    position: 'absolute', top: 20, left: 20, zIndex: 10,
-                    background: '#dc2626', color: '#fff', padding: '6px 14px',
-                    borderRadius: 10, fontSize: 13, fontWeight: 700,
-                  }}>
-                    -{product.discount}% OFF
-                  </span>
-                )}
-                <Image
-                  src={product.images[selectedImage]}
-                  alt={product.name}
-                  width={600}
-                  height={600}
-                  style={{ objectFit: 'contain', padding: 20 }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', gap: 16, marginTop: 20 }}>
-                {product.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedImage(i)}
-                    style={{
-                      width: 90, height: 90, borderRadius: 16, overflow: 'hidden',
-                      border: `2px solid ${selectedImage === i ? theme.primary : '#f1f1f1'}`,
-                      background: '#fff', padding: 10, cursor: 'pointer',
-                      transition: 'all 0.2s',
-                    }}
-                  >
-                    <Image src={img} alt="" width={90} height={90} style={{ objectFit: 'contain' }} />
-                  </button>
-                ))}
-              </div>
-
-              <div style={{ marginTop: 40, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
-                {[
-                  { title: 'Official Warranty', sub: product.warranty, icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
-                  { title: 'Fast Delivery', sub: product.deliveryInfo, icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
-                ].map((badge, i) => (
-                  <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'center', background: '#fff', padding: 16, borderRadius: 16, border: '1px solid #f1f1f1' }}>
-                    <div style={{
-                      width: 48, height: 48, borderRadius: 14, flexShrink: 0,
-                      background: theme.bg, display: 'flex',
-                      alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <svg width="24" height="24" fill="none" stroke={theme.primary} strokeWidth="1.5" viewBox="0 0 24 24">
-                        <path d={badge.icon}/>
-                      </svg>
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 15, color: '#111827' }}>{badge.title}</div>
-                      <div style={{ fontSize: 13, color: '#6b7280' }}>{badge.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Details */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <span style={{ 
-                  background: theme.bg, color: theme.primary, 
-                  padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700, textTransform: 'uppercase' 
-                }}>
-                  {product.category}
-                </span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  {[1, 2, 3, 4, 5].map(s => (
-                    <span key={s} style={{ color: s <= Math.round(product.rating) ? '#f59e0b' : '#e2e8f0', fontSize: 14 }}>★</span>
-                  ))}
-                  <span style={{ fontSize: 13, color: '#6b7280', marginLeft: 4 }}>({product.reviewCount} Reviews)</span>
+        <section className="max-w-[1240px] mx-auto px-5 py-8 lg:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            <div className="lg:col-span-7">
+              <div className="sticky top-24">
+                <div className="relative aspect-square rounded-3xl overflow-hidden border border-gray-100 bg-white group cursor-zoom-in" onClick={() => setLightboxOpen(true)}>
+                  <Image src={product.images[activeImg]} alt={product.name} fill className="object-contain p-8 transition-transform duration-500 group-hover:scale-105" />
                 </div>
-              </div>
-
-              <h1 style={{
-                fontSize: 36, fontWeight: 800, color: '#111827',
-                marginBottom: 20, lineHeight: 1.2,
-              }}>
-                {product.name}
-              </h1>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-                  <span style={{ fontSize: 36, fontWeight: 900, color: theme.primary }}>₨{product.price.toLocaleString()}</span>
-                  {product.originalPrice && (
-                    <span style={{ fontSize: 20, color: '#94a3b8', textDecoration: 'line-through' }}>₨{product.originalPrice.toLocaleString()}</span>
-                  )}
-                </div>
-                {product.discount && (
-                  <span style={{ color: '#dc2626', fontWeight: 700, fontSize: 16 }}>Save {product.discount}%</span>
-                )}
-              </div>
-
-              <div style={{ background: '#fff', border: '1px solid #f1f1f1', borderRadius: 24, padding: 24, marginBottom: 32 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: 12, background: theme.gradient, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <svg width="24" height="24" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, color: '#111827' }}>Flexi Installment Plan</div>
-                    <div style={{ fontSize: 14, color: '#6b7280' }}>Pay as low as ₨{Math.floor(product.price / 12).toLocaleString()}/mo</div>
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                  {product.installmentPlans.map(p => (
-                    <button
-                      key={p.months}
-                      onClick={() => setSelectedPlan(p.months)}
-                      style={{
-                        padding: '16px', borderRadius: 16, border: `2px solid ${selectedPlan === p.months ? theme.primary : '#f1f1f1'}`,
-                        background: selectedPlan === p.months ? theme.bg : '#fff', textAlign: 'left', cursor: 'pointer',
-                        transition: 'all 0.2s',
-                      }}
-                    >
-                      <div style={{ fontSize: 13, color: selectedPlan === p.months ? theme.primary : '#6b7280', marginBottom: 4, fontWeight: 600 }}>{p.months} Months</div>
-                      <div style={{ fontWeight: 800, color: '#111827', fontSize: 16 }}>₨{p.monthly.toLocaleString()}/mo</div>
+                <div className="flex gap-3 mt-5 overflow-x-auto pb-2 scrollbar-hide">
+                  {product.images.map((img, i) => (
+                    <button key={i} onClick={() => setActiveImg(i)} className="relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 bg-white" style={{ borderColor: activeImg === i ? theme.primary : "transparent" }}>
+                      <Image src={img} alt="" fill className="object-contain p-2" />
                     </button>
                   ))}
                 </div>
               </div>
-
-              {product.colors.length > 0 && (
-                <div style={{ marginBottom: 32 }}>
-                  <h3 style={{ fontWeight: 700, color: '#111827', marginBottom: 16, fontSize: 16 }}>Available Colors</h3>
-                  <div style={{ display: 'flex', gap: 12 }}>
-                    {product.colors.map((color, i) => (
-                      <button
-                        key={color.name}
-                        onClick={() => setSelectedColor(i)}
-                        title={color.name}
-                        style={{
-                          width: 44, height: 44, borderRadius: '50%', padding: 4,
-                          border: `2px solid ${selectedColor === i ? theme.primary : '#f1f1f1'}`,
-                          background: '#fff', cursor: 'pointer', transition: 'all 0.2s',
-                        }}
-                      >
-                        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: color.hex }} />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {product.variants.map(v => (
-                <div key={v.label} style={{ marginBottom: 32 }}>
-                  <h3 style={{ fontWeight: 700, color: '#111827', marginBottom: 16, fontSize: 16 }}>{v.label}</h3>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                    {v.options.map(opt => (
-                      <button
-                        key={opt}
-                        onClick={() => setSelectedVariants(prev => ({ ...prev, [v.label]: opt }))}
-                        style={{
-                          padding: '12px 24px', borderRadius: 12, border: `2px solid ${selectedVariants[v.label] === opt ? theme.primary : '#f1f1f1'}`,
-                          background: selectedVariants[v.label] === opt ? theme.bg : '#fff', color: selectedVariants[v.label] === opt ? theme.primary : '#4b5563',
-                          fontWeight: 700, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s',
-                        }}
-                      >
-                        {opt}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              <div style={{ display: 'flex', gap: 16, marginTop: 40 }}>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 20, padding: '0 20px',
-                  borderRadius: 16, border: '2px solid #f1f1f1', background: '#fff',
-                }}>
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ border: 'none', background: 'none', fontSize: 24, cursor: 'pointer', color: '#6b7280' }}>−</button>
-                  <span style={{ fontWeight: 800, minWidth: 30, textAlign: 'center', fontSize: 18 }}>{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)} style={{ border: 'none', background: 'none', fontSize: 24, cursor: 'pointer', color: '#6b7280' }}>+</button>
-                </div>
-                <Button
-                  onClick={handleAddToCart}
-                  style={{
-                    flex: 1, height: 60, borderRadius: 16, fontSize: 18, fontWeight: 800,
-                    background: addedToCart ? '#10b981' : theme.primary,
-                    boxShadow: `0 8px 20px ${theme.primary}30`,
-                  }}
-                >
-                  {addedToCart ? '✓ Added to Cart' : 'Add to Cart'}
-                </Button>
-                <button
-                  onClick={() => setAddedToWishlist(!addedToWishlist)}
-                  style={{
-                    width: 60, height: 60, borderRadius: 16, border: '2px solid #f1f1f1',
-                    background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: 'pointer', color: addedToWishlist ? '#ef4444' : '#94a3b8', transition: 'all 0.2s',
-                  }}
-                >
-                  <svg width="28" height="28" fill={addedToWishlist ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Specifications Section */}
-          <div style={{ marginTop: 80, background: '#fff', borderRadius: 32, padding: 48, border: '1px solid #f1f1f1' }}>
-            <div style={{ display: 'flex', gap: 60, borderBottom: '1px solid #f1f1f1', marginBottom: 40 }}>
-              {['Description', 'Specifications'].map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab.toLowerCase() as any)}
-                  style={{
-                    padding: '20px 0', border: 'none', background: 'none', cursor: 'pointer',
-                    fontSize: 18, fontWeight: 800, color: activeTab === tab.toLowerCase() ? theme.primary : '#94a3b8',
-                    position: 'relative', transition: 'all 0.2s',
-                  }}
-                >
-                  {tab}
-                  {activeTab === tab.toLowerCase() && (
-                    <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 4, background: theme.primary, borderRadius: 4 }} />
-                  )}
-                </button>
-              ))}
             </div>
 
-            <div style={{ maxWidth: 900 }}>
-              {activeTab === 'description' ? (
-                <div style={{ fontSize: 17, color: '#4b5563', lineHeight: 1.8 }}>
-                  <p style={{ marginBottom: 32 }}>{product.description}</p>
-                  <h4 style={{ fontWeight: 800, color: '#111827', marginBottom: 20, fontSize: 20 }}>Key Features:</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                    {product.features.map((f, i) => (
-                      <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'center', background: '#f8fafc', padding: '16px 20px', borderRadius: 16 }}>
-                        <div style={{ color: theme.primary, fontWeight: 900, fontSize: 20 }}>✓</div>
-                        <div style={{ fontWeight: 600, color: '#334155' }}>{f}</div>
+            <div className="lg:col-span-5">
+              <div className="flex flex-col">
+                <h1 className="text-[28px] lg:text-[36px] font-black text-gray-900 leading-[1.15] mb-4" style={{ fontFamily: "'Nunito', sans-serif" }}>{product.name}</h1>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all hover:shadow-sm group" style={{ background: theme.bg, borderColor: theme.primary + "30" }}>
+                    <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: theme.primary }}><Store className="w-3.5 h-3.5 text-white" /></div>
+                    <span className="text-[13px] font-bold leading-none" style={{ color: theme.primary }}>{product.vendor}</span>
+                    {product.vendorVerified && <BadgeCheck className="w-3.5 h-3.5 shrink-0" style={{ color: "#16a34a" }} />}
+                    <span className="text-gray-300 text-[11px] mx-0.5">•</span>
+                    <span className="flex items-center gap-0.5 text-[11px] text-gray-400"><MapPin className="w-3 h-3" />{product.vendorLocation}</span>
+                  </div>
+                </div>
+                <p className="text-[13px] text-gray-400 mb-3"><span className="font-semibold text-gray-500">Reference:</span> {product.reference || (product.id.toUpperCase() + "-001")}</p>
+                <div className="flex items-center gap-2.5 mb-5">
+                  <Stars rating={product.rating} size={16} />
+                  <button onClick={() => setActiveTab("reviews")} className="text-[13px] flex items-center gap-1 hover:underline" style={{ color: theme.primary }}><MessageSquare className="w-3.5 h-3.5" /> Read reviews ({product.reviewCount})</button>
+                </div>
+                <div className="mb-5">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[32px] font-black leading-none" style={{ color: theme.primary, fontFamily: "'Nunito', sans-serif" }}>{formatPrice(product.price)}</span>
+                    {product.originalPrice && <span className="text-lg text-gray-400 line-through font-medium">{formatPrice(product.originalPrice)}</span>}
+                    {discount > 0 && <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-red-500 text-white">-{discount}%</span>}
+                  </div>
+                  <p className="text-[13px] font-semibold mt-1.5 flex items-center gap-1.5" style={{ color: "#16a34a" }}><BadgeCheck className="w-4 h-4" /> Available from {getMonthlyInstallment(product.price, 12)} {"/"} month — 0% markup installment</p>
+                </div>
+                <div className="text-[14px] text-gray-500 leading-7 mb-5 pt-4 border-t border-gray-100">
+                  <p className="mb-2">{product.description}</p>
+                </div>
+                <div className="rounded-xl p-4 mb-5 border" style={{ background: theme.bg, borderColor: theme.primary + "20" }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <CreditCard className="w-4 h-4" style={{ color: theme.primary }} />
+                    <span className="text-[13px] font-bold" style={{ color: theme.primary }}>Installment Plans</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {(product.installmentPlans || [{months: 3}, {months: 6}, {months: 12}, {months: 24}]).map((plan) => (
+                      <div key={plan.months} className="bg-white rounded-lg p-3 text-center border" style={{ borderColor: theme.primary + "15" }}>
+                        <p className="text-[11px] text-gray-400 mb-1">{plan.months} Months</p>
+                        <p className="text-base font-black" style={{ color: theme.primary }}>{plan.monthly ? formatPrice(plan.monthly) : getMonthlyInstallment(product.price, plan.months)}</p>
                       </div>
                     ))}
                   </div>
                 </div>
-              ) : (
-                <div style={{ display: 'grid', gap: 1 }}>
-                  {Object.entries(product.specifications).map(([key, val], i) => (
-                    <div key={key} style={{ display: 'grid', gridTemplateColumns: '250px 1fr', padding: '24px 0', borderBottom: '1px solid #f1f5f9' }}>
-                      <span style={{ fontWeight: 700, color: '#64748b' }}>{key}</span>
-                      <span style={{ color: '#111827', fontWeight: 600 }}>{val}</span>
+                <div className="flex items-center gap-3.5 mb-5">
+                  <button onClick={() => { setAddedToCart(true); setTimeout(() => { window.location.href = "/checkout?product=" + product.id; }, 800); }} className="flex-1 h-11 flex items-center justify-center gap-2 text-white text-[13px] font-black uppercase tracking-wide rounded-lg transition-all hover:opacity-90" style={{ background: addedToCart ? "#16a34a" : theme.primary, boxShadow: "0 6px 20px " + theme.primary + "40" }}>
+                    <CreditCard className="w-4 h-4" /> {addedToCart ? "✓ Redirecting…" : "Buy on Installment"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="border-t border-gray-100 py-12 bg-gray-50/50">
+          <div className="max-w-[1240px] mx-auto px-5">
+            <div className="flex border-b border-gray-200 mb-8">
+              {(["desc", "details", "reviews"] as const).map((tab) => (
+                <button key={tab} onClick={() => setActiveTab(tab)} className="px-8 py-4 text-[14px] font-bold transition-all relative" style={{ color: activeTab === tab ? theme.primary : "#9ca3af" }}>
+                  {tab === "desc" ? "Description" : tab === "details" ? "Details" : "Reviews"}
+                  {activeTab === tab && <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: theme.primary }} />}
+                </button>
+              ))}
+            </div>
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm min-h-[300px]">
+              {activeTab === "desc" && <p className="text-gray-600 leading-relaxed">{product.description}</p>}
+              {activeTab === "details" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+                  {Object.entries(product.specifications).map(([key, val]) => (
+                    <div key={key} className="flex items-center justify-between py-3 border-b border-gray-50">
+                      <span className="text-[13px] font-bold text-gray-400 uppercase tracking-wider">{key}</span>
+                      <span className="text-[14px] font-semibold text-gray-700">{val}</span>
                     </div>
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Reviews Section - New Design */}
-          <div style={{ marginTop: 80 }}>
-            <div style={{ display: 'flex', gap: 40, borderBottom: '1px solid #f1f1f1', marginBottom: 40 }}>
-              <button
-                style={{
-                  padding: '20px 0', border: 'none', background: 'none', cursor: 'pointer',
-                  fontSize: 18, fontWeight: 800, color: theme.primary,
-                  position: 'relative',
-                }}
-              >
-                Reviews ({totalReviews})
-                <div style={{ position: 'absolute', bottom: -1, left: 0, right: 0, height: 4, background: theme.primary, borderRadius: 4 }} />
-              </button>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 80, alignItems: 'start' }}>
-              {/* Reviews List & Stats */}
-              <div>
-                <div style={{ display: 'flex', gap: 48, marginBottom: 48, alignItems: 'center' }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 64, fontWeight: 900, color: theme.primary, lineHeight: 1 }}>{product.rating}</div>
-                    <div style={{ display: 'flex', gap: 4, justifyContent: 'center', margin: '12px 0' }}>
-                      {[1, 2, 3, 4, 5].map(s => (
-                        <span key={s} style={{ color: s <= Math.round(product.rating) ? '#f59e0b' : '#e2e8f0', fontSize: 20 }}>★</span>
-                      ))}
-                    </div>
-                    <div style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600 }}>{totalReviews} Reviews</div>
-                  </div>
-
-                  <div style={{ flex: 1, display: 'grid', gap: 10 }}>
-                    {[5, 4, 3, 2, 1].map((s, i) => (
-                      <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: '#64748b', minWidth: 20 }}>{s}★</span>
-                        <div style={{ flex: 1, height: 8, background: '#f1f5f9', borderRadius: 10, overflow: 'hidden' }}>
-                          <div style={{ 
-                            height: '100%', 
-                            width: `${(ratingCounts[i] / totalReviews) * 100 || 0}%`, 
-                            background: '#f59e0b', borderRadius: 10 
-                          }} />
-                        </div>
-                        <span style={{ fontSize: 14, fontWeight: 600, color: '#94a3b8', minWidth: 30 }}>{ratingCounts[i]}</span>
+              {activeTab === "reviews" && (
+                <div className="space-y-6">
+                  {product.reviews.map((rev, i) => (
+                    <div key={i} className="p-6 rounded-2xl bg-gray-50 border border-gray-100">
+                      <div className="flex items-center justify-between mb-4">
+                        <p className="text-sm font-bold text-gray-900">{rev.name}</p>
+                        <Stars rating={rev.rating} size={14} />
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gap: 40 }}>
-                  {product.reviews.map(r => (
-                    <div key={r.id} style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: 32 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                          <div style={{ 
-                            width: 56, height: 56, borderRadius: '50%', background: theme.primary, 
-                            color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                            fontWeight: 800, fontSize: 18 
-                          }}>
-                            {r.initials}
-                          </div>
-                          <div>
-                            <div style={{ fontWeight: 800, color: '#111827', fontSize: 16 }}>{r.name}</div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <div style={{ display: 'flex', gap: 2 }}>
-                                {[1, 2, 3, 4, 5].map(s => (
-                                  <span key={s} style={{ color: s <= r.rating ? '#f59e0b' : '#e2e8f0', fontSize: 14 }}>★</span>
-                                ))}
-                              </div>
-                              <span style={{ fontSize: 13, color: '#94a3b8', fontWeight: 600 }}>{r.date}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <p style={{ fontSize: 16, color: '#475569', lineHeight: 1.6, marginBottom: 12 }}>{r.comment}</p>
-                      <button style={{ background: 'none', border: 'none', color: theme.primary, fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>Reply</button>
+                      <p className="text-[14px] text-gray-600 leading-relaxed">{rev.comment}</p>
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Write a Review Card */}
-              <div style={{ background: '#f8fafc', borderRadius: 32, padding: 40, border: '1px solid #f1f1f1', position: 'sticky', top: 40 }}>
-                <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111827', marginBottom: 8 }}>Write a Review</h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 }}>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#64748b' }}>Your rating:</span>
-                  <div style={{ display: 'flex', gap: 4 }}>
-                    {[1, 2, 3, 4, 5].map(s => (
-                      <button 
-                        key={s} 
-                        onClick={() => setReviewForm({...reviewForm, rating: s})}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                      >
-                        <span style={{ color: s <= reviewForm.rating ? '#f59e0b' : '#e2e8f0', fontSize: 24 }}>★</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <form onSubmit={handleReviewSubmit} style={{ display: 'grid', gap: 20 }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                    <input
-                      type="text"
-                      placeholder="Your Name"
-                      required
-                      value={reviewForm.name}
-                      onChange={e => setReviewForm({ ...reviewForm, name: e.target.value })}
-                      style={{ padding: '16px 20px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#fff', fontSize: 15 }}
-                    />
-                    <input
-                      type="email"
-                      placeholder="Your Email"
-                      required
-                      value={reviewForm.email}
-                      onChange={e => setReviewForm({ ...reviewForm, email: e.target.value })}
-                      style={{ padding: '16px 20px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#fff', fontSize: 15 }}
-                    />
-                  </div>
-                  <textarea
-                    placeholder="Share your experience with this product..."
-                    required
-                    rows={6}
-                    value={reviewForm.comment}
-                    onChange={e => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                    style={{ padding: '16px 20px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#fff', fontSize: 15, resize: 'none' }}
-                  />
-                  <Button 
-                    type="submit" 
-                    style={{ 
-                      background: theme.primary, height: 60, borderRadius: 16, 
-                      fontSize: 16, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1
-                    }}
-                  >
-                    Submit Review
-                  </Button>
-                </form>
-              </div>
+              )}
             </div>
           </div>
         </div>
+
+        {lightboxOpen && <ZoomLightbox images={product.images} activeIndex={activeImg} onClose={() => setLightboxOpen(false)} onChangeIndex={setActiveImg} theme={theme} />}
       </div>
     </FlexiLayout>
-  )
+  );
 }
