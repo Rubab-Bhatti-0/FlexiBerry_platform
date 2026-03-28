@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
 import HeroCarousel from '@/components/HeroCarousel'
+import VendorShowcase from '@/components/VendorShowcase'
 import { VENDORS } from '@/lib/vendors'
 import { PRODUCTS_DATA } from '@/lib/products'
 
@@ -562,76 +563,8 @@ export default function HomePage() {
         </div>
       </section>
 
-            {/* ── FEATURED SHOPS ROW (1 ROW OF 4 SHOPS) ────────────────────────── */}
-      <section style={{ padding:'60px 16px', background:'#fff' }}>
-        <div style={{ maxWidth:1340, margin:'0 auto' }}>
-          <div style={{ display:'flex', flexWrap:'wrap', justifyContent:'space-between',
-                         alignItems:'flex-end', gap:16, marginBottom:28 }}>
-            <div>
-              <div style={{ fontSize:11, fontWeight:900, letterSpacing:'0.18em', textTransform:'uppercase',
-                             color:'#6366f1', marginBottom:6 }}>VERIFIED SELLERS</div>
-              <h2 style={{ fontSize:'clamp(20px,2.8vw,32px)', fontWeight:900, color:'#111827', letterSpacing:-.5 }}>
-                Featured Shops
-              </h2>
-              <p style={{ color:'#9ca3af', fontSize:13.5, marginTop:4 }}>Explore our top-rated sellers across categories</p>
-            </div>
-            <Link href="/shops" className="btn-ind" style={{ padding:'11px 22px', fontSize:13.5, textDecoration:'none' }}>
-              View All Shops →
-            </Link>
-          </div>
-          <div className="vg" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:20 }}>
-            {VENDORS.filter(v => v.featured).slice(0, 4).map(v => (
-              <Link key={v.id} href={`/shop/${v.id}`} style={{ textDecoration:'none' }}>
-                <div className="vc" style={{ borderTop:`4px solid ${v.bar}`, height:'100%' }}>
-                  <div style={{ padding:20 }}>
-                    <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:12 }}>
-                      <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-                        <div style={{
-                          width:48, height:48, borderRadius:12, flexShrink:0,
-                          background:`linear-gradient(135deg,${v.g1},${v.g2})`,
-                          display:'flex', alignItems:'center', justifyContent:'center',
-                          fontSize:22, boxShadow:`0 6px 20px ${v.g1}44`,
-                        }}>{v.e}</div>
-                        <div>
-                          <h3 style={{ fontSize:14, fontWeight:900, color:'#111827', letterSpacing:-.2, margin:0 }}>{v.name}</h3>
-                          <span style={{
-                            display:'inline-block', padding:'2px 8px', borderRadius:999,
-                            fontSize:10, fontWeight:700, color:v.catC, background:v.catBg, marginTop:3,
-                          }}>{v.cat}</span>
-                        </div>
-                      </div>
-                      <div style={{
-                        width:32, height:32, borderRadius:8, border:'1.5px solid #e5e7eb',
-                        background:'#fff', display:'flex', alignItems:'center', justifyContent:'center',
-                        color:'#9ca3af', transition:'all .15s', flexShrink:0,
-                      }}>
-                        <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <p style={{ fontSize:12.5, color:'#6b7280', marginBottom:14, lineHeight:1.6 }}>{v.desc}</p>
-                    <div style={{ display:'flex', alignItems:'center', gap:12, flexWrap:'wrap', fontSize:12 }}>
-                      <div style={{ display:'flex', alignItems:'center', gap:4 }}>
-                        <span style={{ color:'#facc15' }}>★</span>
-                        <span style={{ fontWeight:900, color:'#111827' }}>{v.rat}</span>
-                      </div>
-                      <div style={{ display:'flex', alignItems:'center', gap:4 }}>
-                        <span>🧩</span>
-                        <span style={{ fontWeight:900, color:'#111827' }}>{v.prods}</span>
-                      </div>
-                      <div style={{ display:'flex', alignItems:'center', gap:3, fontWeight:700, color:'#059669' }}>
-                        <div style={{ width:6, height:6, borderRadius:'50%', background:'#10b981' }} />
-                        Verified
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+            {/* ── FEATURED SHOPS ROW ────────────────────────── */}
+      <VendorShowcase />
 
       {/* ── FAQ ───────────────────────────────────────────────────────── */}
       <section style={{ padding:'60px 16px', background:'#f4f5fb' }}>
