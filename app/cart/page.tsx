@@ -32,10 +32,10 @@ export default function CartPage() {
   return (
     <FlexiLayout>
       <div className="min-h-screen bg-background">
-        <div className="bg-secondary/10 py-8 px-4 border-b border-border">
-          <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-serif font-bold text-foreground">Shopping Cart</h1>
-            <p className="text-muted-foreground">Review your items before checkout</p>
+        <div className="bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 py-12 px-4 border-b border-border">
+          <div className="max-w-7xl mx-auto text-center md:text-left">
+            <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-2">Shopping Cart</h1>
+            <p className="text-muted-foreground text-lg">Review your items before checkout</p>
           </div>
         </div>
 
@@ -47,7 +47,7 @@ export default function CartPage() {
                   {items.map(item => (
                     <Card key={item.id} className="p-4 md:p-6">
                       <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
-                        <div className="bg-gradient-to-br from-accent/20 to-primary/20 rounded-lg w-full sm:w-32 h-32 flex items-center justify-center text-5xl flex-shrink-0">
+                        <div className="bg-gradient-to-br from-accent/10 to-primary/10 rounded-2xl w-full sm:w-32 h-32 flex items-center justify-center text-5xl flex-shrink-0 border border-accent/10 shadow-sm">
                           {item.image}
                         </div>
                         <div className="flex-1">
@@ -65,14 +65,14 @@ export default function CartPage() {
                             </div>
                             <div>
                               <p className="text-muted-foreground text-xs md:text-sm mb-1">Installment</p>
-                              <p className="font-bold text-accent text-sm md:text-base">{item.installmentDuration} months</p>
+                              <p className="font-bold text-primary text-sm md:text-base">{item.installmentDuration} months</p>
                             </div>
                           </div>
                           <div className="flex items-center justify-between sm:justify-start gap-3">
                             <div className="flex items-center gap-2">
-                              <button onClick={() => handleQty(item.id, item.quantity - 1)} className="w-8 h-8 border border-border rounded-lg hover:bg-secondary/50 transition flex items-center justify-center">−</button>
-                              <Input type="number" value={item.quantity} onChange={e => handleQty(item.id, parseInt(e.target.value) || 1)} className="w-12 md:w-16 text-center h-8" min="1" />
-                              <button onClick={() => handleQty(item.id, item.quantity + 1)} className="w-8 h-8 border border-border rounded-lg hover:bg-secondary/50 transition flex items-center justify-center">+</button>
+                              <button onClick={() => handleQty(item.id, item.quantity - 1)} className="w-9 h-9 border border-border rounded-xl hover:bg-accent/10 hover:border-accent/30 transition flex items-center justify-center text-lg">−</button>
+                              <Input type="number" value={item.quantity} onChange={e => handleQty(item.id, parseInt(e.target.value) || 1)} className="w-14 md:w-16 text-center h-9 rounded-xl font-bold" min="1" />
+                              <button onClick={() => handleQty(item.id, item.quantity + 1)} className="w-9 h-9 border border-border rounded-xl hover:bg-accent/10 hover:border-accent/30 transition flex items-center justify-center text-lg">+</button>
                             </div>
                             <div className="sm:hidden text-right">
                               <p className="text-lg font-bold text-foreground">₨{(item.price * item.quantity).toLocaleString()}</p>
@@ -125,14 +125,14 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <div className="bg-primary/5 rounded-lg p-4 mb-6">
-                  <div className="mb-3">
-                    <p className="text-muted-foreground text-sm mb-1">Down Payment (20%)</p>
-                    <p className="text-2xl font-bold text-accent">₨{downPayment.toLocaleString()}</p>
+                <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-5 mb-6 border border-accent/10">
+                  <div className="mb-4">
+                    <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold mb-1">Down Payment (20%)</p>
+                    <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">₨{downPayment.toLocaleString()}</p>
                   </div>
-                  <div>
-                    <p className="text-muted-foreground text-sm mb-1">12-Month EMI</p>
-                    <p className="text-xl font-bold text-foreground">₨{monthlyPayment.toLocaleString()}/month</p>
+                  <div className="pt-4 border-t border-accent/10">
+                    <p className="text-muted-foreground text-xs uppercase tracking-wider font-bold mb-1">12-Month EMI</p>
+                    <p className="text-xl font-bold text-foreground">₨{monthlyPayment.toLocaleString()}<span className="text-sm font-normal text-muted-foreground">/month</span></p>
                   </div>
                 </div>
 
@@ -145,7 +145,9 @@ export default function CartPage() {
 
                 <div className="space-y-3">
                   <Link href="/checkout">
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-base h-12">Proceed to Checkout</Button>
+                    <Button className="w-full bg-gradient-to-r from-[#6366f1] to-[#4f46e5] hover:from-[#4f46e5] hover:to-[#4338ca] text-white text-base h-14 rounded-2xl shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98] font-bold">
+                      Proceed to Checkout
+                    </Button>
                   </Link>
                   <Link href="/products">
                     <Button variant="outline" className="w-full h-12">Continue Shopping</Button>
