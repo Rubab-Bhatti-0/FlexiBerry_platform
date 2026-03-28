@@ -204,8 +204,8 @@ const HeroCarousel = () => {
 
       {/* ── LEFT TEXT CONTENT ── */}
       <div className="relative h-full flex items-center" style={{ zIndex: 10 }}>
-        <div className="container mx-auto" style={{ paddingLeft: "clamp(24px, 5vw, 80px)", paddingRight: "clamp(24px, 5vw, 80px)" }}>
-          <div style={{ maxWidth: 500, marginLeft: 0 }}>
+        <div className="container mx-auto" style={{ paddingLeft: "clamp(32px, 8vw, 120px)", paddingRight: "clamp(32px, 8vw, 120px)" }}>
+          <div style={{ maxWidth: 550, marginLeft: 0 }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
@@ -252,20 +252,21 @@ const HeroCarousel = () => {
                 </p>
 
                 {/* CTA + pill */}
-                <div className="flex items-center gap-3 pt-3 flex-wrap">
+                <div className="flex items-center gap-3 pt-4 flex-wrap">
                   <Link href={slide.link}>
                     <button
-                      className="group flex items-center gap-2.5 font-bold text-base px-10 py-4 rounded-full hover:scale-[1.04] transition-transform"
+                      className="group flex items-center gap-3 font-bold text-base px-12 py-4.5 rounded-full hover:scale-[1.05] transition-transform whitespace-nowrap"
                       style={{
                         background: slide.accent,
                         color: "#fff",
                         boxShadow: `0 12px 36px ${slide.accent}50`,
                         transition: "background 0.4s, box-shadow 0.4s, transform 0.3s",
-                        letterSpacing: "0.3px",
+                        letterSpacing: "0.4px",
+                        minWidth: "fit-content",
                       }}
                     >
                       {slide.cta}
-                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" />
                     </button>
                   </Link>
                 </div>
