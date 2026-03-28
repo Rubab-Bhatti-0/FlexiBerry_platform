@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import { use } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
 import { ArrowLeft, Star, MapPin, BadgeCheck, ShoppingCart, Heart, Flame, TrendingUp, Package, Sparkles, Grid3X3, List, Search, X, Zap, Shield, ChevronRight } from 'lucide-react'
 import { VENDORS as VENDORS_ARRAY } from '@/lib/vendors'
@@ -23,17 +24,17 @@ VENDORS_ARRAY.forEach(v => {
   }
 })
 
-/* Mock Product Data */
+/* Mock Product Data with Real Images */
 const generateProducts = (shopId: string, category: string) => {
   const products = [
-    { id: '1', name: 'Premium Flagship Phone', price: 549999, original: 599999, discount: -8, rating: 4.8, reviews: 234, featured: true, sale: true, mo: 45834, image: '📱' },
-    { id: '2', name: 'Ultra Slim Laptop 15"', price: 429999, original: null, discount: -6, rating: 4.9, reviews: 156, featured: true, sale: false, mo: 35834, image: '💻' },
-    { id: '3', name: 'Wireless Earbuds Pro', price: 24999, original: 29999, discount: -17, rating: 4.5, reviews: 89, featured: false, sale: true, mo: 2083, image: '🎧' },
-    { id: '4', name: 'Smart Watch Series X', price: 34999, original: 39999, discount: -13, rating: 4.7, reviews: 123, featured: false, sale: true, mo: 2917, image: '⌚' },
-    { id: '5', name: 'Tablet 12" Display', price: 149999, original: 179999, discount: -17, rating: 4.6, reviews: 201, featured: true, sale: false, mo: 12500, image: '📲' },
-    { id: '6', name: 'Phone Camera Lens', price: 8999, original: 10999, discount: -18, rating: 4.4, reviews: 67, featured: false, sale: true, mo: 750, image: '📷' },
-    { id: '7', name: 'Portable Charger 50K', price: 6999, original: null, discount: null, rating: 4.5, reviews: 45, featured: false, sale: false, mo: 583, image: '🔋' },
-    { id: '8', name: 'Gaming Laptop RTX 4090', price: 799999, original: 899999, discount: -11, rating: 4.9, reviews: 189, featured: true, sale: true, mo: 66667, image: '🎮' },
+    { id: '1', name: 'Premium Flagship Phone', price: 549999, original: 599999, discount: -8, rating: 4.8, reviews: 234, featured: true, sale: true, mo: 45834, image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop' },
+    { id: '2', name: 'Ultra Slim Laptop 15"', price: 429999, original: null, discount: -6, rating: 4.9, reviews: 156, featured: true, sale: false, mo: 35834, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop' },
+    { id: '3', name: 'Wireless Earbuds Pro', price: 24999, original: 29999, discount: -17, rating: 4.5, reviews: 89, featured: false, sale: true, mo: 2083, image: 'https://images.unsplash.com/photo-1545127398-14699f92334b?w=400&h=400&fit=crop' },
+    { id: '4', name: 'Smart Watch Series X', price: 34999, original: 39999, discount: -13, rating: 4.7, reviews: 123, featured: false, sale: true, mo: 2917, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop' },
+    { id: '5', name: 'Tablet 12" Display', price: 149999, original: 179999, discount: -17, rating: 4.6, reviews: 201, featured: true, sale: false, mo: 12500, image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop' },
+    { id: '6', name: 'Phone Camera Lens', price: 8999, original: 10999, discount: -18, rating: 4.4, reviews: 67, featured: false, sale: true, mo: 750, image: 'https://images.unsplash.com/photo-1606986628025-35d57e735ae0?w=400&h=400&fit=crop' },
+    { id: '7', name: 'Portable Charger 50K', price: 6999, original: null, discount: null, rating: 4.5, reviews: 45, featured: false, sale: false, mo: 583, image: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&h=400&fit=crop' },
+    { id: '8', name: 'Gaming Laptop RTX 4090', price: 799999, original: 899999, discount: -11, rating: 4.9, reviews: 189, featured: true, sale: true, mo: 66667, image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=400&fit=crop' },
   ]
   return products
 }
@@ -41,6 +42,7 @@ const generateProducts = (shopId: string, category: string) => {
 /* ─────────────────── PRODUCT CARD ─────────────────── */
 const ProductCard = ({ product, themeColor }: { product: any; themeColor: string }) => {
   const [hovered, setHovered] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   return (
     <div
@@ -59,18 +61,42 @@ const ProductCard = ({ product, themeColor }: { product: any; themeColor: string
         display: 'flex',
         flexDirection: 'column' as const,
       }}>
-      {/* Image placeholder */}
+      {/* Image Container */}
       <div style={{
-        height: '140px',
+        height: '160px',
         background: `linear-gradient(135deg, ${themeColor}15, ${themeColor}08)`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '48px',
         position: 'relative',
         overflow: 'hidden',
       }}>
-        {product.image}
+        <img
+          src={product.image}
+          alt={product.name}
+          onLoad={() => setImgLoaded(true)}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: imgLoaded ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+          }}
+        />
+        {!imgLoaded && (
+          <div style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            background: `linear-gradient(135deg, ${themeColor}15, ${themeColor}08)`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '48px',
+          }}>
+            📦
+          </div>
+        )}
         {product.featured && (
           <div style={{
             position: 'absolute',
