@@ -219,15 +219,16 @@ const HeroCarousel = () => {
                 <div>
                   <h1
                     className="font-black text-white"
-                    style={{ fontSize: "clamp(2.2rem, 5.2vw, 4.8rem)", lineHeight: 1.04 }}
+                    style={{ fontSize: "clamp(2.6rem, 6.2vw, 5.2rem)", lineHeight: 1.08, letterSpacing: "-0.02em" }}
                   >
                     {slide.titleLine1}
                   </h1>
                   <h1
                     className="font-black"
                     style={{
-                      fontSize: "clamp(2.2rem, 5.2vw, 4.8rem)",
-                      lineHeight: 1.04,
+                      fontSize: "clamp(2.6rem, 6.2vw, 5.2rem)",
+                      lineHeight: 1.08,
+                      letterSpacing: "-0.02em",
                       color: slide.accent,
                       textShadow: `0 0 48px ${slide.accent}55`,
                       transition: "color 0.5s, text-shadow 0.5s",
@@ -240,29 +241,31 @@ const HeroCarousel = () => {
                 {/* Description */}
                 <p
                   style={{
-                    color: "rgba(255,255,255,0.58)",
-                    fontSize: "clamp(0.8rem, 1.4vw, 0.95rem)",
-                    lineHeight: 1.7,
-                    maxWidth: 390,
+                    color: "rgba(255,255,255,0.68)",
+                    fontSize: "clamp(0.95rem, 1.6vw, 1.1rem)",
+                    lineHeight: 1.75,
+                    maxWidth: 420,
+                    fontWeight: 400,
                   }}
                 >
                   {slide.description}
                 </p>
 
                 {/* CTA + pill */}
-                <div className="flex items-center gap-3 pt-1 flex-wrap">
+                <div className="flex items-center gap-3 pt-3 flex-wrap">
                   <Link href={slide.link}>
                     <button
-                      className="group flex items-center gap-2 font-bold text-sm px-7 py-3.5 rounded-2xl hover:scale-[1.03] transition-transform"
+                      className="group flex items-center gap-2.5 font-bold text-base px-10 py-4 rounded-full hover:scale-[1.04] transition-transform"
                       style={{
                         background: slide.accent,
                         color: "#fff",
-                        boxShadow: `0 8px 28px ${slide.accent}45`,
-                        transition: "background 0.4s, box-shadow 0.4s",
+                        boxShadow: `0 12px 36px ${slide.accent}50`,
+                        transition: "background 0.4s, box-shadow 0.4s, transform 0.3s",
+                        letterSpacing: "0.3px",
                       }}
                     >
                       {slide.cta}
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                     </button>
                   </Link>
                 </div>
