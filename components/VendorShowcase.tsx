@@ -52,54 +52,60 @@ const VendorShowcase = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Header row */}
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "48px", flexWrap: "wrap", gap: "16px" }}>
-          <div>
-            <p style={{
-              fontSize: "11px", fontWeight: 700, letterSpacing: "0.18em",
-              textTransform: "uppercase", color: "#2563eb", marginBottom: "10px"
-            }}>Verified Sellers</p>
-            <h2 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)",
-              fontWeight: 900,
-              color: "#0f172a",
-              letterSpacing: "-0.045em",
-              lineHeight: 1.05,
-              marginBottom: "10px"
-            }}>Top Vendors</h2>
-            <p style={{ fontSize: "1.05rem", color: "#64748b" }}>
-              Trusted sellers with verified products
-            </p>
-          </div>
+        <div style={{ textAlign: "center", marginBottom: "56px" }}>
+          <p style={{
+            fontSize: "11px", fontWeight: 700, letterSpacing: "0.18em",
+            textTransform: "uppercase", color: "#2563eb", marginBottom: "12px"
+          }}>Verified Sellers</p>
+          <h2 style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)",
+            fontWeight: 900,
+            color: "#0f172a",
+            letterSpacing: "-0.045em",
+            lineHeight: 1.05,
+            marginBottom: "16px"
+          }}>Top Vendors</h2>
+          <div style={{
+            width: "60px", height: "4px",
+            background: "linear-gradient(90deg, #2563eb, #7c3aed)",
+            borderRadius: "99px", margin: "0 auto 20px"
+          }} />
+          <p style={{ fontSize: "1.1rem", color: "#64748b", maxWidth: "600px", margin: "0 auto 32px" }}>
+            Trusted sellers with verified products and flexible installment plans for every budget.
+          </p>
           <Link
             href="/shops"
             style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
-              padding: "12px 24px", borderRadius: "14px",
+              padding: "14px 32px", borderRadius: "16px",
               background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-              color: "#fff", fontWeight: 700, fontSize: "14px",
+              color: "#fff", fontWeight: 700, fontSize: "15px",
               textDecoration: "none",
-              boxShadow: "0 6px 20px rgba(37,99,235,0.30)",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease"
+              boxShadow: "0 8px 24px rgba(37,99,235,0.25)",
+              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
             }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 10px 28px rgba(37,99,235,0.40)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 32px rgba(37,99,235,0.35)";
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 20px rgba(37,99,235,0.30)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(37,99,235,0.25)";
             }}
           >
-            View All Shops <ArrowRight size={15} />
+            Explore All Shops <ArrowRight size={16} />
           </Link>
         </div>
 
         {/* Cards */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "24px"
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "32px",
+          justifyContent: "center",
+          maxWidth: "1100px",
+          margin: "0 auto"
         }}>
           {featuredVendors.map((shop, i) => {
             const theme = vendorThemes[i % vendorThemes.length];
