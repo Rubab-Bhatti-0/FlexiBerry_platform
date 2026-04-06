@@ -8,6 +8,7 @@ import HeroCarousel from '@/components/HeroCarousel'
 import VendorShowcase from '@/components/VendorShowcase'
 import { VENDORS } from '@/lib/vendors'
 import { PRODUCTS_DATA } from '@/lib/products'
+import { CATEGORY_THEMES } from '@/components/ui/carousel'
 
 /* ── DATA ───────────────────────────────────────────────────────────────── */
 const TICKER = [
@@ -32,16 +33,16 @@ const SLIDES = [
 ]
 
 const CATS = [
-  { name:'Smartphones',    sub:'Latest iPhones & Android',  e:'📱', bg:'#fff0f0', bd:'#fecdd3', slug:'smartphones' },
-  { name:'Laptops',        sub:'MacBooks, Gaming & More',    e:'💻', bg:'#f5f3ff', bd:'#ddd6fe', slug:'laptops'     },
-  { name:'Scotty & Bikes', sub:'Motor Cycles & Scotties',    e:'🏍️', bg:'#fff7ed', bd:'#fed7aa', slug:'bikes'       },
-  { name:'Appliances',     sub:'AC, LED, Fridge & More',     e:'🌀', bg:'#eff6ff', bd:'#bfdbfe', slug:'appliances'  },
-  { name:'Solar Systems',  sub:'Complete Solar Solutions',   e:'☀️', bg:'#fefce8', bd:'#fef08a', slug:'solar'       },
-  { name:'Furniture',      sub:'Home & Office Furniture',    e:'🛋️', bg:'#f0fdfa', bd:'#99f6e4', slug:'furniture'   },
-  { name:'Jahez Packages', sub:'Bundle 4–5 Item Packages',   e:'📦', bg:'#fdf2f8', bd:'#f9a8d4', slug:'jahez'       },
-  { name:'Car Financing',  sub:'Easy Car Installments',      e:'🚗', bg:'#ecfeff', bd:'#a5f3fc', slug:'cars'        },
-  { name:'Business Stock', sub:'Raw Materials & Stock',      e:'🏭', bg:'#f0fdf4', bd:'#bbf7d0', slug:'business'    },
-  { name:'General Store',  sub:'Everything Else',            e:'🛒', bg:'#fffbeb', bd:'#fde68a', slug:'general'     },
+  { name:'Smartphones',    sub:'Latest iPhones & Android',  e:'📱', slug:'smartphones' },
+  { name:'Laptops',        sub:'MacBooks, Gaming & More',    e:'💻', slug:'laptops'     },
+  { name:'Scotty & Bikes', sub:'Motor Cycles & Scotties',    e:'🏍️', slug:'bikes'       },
+  { name:'Appliances',     sub:'AC, LED, Fridge & More',     e:'🌀', slug:'appliances'  },
+  { name:'Solar Systems',  sub:'Complete Solar Solutions',   e:'☀️', slug:'solar'       },
+  { name:'Furniture',      sub:'Home & Office Furniture',    e:'🛋️', slug:'furniture'   },
+  { name:'Jahez Packages', sub:'Bundle 4–5 Item Packages',   e:'📦', slug:'jahez'       },
+  { name:'Car Financing',  sub:'Easy Car Installments',      e:'🚗', slug:'cars'        },
+  { name:'Business Stock', sub:'Raw Materials & Stock',      e:'🏭', slug:'business'    },
+  { name:'General Store',  sub:'Everything Else',            e:'🛒', slug:'general'     },
 ]
 
 const PRODUCTS = Object.values(PRODUCTS_DATA).slice(0, 5).map(p => ({
@@ -268,21 +269,43 @@ export default function HomePage() {
             </p>
           </div>
           <div className="cg" style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:14 }}>
-            {CATS.map(cat => (
+            {CATS.map(cat => {
+              const theme = CATEGORY_THEMES[cat.slug] || CATEGORY_THEMES.general
+              return (
               <Link key={cat.slug} href={`/products?category=${cat.slug}`} className="cat-lift"
                     style={{ display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
                              padding:'22px 10px 18px', borderRadius:18, textDecoration:'none',
-                             background:cat.bg, border:`1.5px solid ${cat.bd}` }}>
-                <div style={{ width:52, height:52, borderRadius:14, background:'#fff',
-                               boxShadow:`0 4px 16px ${cat.bd}80`, display:'flex',
+                             background:theme.bg, border:`1.5px solid ${theme.primary}1a`,
+                             transition:'all 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+                             position:'relative', overflow:'hidden' }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement
+                      el.style.transform = 'translateY(-4px) scale(1.02)'
+                      el.style.boxShadow = `0 12px 28px ${theme.primary}22`
+                      el.style.borderColor = `${theme.primary}33`
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement
+                      el.style.transform = 'translateY(0) scale(1)'
+                      el.style.boxShadow = 'none'
+                      el.style.borderColor = `${theme.primary}1a`
+                    }}>
+                <div style={{ position:'absolute', top:'-25%', right:'-15%', width:'100px', height:'100px',
+                               borderRadius:'50%', background:theme.primary, opacity:theme.glowOp*0.4,
+                               filter:'blur(40px)', pointerEvents:'none' }} />
+                <div style={{ width:52, height:52, borderRadius:14, background:`${theme.primary}12`,
+                               boxShadow:`0 4px 16px ${theme.primary}20`, display:'flex',
                                alignItems:'center', justifyContent:'center', fontSize:26,
-                               marginBottom:10, border:`1px solid ${cat.bd}` }}>
+                               marginBottom:10, border:`1.5px solid ${theme.primary}2a`,
+                               position:'relative', zIndex:1, transition:'all 0.3s ease' }}>
                   {cat.e}
                 </div>
-                <div style={{ fontSize:13, fontWeight:800, color:'#111827', lineHeight:1.3 }}>{cat.name}</div>
-                <div style={{ fontSize:11.5, color:'#9ca3af', marginTop:3, lineHeight:1.4 }}>{cat.sub}</div>
+                <div style={{ fontSize:13, fontWeight:800, color:theme.primary, lineHeight:1.3,
+                               position:'relative', zIndex:1 }}>{cat.name}</div>
+                <div style={{ fontSize:11.5, color:'#9ca3af', marginTop:3, lineHeight:1.4,
+                               position:'relative', zIndex:1 }}>{cat.sub}</div>
               </Link>
-            ))}
+            )}}
           </div>
         </div>
       </section>

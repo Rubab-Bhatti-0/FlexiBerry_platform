@@ -1,174 +1,142 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import { 
   Smartphone, Laptop, Bike, Wind, Sun, 
   Armchair, Package, Car, Box, ShoppingBag 
 } from 'lucide-react'
+import { CATEGORY_THEMES } from '@/components/ui/carousel'
 
 interface Category {
   id: string
   name: string
-  items: number
+  slug: string
   icon: React.ElementType
-  color: string
-  bgColor: string
-  iconBg: string
 }
 
 const categories: Category[] = [
-  {
-    id: 'smartphones',
-    name: 'Smartphones',
-    items: 0,
-    icon: Smartphone,
-    color: '#FF3B5C', // From CATEGORY_THEMES.smartphones.primary
-    bgColor: '#fff1f2', // From CATEGORY_THEMES.smartphones.bg
-    iconBg: '#ffe4e6' // Rose-100
-  },
-  {
-    id: 'laptops',
-    name: 'Laptops',
-    items: 0,
-    icon: Laptop,
-    color: '#7C3AED', // From CATEGORY_THEMES.laptops.primary
-    bgColor: '#f5f3ff', // From CATEGORY_THEMES.laptops.bg
-    iconBg: '#ede9fe' // Violet-100
-  },
-  {
-    id: 'scotty-bikes',
-    name: 'Scotty & Bikes',
-    items: 1,
-    icon: Bike,
-    color: '#F97316', // From CATEGORY_THEMES.bikes.primary
-    bgColor: '#fff7ed', // From CATEGORY_THEMES.bikes.bg
-    iconBg: '#fed7aa' // Orange-100
-  },
-  {
-    id: 'appliances',
-    name: 'Appliances',
-    items: 2,
-    icon: Wind,
-    color: '#92400e', // From CATEGORY_THEMES.appliances.primary
-    bgColor: '#fffbeb', // From CATEGORY_THEMES.appliances.bg
-    iconBg: '#fef3c7' // Amber-100
-  },
-  {
-    id: 'solar-systems',
-    name: 'Solar Systems',
-    items: 0,
-    icon: Sun,
-    color: '#EAB308', // From CATEGORY_THEMES.solar.primary
-    bgColor: '#fefce8', // From CATEGORY_THEMES.solar.bg
-    iconBg: '#fef08a' // Yellow-100
-  },
-  {
-    id: 'furniture',
-    name: 'Furniture',
-    items: 0,
-    icon: Armchair,
-    color: '#10B981', // From CATEGORY_THEMES.furniture.primary
-    bgColor: '#f0fdfa', // From CATEGORY_THEMES.furniture.bg
-    iconBg: '#d1fae5' // Emerald-100
-  },
-  {
-    id: 'jahez-packages',
-    name: 'Jahez Packages',
-    items: 1,
-    icon: Package,
-    color: '#EC4899', // From CATEGORY_THEMES.jahez.primary
-    bgColor: '#fdf2f8', // From CATEGORY_THEMES.jahez.bg
-    iconBg: '#fbcfe8' // Pink-100
-  },
-  {
-    id: 'car-financing',
-    name: 'Car Financing',
-    items: 0,
-    icon: Car,
-    color: '#0EA5E9', // From CATEGORY_THEMES.cars.primary
-    bgColor: '#ecfeff', // From CATEGORY_THEMES.cars.bg
-    iconBg: '#cffafe' // Cyan-100
-  },
-  {
-    id: 'business-stock',
-    name: 'Business Stock',
-    items: 0,
-    icon: Box,
-    color: '#84CC16', // From CATEGORY_THEMES.business.primary
-    bgColor: '#f7fee7', // From CATEGORY_THEMES.business.bg
-    iconBg: '#ecfccb' // Lime-100
-  },
-  {
-    id: 'general-store',
-    name: 'General Store',
-    items: 0,
-    icon: ShoppingBag,
-    color: '#0EA5E9', // From CATEGORY_THEMES.general.primary
-    bgColor: '#ecfeff', // From CATEGORY_THEMES.general.bg
-    iconBg: '#cffafe' // Cyan-100
-  }
+  { id: 'smartphones', name: 'Smartphones', slug: 'smartphones', icon: Smartphone },
+  { id: 'laptops', name: 'Laptops', slug: 'laptops', icon: Laptop },
+  { id: 'bikes', name: 'Scotty & Bikes', slug: 'bikes', icon: Bike },
+  { id: 'appliances', name: 'Appliances', slug: 'appliances', icon: Wind },
+  { id: 'solar', name: 'Solar Systems', slug: 'solar', icon: Sun },
+  { id: 'furniture', name: 'Furniture', slug: 'furniture', icon: Armchair },
+  { id: 'jahez', name: 'Jahez Packages', slug: 'jahez', icon: Package },
+  { id: 'cars', name: 'Car Financing', slug: 'cars', icon: Car },
+  { id: 'business', name: 'Business Stock', slug: 'business', icon: Box },
+  { id: 'general', name: 'General Store', slug: 'general', icon: ShoppingBag }
 ]
 
 const ShopCategory = () => {
   return (
     <div style={{ padding: '40px 20px', maxWidth: '1400px', margin: '0 auto', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-        {categories.map((cat) => (
-          <div 
-            key={cat.id}
-            style={{
-              backgroundColor: cat.bgColor,
-              borderRadius: '24px',
-              padding: '24px 16px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textAlign: 'center',
-              cursor: 'pointer',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              border: '1px solid rgba(0,0,0,0.03)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)'
-              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0,0,0,0.05)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = 'none'
-            }}
-          >
-            <div style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '16px',
-              backgroundColor: cat.iconBg,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '16px',
-              color: cat.color
-            }}>
-              <cat.icon size={28} strokeWidth={1.5} />
-            </div>
-            <h3 style={{
-              fontSize: '16px',
-              fontWeight: 700,
-              color: cat.color,
-              margin: '0 0 4px 0'
-            }}>
-              {cat.name}
-            </h3>
-            <p style={{
-              fontSize: '13px',
-              color: '#94a3b8',
-              margin: 0,
-              fontWeight: 500
-            }}>
-              {cat.items} items
-            </p>
-          </div>
-        ))}
+        {categories.map((cat) => {
+          const theme = CATEGORY_THEMES[cat.slug] || CATEGORY_THEMES.general
+          
+          // Generate light icon background from primary color
+          const iconBgColor = `${theme.primary}15`
+          
+          return (
+            <Link 
+              key={cat.id}
+              href={`/products?category=${cat.slug}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <div 
+                style={{
+                  backgroundColor: theme.bg,
+                  borderRadius: '24px',
+                  padding: '24px 16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  border: `1.5px solid ${theme.primary}1a`,
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.transform = 'translateY(-6px) scale(1.02)'
+                  el.style.boxShadow = `0 16px 32px ${theme.primary}26`
+                  el.style.borderColor = `${theme.primary}33`
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.transform = 'translateY(0) scale(1)'
+                  el.style.boxShadow = 'none'
+                  el.style.borderColor = `${theme.primary}1a`
+                }}
+              >
+                {/* Accent glow blob */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '-30%',
+                    right: '-20%',
+                    width: '120px',
+                    height: '120px',
+                    borderRadius: '50%',
+                    background: theme.primary,
+                    opacity: theme.glowOp * 0.5,
+                    filter: 'blur(50px)',
+                    pointerEvents: 'none'
+                  }}
+                />
+                
+                {/* Icon container */}
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '16px',
+                  backgroundColor: iconBgColor,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '16px',
+                  color: theme.primary,
+                  border: `1.5px solid ${theme.primary}2a`,
+                  position: 'relative',
+                  zIndex: 1,
+                  transition: 'all 0.3s ease'
+                }}>
+                  <cat.icon size={32} strokeWidth={1.5} />
+                </div>
+                
+                {/* Category name */}
+                <h3 style={{
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  color: theme.primary,
+                  margin: '0 0 4px 0',
+                  position: 'relative',
+                  zIndex: 1
+                }}>
+                  {cat.name}
+                </h3>
+                
+                {/* Accent line */}
+                <div 
+                  style={{
+                    height: '2px',
+                    width: '24px',
+                    background: theme.primary,
+                    borderRadius: '1px',
+                    margin: '8px 0 0 0',
+                    opacity: 0.3,
+                    position: 'relative',
+                    zIndex: 1
+                  }}
+                />
+              </div>
+            </Link>
+          )
+        })}
       </div>
     </div>
   )

@@ -336,6 +336,8 @@ const ProductCard = ({ product, index, themeColor }: { product: any; index: numb
     : 0;
 
   const cat = categories.find(c => c.id === product.categoryId) || categories[0];
+  const categoryTheme = CATEGORY_THEMES[product.categoryId] || CATEGORY_THEMES.general;
+  const cardThemeColor = categoryTheme.primary;
 
   return (
     <Link href={`/products/${product.id}`} style={{ textDecoration: "none" }}>
@@ -416,16 +418,17 @@ const ProductCard = ({ product, index, themeColor }: { product: any; index: numb
         </button>
 
         {/* Image */}
-        <div style={{ position: "relative", aspectRatio: "1", background: "linear-gradient(to bottom right, #f9fafb, #f3f4f6)", overflow: "hidden" }}>
+        <div style={{ position: "relative", aspectRatio: "1", background: `linear-gradient(135deg, ${categoryTheme.bg} 0%, ${categoryTheme.tint} 100%)`, overflow: "hidden" }}>
           <Image src={product.image} alt={product.name} fill style={{ objectFit: 'contain', padding: '12px' }} />
-          <div style={{ position: "absolute", inset: 0, bottom: 0, height: 64, background: "linear-gradient(to top, rgba(0,0,0,0.1), transparent)" }} />
+          <div style={{ position: "absolute", inset: 0, bottom: 0, height: 64, background: `linear-gradient(to top, ${categoryTheme.primary}15, transparent)` }} />
         </div>
 
         {/* Content */}
         <div style={{ padding: 16 }}>
           {/* Category */}
           <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 8 }}>
-            <span style={{ fontSize: 10, fontWeight: 700, color: themeColor, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+            <div style={{ height: 6, width: 6, borderRadius: "50%", background: cardThemeColor }} />
+            <span style={{ fontSize: 10, fontWeight: 700, color: cardThemeColor, textTransform: "uppercase", letterSpacing: "0.05em" }}>
               {cat.name}
             </span>
           </div>
@@ -447,7 +450,7 @@ const ProductCard = ({ product, index, themeColor }: { product: any; index: numb
           {/* Price */}
           <div style={{ marginBottom: 8 }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }}>
-              <span style={{ fontSize: 20, fontWeight: 800, color: themeColor, fontFamily: "'Space Grotesk', sans-serif" }}>
+              <span style={{ fontSize: 20, fontWeight: 800, color: cardThemeColor, fontFamily: "'Space Grotesk', sans-serif" }}>
                 ₨{product.price.toLocaleString()}
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
@@ -469,20 +472,20 @@ const ProductCard = ({ product, index, themeColor }: { product: any; index: numb
         <div style={{ padding: "0 16px 16px", marginTop: "auto" }}>
           <button style={{
             width: "100%", padding: "10px", borderRadius: "10px",
-            background: `${themeColor}0d`, border: `1.5px solid ${themeColor}1a`,
-            color: themeColor, fontSize: "12px", fontWeight: 700,
+            background: `${cardThemeColor}0d`, border: `1.5px solid ${cardThemeColor}1a`,
+            color: cardThemeColor, fontSize: "12px", fontWeight: 700,
             display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
             cursor: "pointer", transition: "all 0.2s ease",
           }}
           onMouseEnter={e => {
             const el = e.currentTarget as HTMLElement;
-            el.style.background = themeColor;
+            el.style.background = cardThemeColor;
             el.style.color = "white";
           }}
           onMouseLeave={e => {
             const el = e.currentTarget as HTMLElement;
-            el.style.background = `${themeColor}0d`;
-            el.style.color = themeColor;
+            el.style.background = `${cardThemeColor}0d`;
+            el.style.color = cardThemeColor;
           }}
           >
             View Details <ArrowRight size={14} />
@@ -558,7 +561,7 @@ export default function ProductsPage() {
 
   return (
     <FlexiLayout>
-      <div style={{ background: theme.bg, minHeight: "100vh", padding: "20px 0 80px", transition: "background 0.5s ease" }}>
+      <div style={{ background: theme.bg, minHeight: "100vh", padding: "20px 0 80px", transition: "background 0.5s ease", backgroundImage: `linear-gradient(135deg, ${theme.bg} 0%, ${theme.tint} 100%)` }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 20px" }}>
           
           {/* Breadcrumbs */}
@@ -580,7 +583,8 @@ export default function ProductsPage() {
             border: `1.5px solid ${theme.primary}1a`, boxShadow: `0 10px 30px ${theme.primary}0d`,
             position: "relative", overflow: "hidden"
           }}>
-            <div style={{ position: "absolute", top: "-20px", right: "-20px", width: "150px", height: "150px", borderRadius: "50%", background: `${theme.primary}08` }} />
+            <div style={{ position: "absolute", top: "-20px", right: "-20px", width: "150px", height: "150px", borderRadius: "50%", background: `${theme.primary}08`, filter: `blur(80px)` }} />
+            <div style={{ position: "absolute", bottom: "-30px", left: "-30px", width: "120px", height: "120px", borderRadius: "50%", background: `${theme.glow}`, opacity: theme.glowOp, filter: `blur(60px)` }} />
             <div style={{ position: "relative", zIndex: 1 }}>
               <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
                 <span style={{ fontSize: "32px" }}>{activeCategory.e}</span>
