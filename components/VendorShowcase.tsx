@@ -59,11 +59,11 @@ const VendorShowcase = () => {
           }}>Verified Sellers</p>
           <h2 style={{
             fontFamily: "var(--font-display)",
-            fontSize: "clamp(2rem, 8vw, 3.4rem)",
+            fontSize: "clamp(2.2rem, 4.5vw, 3.4rem)",
             fontWeight: 900,
             color: "#0f172a",
             letterSpacing: "-0.045em",
-            lineHeight: 1.1,
+            lineHeight: 1.05,
             marginBottom: "16px"
           }}>Top Vendors</h2>
           <div style={{
@@ -101,8 +101,8 @@ const VendorShowcase = () => {
         {/* Cards */}
         <div style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "24px 32px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "32px",
           justifyContent: "center",
           maxWidth: "1100px",
           margin: "0 auto"
