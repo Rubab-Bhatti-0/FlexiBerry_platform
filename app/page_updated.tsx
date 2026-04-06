@@ -36,7 +36,7 @@ const CATS = [
   { name:'Solar Systems',  sub:'Complete Solar Solutions',   e:'☀️', bg:'#fefce8', bd:'#fef08a', slug:'solar'       },
   { name:'Furniture',      sub:'Home & Office Furniture',    e:'🛋️', bg:'#f0fdfa', bd:'#99f6e4', slug:'furniture'   },
   { name:'Jahez Packages', sub:'Bundle 4–5 Item Packages',   e:'📦', bg:'#fdf2f8', bd:'#f9a8d4', slug:'jahez'       },
-  { name:'Car Financing',  sub:'Easy Car Installments',      e:'🚗', bg:'#ecfeff', bd:'#a5f3fc', slug:'cars'        },
+  { name:'Car Financing',  sub:'Easy Car Installments',      e:'🚗', bg:'#fff1f2', bd:'#fecdd3', slug:'cars'        },
   { name:'Business Stock', sub:'Raw Materials & Stock',      e:'🏭', bg:'#f8fafc', bd:'#e2e8f0', slug:'business'    },
   { name:'General Store',  sub:'Everything Else',            e:'🛒', bg:'#fffbeb', bd:'#fde68a', slug:'general'     },
 ]

@@ -78,13 +78,13 @@ export const CATEGORY_THEMES: Record<
     darkBg:   "#001a0d",   // deep emerald-black
   },
   cars: {
-    primary:  "#0EA5E9",
-    alt:      "#7DD3FC",
-    bg:       "#ecfeff",
-    glow:     "#0284C7",
+    primary:  "#FF3B5C",
+    alt:      "#FF8C69",
+    bg:       "#fff1f2",
+    glow:     "#FF3B5C",
     glowOp:   0.28,
-    tint:     "rgba(2,132,199,0.18)",
-    darkBg:   "#00101f",   // deep ocean-black
+    tint:     "rgba(255,59,92,0.18)",
+    darkBg:   "#1f0008",   // deep crimson-black
   },
   business: {
     primary:  "#374151",

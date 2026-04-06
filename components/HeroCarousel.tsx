@@ -83,8 +83,8 @@ const slides = [
     description: "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
     cta: "Shop Cars",
     link: "/products?category=cars",
-    accent: "#7c3aed",
-    bg: "#100a1a",
+    accent: "#FF3B5C",
+    bg: "#1f0008",
   },
   {
     image: "/assets/carousel-9.jpg",
