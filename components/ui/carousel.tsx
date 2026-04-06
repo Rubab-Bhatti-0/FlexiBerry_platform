@@ -76,7 +76,7 @@ export const CATEGORY_THEMES: Record<
     glowOp:   0.28,
     tint:     "rgba(5,150,105,0.16)",
     darkBg:   "#001a0d",   // deep emerald-black
-  }
+  },
   cars: {
     primary:  "#0EA5E9",
     alt:      "#7DD3FC",
