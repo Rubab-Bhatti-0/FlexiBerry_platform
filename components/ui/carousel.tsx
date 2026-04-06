@@ -76,7 +76,7 @@ export const CATEGORY_THEMES: Record<
     glowOp:   0.28,
     tint:     "rgba(5,150,105,0.16)",
     darkBg:   "#001a0d",   // deep emerald-black
-  },
+  }
   cars: {
     primary:  "#0EA5E9",
     alt:      "#7DD3FC",
@@ -96,13 +96,13 @@ export const CATEGORY_THEMES: Record<
     darkBg:   "#0d1a00",   // deep lime-black
   },
   general: {
-    primary:  "#F59E0B",
-    alt:      "#FCD34D",
-    bg:       "#fffbeb",
-    glow:     "#D97706",
-    glowOp:   0.26,
-    tint:     "rgba(217,119,6,0.16)",
-    darkBg:   "#1a1000",   // deep amber-black
+    primary:  "#0EA5E9",
+    alt:      "#7DD3FC",
+    bg:       "#ecfeff",
+    glow:     "#0284C7",
+    glowOp:   0.28,
+    tint:     "rgba(2,132,199,0.18)",
+    darkBg:   "#00101f",   // deep ocean-blue
   },
 };
 

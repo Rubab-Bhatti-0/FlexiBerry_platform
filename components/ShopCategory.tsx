@@ -22,7 +22,7 @@ const categories: Category[] = [
     name: 'Smartphones',
     items: 0,
     icon: Smartphone,
-    color: '#b91c1c', // Red-700
+    color: '#FF3B5C', // Red from CATEGORY_THEMES
     bgColor: '#fff1f2', // Rose-50
     iconBg: '#ffe4e6' // Rose-100
   },
@@ -31,7 +31,7 @@ const categories: Category[] = [
     name: 'Laptops',
     items: 0,
     icon: Laptop,
-    color: '#6d28d9', // Violet-700
+    color: '#7C3AED', // Violet from CATEGORY_THEMES
     bgColor: '#f5f3ff', // Violet-50
     iconBg: '#ede9fe' // Violet-100
   },
@@ -40,61 +40,61 @@ const categories: Category[] = [
     name: 'Scotty & Bikes',
     items: 1,
     icon: Bike,
-    color: '#92400e', // Amber-800
-    bgColor: '#fffbeb', // Amber-50
-    iconBg: '#fef3c7' // Amber-100
+    color: '#F97316', // Orange from CATEGORY_THEMES
+    bgColor: '#fff7ed', // Orange-50
+    iconBg: '#fed7aa' // Orange-100
   },
   {
     id: 'appliances',
     name: 'Appliances',
     items: 2,
     icon: Wind,
-    color: '#b91c1c', // Red-700
-    bgColor: '#fff1f2', // Rose-50
-    iconBg: '#ffe4e6' // Rose-100
+    color: '#C026D3', // Magenta from CATEGORY_THEMES
+    bgColor: '#fdf4ff', // Magenta-50
+    iconBg: '#f3e8ff' // Magenta-100
   },
   {
     id: 'solar-systems',
     name: 'Solar Systems',
     items: 0,
     icon: Sun,
-    color: '#92400e', // Amber-800
-    bgColor: '#fffbeb', // Amber-50
-    iconBg: '#fef3c7' // Amber-100
+    color: '#EAB308', // Yellow from CATEGORY_THEMES
+    bgColor: '#fefce8', // Yellow-50
+    iconBg: '#fef08a' // Yellow-100
   },
   {
     id: 'furniture',
     name: 'Furniture',
     items: 0,
     icon: Armchair,
-    color: '#065f46', // Emerald-800
-    bgColor: '#f0fdf4', // Emerald-50
-    iconBg: '#dcfce7' // Emerald-100
+    color: '#10B981', // Green from CATEGORY_THEMES
+    bgColor: '#f0fdfa', // Green-50
+    iconBg: '#d1fae5' // Green-100
   },
   {
     id: 'jahez-packages',
     name: 'Jahez Packages',
     items: 1,
     icon: Package,
-    color: '#9d174d', // Pink-700
+    color: '#EC4899', // Pink from CATEGORY_THEMES
     bgColor: '#fdf2f8', // Pink-50
-    iconBg: '#fce7f3' // Pink-100
+    iconBg: '#fbcfe8' // Pink-100
   },
   {
     id: 'car-financing',
     name: 'Car Financing',
     items: 0,
     icon: Car,
-    color: '#1e40af', // Blue-800
-    bgColor: '#eff6ff', // Blue-50
-    iconBg: '#dbeafe' // Blue-100
+    color: '#0EA5E9', // Blue from CATEGORY_THEMES
+    bgColor: '#ecfeff', // Blue-50
+    iconBg: '#cffafe' // Blue-100
   },
   {
     id: 'business-stock',
     name: 'Business Stock',
     items: 0,
     icon: Box,
-    color: '#3f6212', // Lime-800
+    color: '#84CC16', // Lime from CATEGORY_THEMES
     bgColor: '#f7fee7', // Lime-50
     iconBg: '#ecfccb' // Lime-100
   },
@@ -103,9 +103,9 @@ const categories: Category[] = [
     name: 'General Store',
     items: 0,
     icon: ShoppingBag,
-    color: '#1e40af', // Blue-800
-    bgColor: '#eff6ff', // Blue-50
-    iconBg: '#dbeafe' // Blue-100
+    color: '#0EA5E9', // Blue from CATEGORY_THEMES (general)
+    bgColor: '#ecfeff', // Blue-50
+    iconBg: '#cffafe' // Blue-100
   }
 ]
 
