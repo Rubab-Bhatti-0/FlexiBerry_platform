@@ -512,7 +512,7 @@ export default function HomePage() {
 
       {/* ── HOW IT WORKS ──────────────────────────────────────────────── */}
       <section id="how-it-works" style={{
-        padding:'64px 16px', background:'linear-gradient(180deg,#eef2ff,#f4f5fb)',
+        padding:'clamp(48px, 8vw, 80px) 16px', background:'linear-gradient(180deg,#eef2ff,#f4f5fb)',
       }}>
         <div style={{ maxWidth:1340, margin:'0 auto', textAlign:'center' }}>
           <div style={{ fontSize:11, fontWeight:900, letterSpacing:'0.18em', textTransform:'uppercase', color:'#6366f1', marginBottom:8 }}>
@@ -527,7 +527,11 @@ export default function HomePage() {
           <div style={{ width:48, height:3, background:'linear-gradient(90deg,#6366f1,#8b5cf6)',
                          borderRadius:99, margin:'0 auto 44px' }} />
 
-          <div className="sg" style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:18 }}>
+          <div className="sg" style={{ 
+            display:'grid', 
+            gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))', 
+            gap:24 
+          }}>
             {[
               { n:1, g1:'#3b82f6', g2:'#4f46e5', e:'👤', t:'Create Account',       d:'Sign up in minutes with your basic details. No paperwork, no hassle.' },
               { n:2, g1:'#8b5cf6', g2:'#6d28d9', e:'📄', t:'Upload Documents',     d:'Submit CNIC, selfie & salary slip for fast KYC verification.' },

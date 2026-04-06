@@ -121,9 +121,9 @@ const HeroCarousel = () => {
 
   return (
     <section
-      className="relative overflow-hidden"
+      className="relative overflow-hidden w-full"
       style={{
-        height: "clamp(400px, 52vw, 560px)",
+        height: "clamp(480px, 85vh, 600px)",
         backgroundColor: slide.bg,
         transition: "background-color 0.9s ease",
       }}
@@ -139,20 +139,21 @@ const HeroCarousel = () => {
           className="absolute inset-0"
           style={{ zIndex: 1 }}
         >
-          {/* Image occupies right 60% of the banner */}
-          <div className="absolute top-0 right-0 h-full" style={{ width: "62%" }}>
+          {/* Image occupies right part of the banner, becomes background on mobile */}
+          <div className="absolute top-0 right-0 h-full w-full md:w-[62%]" style={{ zIndex: 1 }}>
             <img
               src={slide.image}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover opacity-40 md:opacity-100"
               style={{ objectPosition: "center center" }}
             />
           </div>
 
-          {/* Left-to-right gradient: solid bg colour → transparent */}
+          {/* Responsive gradient overlay */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 hidden md:block"
             style={{
+              zIndex: 2,
               background: `linear-gradient(
                 to right,
                 ${slide.bg} 0%,
@@ -162,6 +163,18 @@ const HeroCarousel = () => {
                 ${slide.bg}66 60%,
                 ${slide.bg}22 72%,
                 transparent 85%
+              )`,
+            }}
+          />
+          <div
+            className="absolute inset-0 block md:hidden"
+            style={{
+              zIndex: 2,
+              background: `linear-gradient(
+                to bottom,
+                ${slide.bg}cc 0%,
+                ${slide.bg}ee 40%,
+                ${slide.bg} 100%
               )`,
             }}
           />
@@ -202,10 +215,10 @@ const HeroCarousel = () => {
         }}
       />
 
-      {/* ── LEFT TEXT CONTENT ── */}
+      {/* ── TEXT CONTENT ── */}
       <div className="relative h-full flex items-center" style={{ zIndex: 10 }}>
-        <div className="container mx-auto" style={{ paddingLeft: "clamp(32px, 8vw, 120px)", paddingRight: "clamp(32px, 8vw, 120px)" }}>
-          <div style={{ maxWidth: 550, marginLeft: 0 }}>
+        <div className="container mx-auto px-6 md:px-12 lg:px-20">
+          <div className="max-w-[550px] mx-auto md:ml-0 text-center md:text-left">
             <AnimatePresence mode="wait">
               <motion.div
                 key={current}
@@ -240,6 +253,7 @@ const HeroCarousel = () => {
 
                 {/* Description */}
                 <p
+                  className="mx-auto md:ml-0"
                   style={{
                     color: "rgba(255,255,255,0.68)",
                     fontSize: "clamp(0.95rem, 1.6vw, 1.1rem)",
@@ -252,7 +266,7 @@ const HeroCarousel = () => {
                 </p>
 
                 {/* CTA + pill */}
-                <div className="flex items-center gap-3 pt-4 flex-wrap">
+                <div className="flex items-center justify-center md:justify-start gap-3 pt-4 flex-wrap">
                   <Link href={slide.link}>
                     <button
                       className="group flex items-center gap-2.5 font-bold hover:scale-[1.04] active:scale-[0.98] transition-all whitespace-nowrap"
@@ -281,12 +295,12 @@ const HeroCarousel = () => {
       </div>
 
       {/* ── PREV / NEXT ARROWS ── */}
-      {[{ fn: prev, Icon: ChevronLeft, side: "left-6 md:left-8" }, { fn: next, Icon: ChevronRight, side: "right-6 md:right-8" }].map(
+      {[{ fn: prev, Icon: ChevronLeft, side: "left-4 md:left-8" }, { fn: next, Icon: ChevronRight, side: "right-4 md:right-8" }].map(
         ({ fn, Icon, side }) => (
           <button
             key={side}
             onClick={fn}
-            className={`absolute ${side} top-1/2 -translate-y-1/2 h-10 w-10 md:h-11 md:w-11 rounded-full flex items-center justify-center transition-all hover:scale-110`}
+            className={`absolute ${side} top-1/2 -translate-y-1/2 h-10 w-10 md:h-11 md:w-11 rounded-full hidden sm:flex items-center justify-center transition-all hover:scale-110`}
             style={{
               zIndex: 20,
               background: "rgba(255,255,255,0.08)",
