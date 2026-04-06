@@ -10,6 +10,7 @@ import {
   SlidersHorizontal, X, Sparkles, Grid3X3, List,
 } from "lucide-react";
 import { VENDORS } from "@/lib/vendors";
+import { CATEGORY_THEMES } from "@/components/ui/carousel";
 
 /* Global scrollbar styling */
 if (typeof document !== 'undefined') {
@@ -45,9 +46,26 @@ const PLATFORM_STATS = [
   { label: "Cities Covered", value: "120+", icon: MapPin, color: "#10b981" },
 ];
 
+// Helper to get theme from CATEGORY_THEMES
+const getThemeForCategory = (catName: string) => {
+  if (catName === "All") return CATEGORY_THEMES.general;
+  const slug = catName.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
+  // Special mappings if needed
+  if (slug === "home-living") return CATEGORY_THEMES.furniture;
+  if (slug === "motors-energy") return CATEGORY_THEMES.cars;
+  if (slug === "solar-energy") return CATEGORY_THEMES.solar;
+  if (slug === "jahez-dowry") return CATEGORY_THEMES.jahez;
+  if (slug === "bikes-scooters") return CATEGORY_THEMES.bikes;
+  if (slug === "mobiles") return CATEGORY_THEMES.smartphones;
+  if (slug === "electronics") return CATEGORY_THEMES.laptops;
+  
+  return CATEGORY_THEMES[slug] || CATEGORY_THEMES.general;
+};
+
 /* ─────────────────── SHOP CARD ─────────────────── */
 const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: number; view: "grid" | "list" }) => {
   const [hovered, setHovered] = useState(false);
+  const theme = getThemeForCategory(vendor.category);
 
   if (view === "list") {
     return (
@@ -57,8 +75,8 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
         style={{
           background: "white",
           borderRadius: "20px",
-          border: `1.5px solid ${hovered ? "rgba(37,99,235,0.25)" : "rgba(37,99,235,0.08)"}`,
-          boxShadow: hovered ? "0 12px 40px rgba(37,99,235,0.14), 0 2px 8px rgba(0,0,0,0.04)" : "0 2px 12px rgba(0,0,0,0.04)",
+          border: `1.5px solid ${hovered ? `${theme.primary}40` : "rgba(37,99,235,0.08)"}`,
+          boxShadow: hovered ? `0 12px 40px ${theme.primary}20, 0 2px 8px rgba(0,0,0,0.04)` : "0 2px 12px rgba(0,0,0,0.04)",
           padding: "20px 24px",
           display: "flex", alignItems: "center", gap: "20px",
           transition: "all 0.25s cubic-bezier(0.22,1,0.36,1)",
@@ -84,16 +102,16 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
             <span style={{ fontSize: "16px", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>
               {vendor.name}
             </span>
-            {vendor.verified && <BadgeCheck size={15} color="#2563eb" fill="rgba(37,99,235,0.15)" />}
+            {vendor.verified && <BadgeCheck size={15} color={theme.primary} fill={`${theme.primary}26`} />}
             {vendor.featured && (
               <span style={{
                 fontSize: "9px", fontWeight: 800, padding: "2px 7px", borderRadius: "99px",
-                background: "linear-gradient(135deg, #2563eb, #7c3aed)", color: "white",
+                background: `linear-gradient(135deg, ${theme.primary}, ${theme.alt})`, color: "white",
               }}>FEATURED</span>
             )}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" as const }}>
-            <span style={{ fontSize: "12px", fontWeight: 700, padding: "2px 9px", borderRadius: "99px", background: vendor.categoryBg, color: vendor.categoryColor }}>{vendor.category}</span>
+            <span style={{ fontSize: "12px", fontWeight: 700, padding: "2px 9px", borderRadius: "99px", background: theme.bg, color: theme.primary }}>{vendor.category}</span>
             <span style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "12px", color: "#64748b" }}>
               <MapPin size={11} /> {vendor.city}
             </span>
@@ -112,7 +130,7 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
           </div>
           {vendor.installments && (
             <div style={{ textAlign: "center" as const }}>
-              <div style={{ fontSize: "13px", fontWeight: 800, color: "#2563eb" }}>⚡ Kisti</div>
+              <div style={{ fontSize: "13px", fontWeight: 800, color: theme.primary }}>⚡ Kisti</div>
               <div style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 600 }}>Available</div>
             </div>
           )}
@@ -122,12 +140,12 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
           <button style={{
             display: "flex", alignItems: "center", gap: "6px",
             padding: "10px 20px", borderRadius: "12px",
-            background: hovered ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "transparent",
-            border: `1.5px solid ${hovered ? "transparent" : "rgba(37,99,235,0.20)"}`,
-            color: hovered ? "white" : "#2563eb",
+            background: hovered ? `linear-gradient(135deg, ${theme.primary}, ${theme.alt})` : "transparent",
+            border: `1.5px solid ${hovered ? "transparent" : `${theme.primary}33`}`,
+            color: hovered ? "white" : theme.primary,
             fontSize: "13px", fontWeight: 700,
             cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-            boxShadow: hovered ? "0 6px 20px rgba(37,99,235,0.35)" : "none",
+            boxShadow: hovered ? `0 6px 20px ${theme.primary}50` : "none",
             transition: "all 0.2s ease",
           }}>
             Visit Shop <ArrowUpRight size={14} strokeWidth={2.5} />
@@ -144,9 +162,9 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
       style={{
         background: "white",
         borderRadius: "22px",
-        border: `1.5px solid ${hovered ? "rgba(37,99,235,0.22)" : "rgba(37,99,235,0.07)"}`,
+        border: `1.5px solid ${hovered ? `${theme.primary}38` : "rgba(37,99,235,0.07)"}`,
         boxShadow: hovered
-          ? "0 20px 50px rgba(37,99,235,0.14), 0 6px 16px rgba(0,0,0,0.06)"
+          ? `0 20px 50px ${theme.primary}24, 0 6px 16px rgba(0,0,0,0.06)`
           : "0 2px 12px rgba(0,0,0,0.04)",
         overflow: "hidden",
         transition: "all 0.3s cubic-bezier(0.22,1,0.36,1)",
@@ -211,10 +229,10 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
           <div style={{
             position: "absolute", bottom: "-16px", left: "56px",
             height: "22px", width: "22px", borderRadius: "50%",
-            background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+            background: `linear-gradient(135deg, ${theme.primary}, ${theme.alt})`,
             display: "flex", alignItems: "center", justifyContent: "center",
             border: "2px solid white",
-            boxShadow: "0 2px 8px rgba(37,99,235,0.40)",
+            boxShadow: `0 2px 8px ${theme.primary}66`,
           }}>
             <BadgeCheck size={12} color="white" fill="transparent" />
           </div>
@@ -222,80 +240,51 @@ const ShopCard = ({ vendor, index, view }: { vendor: typeof VENDORS[0]; index: n
       </div>
       {/* ── Body ── */}
       <div style={{ padding: "28px 18px 18px", flex: 1, display: "flex", flexDirection: "column" as const }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "6px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "12px" }}>
           <div>
-            <h3 style={{ fontSize: "15px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-              {vendor.name}
-            </h3>
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "5px", flexWrap: "wrap" as const }}>
-              <span style={{
-                fontSize: "11px", fontWeight: 700, padding: "2px 9px", borderRadius: "99px",
-                background: vendor.categoryBg, color: vendor.categoryColor,
-              }}>{vendor.category}</span>
-              <span style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "11px", color: "#94a3b8", fontWeight: 500 }}>
+            <h3 style={{ fontSize: "15px", fontWeight: 800, color: "#0f172a", margin: "0 0 4px", letterSpacing: "-0.01em" }}>{vendor.name}</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, padding: "2px 8px", borderRadius: "99px", background: theme.bg, color: theme.primary }}>{vendor.category}</span>
+              <span style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "11px", color: "#64748b", fontWeight: 500 }}>
                 <MapPin size={10} /> {vendor.city}
               </span>
             </div>
           </div>
-          <div style={{
-            display: "flex", alignItems: "center", gap: "3px",
-            padding: "4px 9px", borderRadius: "99px",
-            background: "rgba(245,158,11,0.10)",
-            border: "1.5px solid rgba(245,158,11,0.20)",
-            flexShrink: 0,
-          }}>
-            <Star size={11} fill="#f59e0b" color="#f59e0b" />
-            <span style={{ fontSize: "11px", fontWeight: 800, color: "#b45309" }}>{vendor.rating}</span>
+          <div style={{ textAlign: "right" as const }}>
+            <div style={{ fontSize: "14px", fontWeight: 800, color: "#f59e0b" }}>★ {vendor.rating}</div>
+            <div style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 600 }}>{vendor.reviews.toLocaleString()}</div>
           </div>
         </div>
-        <p style={{
-          fontSize: "12px", color: "#64748b", lineHeight: 1.55,
-          margin: "8px 0 14px", flex: 1,
-          display: "-webkit-box" as any,
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical" as any,
-          overflow: "hidden",
-        }}>
+        
+        <p style={{ fontSize: "12px", color: "#64748b", margin: "0 0 18px", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
           {vendor.description}
         </p>
-        <div style={{
-          display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
-          borderTop: "1px solid rgba(37,99,235,0.07)",
-          borderBottom: "1px solid rgba(37,99,235,0.07)",
-          margin: "0 -2px 14px",
-          padding: "10px 4px",
-        }}>
-          {[
-            { val: vendor.products.toString(), label: "Products", color: "#2563eb" },
-            { val: `${vendor.reviews >= 1000 ? (vendor.reviews / 1000).toFixed(1) + "k" : vendor.reviews}`, label: "Reviews", color: "#7c3aed" },
-            { val: (vendor as any).established || "2023", label: "Since", color: "#10b981" },
-          ].map((s, i) => (
-            <div key={i} style={{
-              textAlign: "center" as const,
-              borderRight: i < 2 ? "1px solid rgba(37,99,235,0.07)" : "none",
-              padding: "0 4px",
-            }}>
-              <div style={{ fontSize: "14px", fontWeight: 800, color: s.color }}>{s.val}</div>
-              <div style={{ fontSize: "9px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" as const, letterSpacing: "0.06em" }}>{s.label}</div>
+
+        <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "14px", borderTop: "1px solid rgba(0,0,0,0.04)" }}>
+          <div style={{ display: "flex", gap: "12px" }}>
+            <div>
+              <div style={{ fontSize: "13px", fontWeight: 800, color: "#0f172a" }}>{vendor.products}</div>
+              <div style={{ fontSize: "9px", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>Products</div>
             </div>
-          ))}
+            {vendor.installments && (
+              <div>
+                <div style={{ fontSize: "13px", fontWeight: 800, color: theme.primary }}>⚡ Kisti</div>
+                <div style={{ fontSize: "9px", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>Available</div>
+              </div>
+            )}
+          </div>
+          <Link href={`/shop/${vendor.id}`} style={{ textDecoration: "none" }}>
+            <button style={{
+              height: "34px", width: "34px", borderRadius: "10px",
+              background: hovered ? theme.primary : "rgba(37,99,235,0.06)",
+              border: "none", color: hovered ? "white" : theme.primary,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", transition: "all 0.2s ease",
+            }}>
+              <ArrowUpRight size={16} strokeWidth={2.5} />
+            </button>
+          </Link>
         </div>
-        <Link href={`/shop/${vendor.id}`} style={{ textDecoration: "none" }}>
-          <button style={{
-            width: "100%", height: "40px", borderRadius: "12px",
-            background: hovered ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "rgba(37,99,235,0.06)",
-            border: `1.5px solid ${hovered ? "transparent" : "rgba(37,99,235,0.15)"}`,
-            color: hovered ? "white" : "#2563eb",
-            fontSize: "13px", fontWeight: 700,
-            cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
-            boxShadow: hovered ? "0 8px 24px rgba(37,99,235,0.38)" : "none",
-            transition: "all 0.25s cubic-bezier(0.22,1,0.36,1)",
-          }}>
-            Visit Shop
-            <ArrowUpRight size={14} strokeWidth={2.5} style={{ transition: "transform 0.2s", transform: hovered ? "translate(2px,-2px)" : "none" }} />
-          </button>
-        </Link>
       </div>
     </div>
   );
@@ -307,7 +296,6 @@ export default function ShopsPage() {
   const [activeCategory, setCategory] = useState("All");
   const [activeCity, setCity] = useState("All Cities");
   const [verifiedOnly, setVerified] = useState(false);
-  const [installOnly, setInstall] = useState(false);
   const [sortBy, setSort] = useState<"rating" | "products" | "reviews" | "newest">("rating");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [heroVisible, setHero] = useState(false);
@@ -316,6 +304,8 @@ export default function ShopsPage() {
     const t = setTimeout(() => setHero(true), 80);
     return () => clearTimeout(t);
   }, []);
+
+  const theme = useMemo(() => getThemeForCategory(activeCategory), [activeCategory]);
 
   const filtered = useMemo(() => {
     let list = [...VENDORS];
@@ -329,7 +319,6 @@ export default function ShopsPage() {
     if (activeCategory !== "All") list = list.filter(v => v.category === activeCategory);
     if (activeCity !== "All Cities") list = list.filter(v => v.city === activeCity);
     if (verifiedOnly) list = list.filter(v => v.verified);
-    if (installOnly) list = list.filter(v => v.installments);
 
     list.sort((a, b) => {
       if (sortBy === "rating") return b.rating - a.rating;
@@ -338,40 +327,37 @@ export default function ShopsPage() {
       return ((b as any).established || "2023").localeCompare((a as any).established || "2023");
     });
     return list;
-  }, [search, activeCategory, activeCity, verifiedOnly, installOnly, sortBy]);
-
-  const featured = filtered.filter(v => v.featured);
-  const rest = filtered.filter(v => !v.featured);
+  }, [search, activeCategory, activeCity, verifiedOnly, sortBy]);
 
   const activeFilterCount = [
     activeCategory !== "All",
     activeCity !== "All Cities",
     verifiedOnly,
-    installOnly,
     sortBy !== "rating",
     !!search.trim(),
   ].filter(Boolean).length;
 
   const resetFilters = () => {
     setSearch(""); setCategory("All"); setCity("All Cities");
-    setVerified(false); setInstall(false); setSort("rating");
+    setVerified(false); setSort("rating");
   };
 
   return (
     <FlexiLayout>
-      <div style={{ minHeight: "100vh", background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div style={{ minHeight: "100vh", background: theme.bg, fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background 0.5s ease" }}>
 
         {/* ── HERO SECTION ── */}
         <section style={{
-          background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 35%, #7c3aed 70%, #4c1d95 100%)",
+          background: `linear-gradient(135deg, ${theme.darkBg} 0%, ${theme.primary} 50%, ${theme.alt} 100%)`,
           padding: "64px 16px 80px",
           position: "relative", overflow: "hidden",
+          transition: "background 0.5s ease"
         }}>
           {/* Animated orbs */}
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
             <div style={{ position: "absolute", width: "500px", height: "500px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-150px", right: "-100px", animation: "floatOrb 8s ease-in-out infinite" }} />
             <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-80px", left: "10%", animation: "floatOrb 10s ease-in-out infinite 2s" }} />
-            <div style={{ position: "absolute", width: "200px", height: "200px", borderRadius: "50%", background: "rgba(124,58,237,0.25)", top: "20%", left: "40%", filter: "blur(40px)" }} />
+            <div style={{ position: "absolute", width: "200px", height: "200px", borderRadius: "50%", background: `${theme.glow}40`, top: "20%", left: "40%", filter: "blur(40px)" }} />
             <svg style={{ position: "absolute", right: "5%", top: 0, opacity: 0.07 }} width="400" height="300" viewBox="0 0 400 300">
               {Array.from({ length: 12 }).map((_, row) =>
                 Array.from({ length: 20 }).map((_, col) => (
@@ -427,11 +413,11 @@ export default function ShopsPage() {
                     fontFamily: "'Space Grotesk', sans-serif",
                     textShadow: "0 4px 24px rgba(0,0,0,0.20)",
                   }}>
-                    All Shops
+                    {activeCategory === "All" ? "All Shops" : activeCategory}
                   </h1>
                 </div>
                 <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "clamp(14px,2vw,17px)", margin: 0, fontWeight: 500, maxWidth: "480px", lineHeight: 1.55 }}>
-                  {VENDORS.length} verified sellers • Shop with confidence on FlexiBerry
+                  {filtered.length} verified sellers • Shop with confidence on FlexiBerry
                 </p>
               </div>
 
@@ -558,14 +544,23 @@ export default function ShopsPage() {
         {/* Curved bottom edge */}
         <div style={{
           position: "absolute", bottom: -1, left: 0, right: 0, height: "40px",
-          background: "linear-gradient(160deg, #f8faff 0%, #f3f0ff 60%, #f0fff8 100%)",
+          background: theme.bg,
           borderRadius: "60% 60% 0 0 / 100% 100% 0 0",
+          transition: "background 0.5s ease"
         }} />
 
       <style>{`
         @keyframes bounce {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-10px); }
+        }
+        @keyframes floatOrb {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-20px, 20px); }
+        }
+        @keyframes cardIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
 
@@ -574,8 +569,8 @@ export default function ShopsPage() {
           <div style={{
             background: "white",
             borderRadius: "20px",
-            border: "1.5px solid rgba(37,99,235,0.08)",
-            boxShadow: "0 4px 24px rgba(37,99,235,0.08)",
+            border: `1.5px solid ${theme.primary}20`,
+            boxShadow: `0 4px 24px ${theme.primary}15`,
             padding: "16px 20px",
             display: "flex", flexWrap: "wrap" as const, gap: "12px", alignItems: "center",
           }}>
@@ -583,9 +578,9 @@ export default function ShopsPage() {
             <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
               <div style={{
                 height: "32px", width: "32px", borderRadius: "9px",
-                background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                background: `linear-gradient(135deg, ${theme.primary}, ${theme.alt})`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 4px 12px rgba(37,99,235,0.35)",
+                boxShadow: `0 4px 12px ${theme.primary}40`,
               }}>
                 <SlidersHorizontal size={14} color="white" strokeWidth={2.5} />
               </div>
@@ -593,41 +588,42 @@ export default function ShopsPage() {
               {activeFilterCount > 0 && (
                 <span style={{
                   height: "18px", minWidth: "18px", borderRadius: "99px",
-                  background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                  background: `linear-gradient(135deg, ${theme.primary}, ${theme.alt})`,
                   fontSize: "10px", fontWeight: 800, color: "white",
                   display: "flex", alignItems: "center", justifyContent: "center", padding: "0 5px",
                 }}>{activeFilterCount}</span>
               )}
             </div>
 
-            <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
+            <div style={{ width: "1px", height: "28px", background: `${theme.primary}20`, flexShrink: 0 }} />
 
             {/* Category pills */}
             <div style={{ display: "flex", gap: "5px", overflowX: "auto" as const, scrollbarWidth: "none" as const, flex: 1, minWidth: 0 }}>
               {CATEGORIES.map(cat => {
                 const active = activeCategory === cat;
+                const catTheme = getThemeForCategory(cat);
                 return (
                   <button key={cat} onClick={() => setCategory(cat)} style={{
                     padding: "6px 14px", borderRadius: "99px", flexShrink: 0,
                     fontSize: "12px", fontWeight: 700,
-                    border: `1.5px solid ${active ? "#2563eb" : "rgba(37,99,235,0.12)"}`,
-                    background: active ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "transparent",
+                    border: `1.5px solid ${active ? catTheme.primary : `${catTheme.primary}20`}`,
+                    background: active ? `linear-gradient(135deg, ${catTheme.primary}, ${catTheme.alt})` : "transparent",
                     color: active ? "white" : "#64748b",
                     cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    boxShadow: active ? "0 4px 12px rgba(37,99,235,0.30)" : "none",
+                    boxShadow: active ? `0 4px 12px ${catTheme.primary}40` : "none",
                     transition: "all 0.18s cubic-bezier(0.34,1.56,0.64,1)",
                   }}>{cat}</button>
                 );
               })}
             </div>
 
-            <div style={{ width: "1px", height: "28px", background: "rgba(37,99,235,0.10)", flexShrink: 0 }} />
+            <div style={{ width: "1px", height: "28px", background: `${theme.primary}20`, flexShrink: 0 }} />
 
             {/* Right side controls */}
             <div style={{ display: "flex", gap: "8px", alignItems: "center", flexShrink: 0, flexWrap: "wrap" as const }}>
               <select value={activeCity} onChange={e => setCity(e.target.value)} style={{
                 height: "34px", padding: "0 10px", borderRadius: "10px",
-                border: "1.5px solid rgba(37,99,235,0.15)",
+                border: `1.5px solid ${theme.primary}30`,
                 background: "#fafbff", fontSize: "12px", fontWeight: 600,
                 color: "#374151", outline: "none", cursor: "pointer",
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -637,7 +633,7 @@ export default function ShopsPage() {
 
               <select value={sortBy} onChange={e => setSort(e.target.value as any)} style={{
                 height: "34px", padding: "0 10px", borderRadius: "10px",
-                border: "1.5px solid rgba(37,99,235,0.15)",
+                border: `1.5px solid ${theme.primary}30`,
                 background: "#fafbff", fontSize: "12px", fontWeight: 600,
                 color: "#374151", outline: "none", cursor: "pointer",
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -651,27 +647,14 @@ export default function ShopsPage() {
               <button onClick={() => setVerified(!verifiedOnly)} style={{
                 display: "flex", alignItems: "center", gap: "5px",
                 height: "34px", padding: "0 12px", borderRadius: "10px",
-                border: `1.5px solid ${verifiedOnly ? "#2563eb" : "rgba(37,99,235,0.15)"}`,
-                background: verifiedOnly ? "rgba(37,99,235,0.08)" : "transparent",
-                color: verifiedOnly ? "#2563eb" : "#64748b",
+                border: `1.5px solid ${verifiedOnly ? theme.primary : `${theme.primary}30`}`,
+                background: verifiedOnly ? `${theme.primary}15` : "transparent",
+                color: verifiedOnly ? theme.primary : "#64748b",
                 fontSize: "12px", fontWeight: 700, cursor: "pointer",
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 transition: "all 0.15s",
               }}>
                 <BadgeCheck size={13} strokeWidth={2.5} /> Verified
-              </button>
-
-              <button onClick={() => setInstall(!installOnly)} style={{
-                display: "flex", alignItems: "center", gap: "5px",
-                height: "34px", padding: "0 12px", borderRadius: "10px",
-                border: `1.5px solid ${installOnly ? "#2563eb" : "rgba(37,99,235,0.15)"}`,
-                background: installOnly ? "rgba(37,99,235,0.08)" : "transparent",
-                color: installOnly ? "#2563eb" : "#64748b",
-                fontSize: "12px", fontWeight: 700, cursor: "pointer",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                transition: "all 0.15s",
-              }}>
-                <Zap size={13} strokeWidth={2.5} /> Kisti
               </button>
 
               {activeFilterCount > 0 && (
@@ -689,13 +672,13 @@ export default function ShopsPage() {
 
               <div style={{
                 display: "flex", borderRadius: "10px",
-                border: "1.5px solid rgba(37,99,235,0.12)",
+                border: `1.5px solid ${theme.primary}30`,
                 overflow: "hidden",
               }}>
                 {([["grid", Grid3X3], ["list", List]] as const).map(([mode, Icon]) => (
                   <button key={mode} onClick={() => setView(mode)} style={{
                     height: "34px", width: "34px", border: "none",
-                    background: view === mode ? "linear-gradient(135deg, #2563eb, #7c3aed)" : "transparent",
+                    background: view === mode ? `linear-gradient(135deg, ${theme.primary}, ${theme.alt})` : "transparent",
                     color: view === mode ? "white" : "#94a3b8",
                     cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
                     transition: "all 0.15s",
@@ -723,207 +706,39 @@ export default function ShopsPage() {
             <div style={{
               textAlign: "center" as const, padding: "80px 24px",
               background: "white", borderRadius: "24px",
-              border: "1.5px solid rgba(37,99,235,0.08)",
-              boxShadow: "0 4px 24px rgba(37,99,235,0.06)",
+              border: `1.5px solid ${theme.primary}20`,
+              boxShadow: `0 4px 24px ${theme.primary}10`,
             }}>
               <div style={{
                 height: "80px", width: "80px", borderRadius: "24px",
-                background: "linear-gradient(135deg, #eff6ff, #f5f3ff)",
+                background: `${theme.primary}10`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                margin: "0 auto 20px",
+                margin: "0 auto 24px", color: theme.primary,
               }}>
-                <Store size={36} color="#2563eb" strokeWidth={1.5} />
+                <Store size={40} />
               </div>
-              <p style={{ fontSize: "20px", fontWeight: 900, color: "#0f172a", margin: "0 0 8px", letterSpacing: "-0.03em" }}>No shops found</p>
-              <p style={{ fontSize: "14px", color: "#94a3b8", margin: "0 0 28px" }}>Try adjusting your filters or search terms</p>
+              <h3 style={{ fontSize: "20px", fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>No shops found</h3>
+              <p style={{ color: "#64748b", fontSize: "14px", margin: "0 0 24px" }}>Try adjusting your filters or search terms to find what you're looking for.</p>
               <button onClick={resetFilters} style={{
-                padding: "12px 32px", borderRadius: "14px",
-                background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                border: "none", color: "white", fontSize: "14px", fontWeight: 700,
-                cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                boxShadow: "0 8px 24px rgba(37,99,235,0.35)",
-              }}>Reset Filters</button>
+                padding: "12px 24px", borderRadius: "12px",
+                background: `linear-gradient(135deg, ${theme.primary}, ${theme.alt})`,
+                color: "white", border: "none", fontSize: "14px", fontWeight: 700,
+                cursor: "pointer", boxShadow: `0 8px 20px ${theme.primary}40`,
+              }}>Clear All Filters</button>
             </div>
           ) : (
-            <>
-              {/* Featured shops */}
-              {featured.length > 0 && activeCategory === "All" && !search && (
-                <div style={{ marginBottom: "36px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-                    <div style={{
-                      height: "28px", width: "28px", borderRadius: "8px",
-                      background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                    }}>
-                      <Sparkles size={13} color="white" strokeWidth={2.5} />
-                    </div>
-                    <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>Featured Shops</h2>
-                    <span style={{
-                      padding: "2px 10px", borderRadius: "99px", fontSize: "11px", fontWeight: 700,
-                      background: "rgba(37,99,235,0.08)", color: "#2563eb",
-                    }}>{featured.length} shops</span>
-                  </div>
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: view === "list" ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
-                    gap: "18px",
-                  }}>
-                    {featured.map((v, i) => <ShopCard key={v.id} vendor={v} index={i} view={view} />)}
-                  </div>
-                </div>
-              )}
-
-              {/* All / remaining shops */}
-              {(rest.length > 0 || search || activeCategory !== "All") && (
-                <div>
-                  {featured.length > 0 && activeCategory === "All" && !search && (
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
-                      <div style={{
-                        height: "28px", width: "28px", borderRadius: "8px",
-                        background: "linear-gradient(135deg, #eff6ff, #f5f3ff)",
-                        border: "1.5px solid rgba(37,99,235,0.12)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                      }}>
-                        <Store size={13} color="#2563eb" strokeWidth={2.5} />
-                      </div>
-                      <h2 style={{ fontSize: "18px", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>All Shops</h2>
-                      <span style={{
-                        padding: "2px 10px", borderRadius: "99px", fontSize: "11px", fontWeight: 700,
-                        background: "rgba(37,99,235,0.08)", color: "#2563eb",
-                      }}>{rest.length} shops</span>
-                    </div>
-                  )}
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: view === "list" ? "1fr" : "repeat(auto-fill, minmax(260px, 1fr))",
-                    gap: "18px",
-                  }}>
-                    {(search || activeCategory !== "All" ? filtered : rest).map((v, i) => (
-                      <ShopCard key={v.id} vendor={v} index={i} view={view} />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: view === "grid" ? "repeat(auto-fill, minmax(300px, 1fr))" : "1fr",
+              gap: "24px",
+            }}>
+              {filtered.map((vendor, i) => (
+                <ShopCard key={vendor.id} vendor={vendor} index={i} view={view} />
+              ))}
+            </div>
           )}
-
-          {/* ── BECOME A VENDOR BANNER ── */}
-          <div style={{
-            marginTop: "56px",
-            borderRadius: "28px",
-            background: "linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%)",
-            padding: "44px 40px",
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            flexWrap: "wrap" as const, gap: "24px",
-            position: "relative", overflow: "hidden",
-            boxShadow: "0 20px 60px rgba(37,99,235,0.30), 0 8px 24px rgba(124,58,237,0.20)",
-          }}>
-            <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-              <div style={{ position: "absolute", width: "300px", height: "300px", borderRadius: "50%", background: "rgba(255,255,255,0.05)", top: "-80px", right: "15%" }} />
-              <div style={{ position: "absolute", width: "180px", height: "180px", borderRadius: "50%", background: "rgba(255,255,255,0.04)", bottom: "-60px", right: "5%" }} />
-              <svg style={{ position: "absolute", right: "20%", top: 0, opacity: 0.06 }} width="300" height="200" viewBox="0 0 300 200">
-                {Array.from({ length: 8 }).map((_, row) =>
-                  Array.from({ length: 14 }).map((_, col) => (
-                    <circle key={`${row}-${col}`} cx={col * 22 + 11} cy={row * 26 + 13} r="1.8" fill="white" />
-                  ))
-                )}
-              </svg>
-            </div>
-
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "10px" }}>
-                <div style={{
-                  background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)",
-                  borderRadius: "16px", padding: "8px",
-                  border: "1.5px solid rgba(255,255,255,0.25)",
-                }}>
-                  <FlexiBerryLogo size={44} />
-                </div>
-                <div>
-                  <h2 style={{
-                    color: "white", fontWeight: 900, fontSize: "clamp(20px, 3vw, 28px)",
-                    margin: 0, letterSpacing: "-0.03em",
-                    fontFamily: "'Space Grotesk', sans-serif",
-                  }}>
-                    Sell on FlexiBerry
-                  </h2>
-                  <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "14px", margin: "4px 0 0", fontWeight: 500 }}>
-                    0% commission for your first 90 days · 1,200+ vendors already growing
-                  </p>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" as const }}>
-                {[
-                  { icon: TrendingUp, text: "Reach 2.4M+ customers" },
-                  { icon: Zap, text: "Installments built-in" },
-                  { icon: Shield, text: "KYC verified payouts" },
-                ].map(({ icon: Icon, text }) => (
-                  <div key={text} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <Icon size={13} color="rgba(255,255,255,0.75)" />
-                    <span style={{ fontSize: "12px", fontWeight: 600, color: "rgba(255,255,255,0.80)" }}>{text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ display: "flex", gap: "12px", position: "relative", zIndex: 1, flexWrap: "wrap" as const }}>
-              <Link href="/auth/login" style={{ textDecoration: "none" }}>
-                <button style={{
-                  padding: "14px 28px", borderRadius: "14px",
-                  background: "rgba(255,255,255,0.15)",
-                  border: "1.5px solid rgba(255,255,255,0.30)",
-                  backdropFilter: "blur(8px)",
-                  color: "white", fontSize: "14px", fontWeight: 700,
-                  cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  display: "flex", alignItems: "center", gap: "6px",
-                  transition: "all 0.2s ease",
-                }}
-                  onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.25)"}
-                  onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.15)"}>
-                  Vendor Login <ChevronRight size={15} />
-                </button>
-              </Link>
-              <Link href="/auth/register" style={{ textDecoration: "none" }}>
-                <button style={{
-                  padding: "14px 28px", borderRadius: "14px",
-                  background: "white",
-                  border: "none",
-                  color: "#2563eb", fontSize: "14px", fontWeight: 800,
-                  cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  display: "flex", alignItems: "center", gap: "6px",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.20)",
-                  transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
-                }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px) scale(1.02)";
-                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 12px 32px rgba(0,0,0,0.25)";
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLButtonElement).style.transform = "none";
-                    (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.20)";
-                  }}>
-                  Register Free <ArrowUpRight size={15} />
-                </button>
-              </Link>
-            </div>
-          </div>
         </main>
       </div>
-
-      <style jsx global>{`
-        @keyframes cardIn {
-          from { opacity: 0; transform: translateY(16px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes floatOrb {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33%       { transform: translate(-20px, -15px) scale(1.04); }
-          66%       { transform: translate(15px, -25px) scale(0.97); }
-        }
-        input::placeholder { color: rgba(255,255,255,0.40); }
-        select { appearance: auto; }
-        ::-webkit-scrollbar { display: none; }
-      `}</style>
     </FlexiLayout>
   );
 }

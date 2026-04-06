@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import { use } from 'react'
-import Link from 'next/image'
+import Image from 'next/image'
 import NextLink from 'next/link'
 import FlexiLayout from '@/components/layout/FlexiLayout/FlexiLayout'
 import { 
@@ -12,14 +12,33 @@ import {
 } from 'lucide-react'
 import ShopCategory from '@/components/ShopCategory'
 import { VENDORS as VENDORS_ARRAY } from '@/lib/vendors'
+import { CATEGORY_THEMES } from '@/components/ui/carousel'
+
+// Helper to get theme from CATEGORY_THEMES
+const getThemeForCategory = (catName: string) => {
+  const slug = catName.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-');
+  // Special mappings if needed
+  if (slug === "home-living") return CATEGORY_THEMES.furniture;
+  if (slug === "motors-energy") return CATEGORY_THEMES.cars;
+  if (slug === "solar-energy") return CATEGORY_THEMES.solar;
+  if (slug === "jahez-dowry") return CATEGORY_THEMES.jahez;
+  if (slug === "bikes-scooters") return CATEGORY_THEMES.bikes;
+  if (slug === "mobiles") return CATEGORY_THEMES.smartphones;
+  if (slug === "electronics") return CATEGORY_THEMES.laptops;
+  
+  return CATEGORY_THEMES[slug] || CATEGORY_THEMES.general;
+};
 
 // Convert array to object for easy lookup
 const VENDORS: Record<string, any> = {}
 VENDORS_ARRAY.forEach(v => {
+  const theme = getThemeForCategory(v.category);
   VENDORS[v.id] = {
     ...v,
-    themeBgLight: v.themeBgLight || '#f8f9fd',
-    themeColor: v.categoryColor,
+    themeBgLight: theme.bg,
+    themeColor: theme.primary,
+    themeAlt: theme.alt,
+    themeDarkBg: theme.darkBg,
     subCategories: [
       { name: 'Smartphones', sub: 'Latest iPhones & Android', e: '📱', bg: '#fff0f0', bd: '#fecdd3', slug: 'smartphones' },
       { name: 'Laptops', sub: 'MacBooks, Gaming & More', e: '💻', bg: '#f5f3ff', bd: '#ddd6fe', slug: 'laptops' },
@@ -237,7 +256,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
 
   return (
     <FlexiLayout>
-      <div style={{ background: '#f4f5fb', minHeight: '100vh' }}>
+      <div style={{ background: shop.themeBgLight, minHeight: '100vh', transition: 'background 0.5s ease' }}>
         <style>{`
           * { box-sizing: border-box }
           body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0 }
@@ -288,7 +307,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
         {/* ─────────────── NEW HERO BANNER DESIGN ─────────────── */}
         <section style={{ padding: '40px 20px', maxWidth: '1400px', margin: '0 auto' }}>
           <div style={{ 
-            background: shop.bannerGrad, 
+            background: `linear-gradient(135deg, ${shop.themeDarkBg} 0%, ${shop.themeColor} 50%, ${shop.themeAlt} 100%)`, 
             borderRadius: '32px', 
             padding: '60px 50px', 
             color: 'white', 
@@ -297,7 +316,8 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            minHeight: '400px'
+            minHeight: '400px',
+            transition: 'background 0.5s ease'
           }}>
             {/* Left Content */}
             <div style={{ position: 'relative', zIndex: 2, maxWidth: '600px' }}>
@@ -465,7 +485,7 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
           <div style={{ marginBottom: '60px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: shop.bannerGrad, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', boxShadow: `0 8px 20px ${shop.themeColor}44` }}>
+                <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: `linear-gradient(135deg, ${shop.themeColor}, ${shop.themeAlt})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', boxShadow: `0 8px 20px ${shop.themeColor}44` }}>
                   {shop.emoji}
                 </div>
                 <div>
@@ -502,37 +522,17 @@ export default function SoloShopPage({ params }: { params: Promise<{ shopId: str
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   transition: 'all 0.2s ease',
                 }}>
-                  All Products
+                  <Grid3X3 size={12} style={{ display: 'inline', marginRight: '4px' }} /> All Products
                 </button>
               </div>
             </div>
 
             <div className="prod-grid">
-              {(viewMode === 'featured' ? featured : filtered).map(product => (
-                <ProductCard key={product.id} product={product} themeColor={shop.themeColor} />
+              {(viewMode === 'featured' ? featured : filtered).map((p, i) => (
+                <ProductCard key={p.id} product={p} themeColor={shop.themeColor} />
               ))}
             </div>
           </div>
-
-          {/* ─────────────── SALE PRODUCTS SECTION ─────────────── */}
-          {sale.length > 0 && (
-            <div style={{ marginBottom: '60px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: `linear-gradient(135deg, #ef4444, #dc2626)`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
-                  🔥
-                </div>
-                <div>
-                  <h2 style={{ fontSize: '24px', fontWeight: 900, margin: 0, color: '#111827' }}>Hot Deals</h2>
-                  <p style={{ fontSize: '12px', color: '#9ca3af', margin: '4px 0 0 0' }}>Limited time offers</p>
-                </div>
-              </div>
-              <div className="prod-grid">
-                {sale.map(product => (
-                  <ProductCard key={product.id} product={product} themeColor={shop.themeColor} />
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </FlexiLayout>

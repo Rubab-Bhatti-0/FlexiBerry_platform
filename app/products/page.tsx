@@ -189,7 +189,7 @@ const FilterSidebar = ({
           {(Object.entries(SORT_LABELS) as [SortOption, string][]).map(([val, label]) => (
             <button key={val} onClick={() => onChange({ sortBy: val })} style={{
               display: "flex", alignItems: "center", gap: "8px",
-              padding: "7px 10px", borderRadius: "9px", border: "none",
+              padding: "7px 10px", borderRadius: "99px", border: "none",
               cursor: "pointer", textAlign: "left", width: "100%",
               background: filters.sortBy === val ? `${themeColor}14` : "transparent",
               fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background 0.15s",
@@ -221,7 +221,7 @@ const FilterSidebar = ({
             return (
               <button key={cat.id} onClick={() => onChange({ category: cat.id })} style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
-                padding: "7px 10px", borderRadius: "9px", border: "none",
+                padding: "7px 10px", borderRadius: "99px", border: "none",
                 cursor: "pointer", background: active ? `${themeColor}14` : "transparent",
                 fontFamily: "'Plus Jakarta Sans', sans-serif", transition: "background 0.15s",
               }}>
@@ -558,7 +558,7 @@ export default function ProductsPage() {
 
   return (
     <FlexiLayout>
-      <div style={{ background: "#f8fafc", minHeight: "100vh", padding: "20px 0 80px" }}>
+      <div style={{ background: theme.bg, minHeight: "100vh", padding: "20px 0 80px", transition: "background 0.5s ease" }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 20px" }}>
           
           {/* Breadcrumbs */}
@@ -612,7 +612,7 @@ export default function ProductsPage() {
               <div style={{ 
                 display: "flex", alignItems: "center", justifyContent: "space-between", 
                 marginBottom: "24px", background: "white", padding: "12px 20px", 
-                borderRadius: "16px", border: "1.5px solid #e2e8f0" 
+                borderRadius: "16px", border: `1.5px solid ${theme.primary}20` 
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
                   <div style={{ position: "relative", flex: 1, maxWidth: "400px" }}>
@@ -694,13 +694,13 @@ export default function ProductsPage() {
               ) : (
                 <div style={{
                   textAlign: "center", padding: "80px 20px", background: "white",
-                  borderRadius: "24px", border: "1.5px dashed #e2e8f0"
+                  borderRadius: "24px", border: `1.5px dashed ${theme.primary}40`
                 }}>
                   <div style={{ 
-                    height: "64px", width: "64px", borderRadius: "20px", background: "#f1f5f9",
+                    height: "64px", width: "64px", borderRadius: "20px", background: `${theme.primary}10`,
                     display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px"
                   }}>
-                    <Package size={32} color="#94a3b8" />
+                    <Package size={32} color={theme.primary} />
                   </div>
                   <h3 style={{ fontSize: "18px", fontWeight: 700, color: "#0f172a", marginBottom: "8px" }}>No products found</h3>
                   <p style={{ color: "#64748b", marginBottom: "24px" }}>Try adjusting your filters or search query to find what you're looking for.</p>
