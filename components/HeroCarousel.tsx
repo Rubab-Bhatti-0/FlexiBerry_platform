@@ -33,8 +33,8 @@ const slides = [
     description: "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
     cta: "Shop Motorcycles",
     link: "/products?category=bikes",
-    accent: "#0891b2",
-    bg: "#0a1a1a",
+    accent: "#FF8C42",
+    bg: "#1a0a00",
   },
   {
     image: "/assets/carousel-4.jpg",

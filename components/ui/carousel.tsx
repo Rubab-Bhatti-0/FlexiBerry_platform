@@ -33,13 +33,13 @@ export const CATEGORY_THEMES: Record<
     darkBg:   "#0e0025",   // deep violet-black
   },
   bikes: {
-    primary:  "#F97316",
-    alt:      "#FDBA74",
-    bg:       "#fff7ed",
-    glow:     "#EA580C",
+    primary:  "#FF8C42",
+    alt:      "#FFB380",
+    bg:       "#fff5f0",
+    glow:     "#FF7722",
     glowOp:   0.28,
-    tint:     "rgba(234,88,12,0.16)",
-    darkBg:   "#1e0a00",   // deep burnt-orange black
+    tint:     "rgba(255,119,34,0.16)",
+    darkBg:   "#1a0a00",   // deep orange-black
   },
   appliances: {
     primary:  "#92400e",
