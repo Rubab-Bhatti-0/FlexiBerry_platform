@@ -29,7 +29,7 @@ const SLIDES = [
 ]
 
 const CATS = [
-  { name:'Smartphones',    sub:'Latest iPhones & Android',  e:'📱', bg:'#fff0f0', bd:'#fecdd3', slug:'smartphones' },
+  { name:'Smartphones',    sub:'Latest iPhones & Android',  e:'📱', bg:'#eff6ff', bd:'#bfdbfe', slug:'smartphones' },
   { name:'Laptops',        sub:'MacBooks, Gaming & More',    e:'💻', bg:'#f5f3ff', bd:'#ddd6fe', slug:'laptops'     },
   { name:'Scotty & Bikes', sub:'Motor Cycles & Scotties',    e:'🏍️', bg:'#fff7ed', bd:'#fed7aa', slug:'bikes'       },
   { name:'Appliances',     sub:'AC, LED, Fridge & More',     e:'🌀', bg:'#eff6ff', bd:'#bfdbfe', slug:'appliances'  },
@@ -37,7 +37,7 @@ const CATS = [
   { name:'Furniture',      sub:'Home & Office Furniture',    e:'🛋️', bg:'#f0fdfa', bd:'#99f6e4', slug:'furniture'   },
   { name:'Jahez Packages', sub:'Bundle 4–5 Item Packages',   e:'📦', bg:'#fdf2f8', bd:'#f9a8d4', slug:'jahez'       },
   { name:'Car Financing',  sub:'Easy Car Installments',      e:'🚗', bg:'#ecfeff', bd:'#a5f3fc', slug:'cars'        },
-  { name:'Business Stock', sub:'Raw Materials & Stock',      e:'🏭', bg:'#f0fdf4', bd:'#bbf7d0', slug:'business'    },
+  { name:'Business Stock', sub:'Raw Materials & Stock',      e:'🏭', bg:'#f8fafc', bd:'#e2e8f0', slug:'business'    },
   { name:'General Store',  sub:'Everything Else',            e:'🛒', bg:'#fffbeb', bd:'#fde68a', slug:'general'     },
 ]
 

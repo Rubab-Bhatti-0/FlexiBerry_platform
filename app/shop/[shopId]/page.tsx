@@ -40,7 +40,7 @@ VENDORS_ARRAY.forEach(v => {
     themeAlt: theme.alt,
     themeDarkBg: theme.darkBg,
     subCategories: [
-      { name: 'Smartphones', sub: 'Latest iPhones & Android', e: '📱', bg: '#fff0f0', bd: '#fecdd3', slug: 'smartphones' },
+      { name: 'Smartphones', sub: 'Latest iPhones & Android', e: '📱', bg: '#eff6ff', bd: '#bfdbfe', slug: 'smartphones' },
       { name: 'Laptops', sub: 'MacBooks, Gaming & More', e: '💻', bg: '#f5f3ff', bd: '#ddd6fe', slug: 'laptops' },
       { name: 'Appliances', sub: 'AC, LED, Fridge & More', e: '🌀', bg: '#eff6ff', bd: '#bfdbfe', slug: 'appliances' },
       { name: 'Solar Systems', sub: 'Complete Solar Solutions', e: '☀️', bg: '#fefce8', bd: '#fef08a', slug: 'solar' },

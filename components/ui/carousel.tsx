@@ -15,13 +15,13 @@ export const CATEGORY_THEMES: Record<
   { primary: string; alt: string; bg: string; glow: string; glowOp: number; tint: string; darkBg: string }
 > = {
   smartphones: {
-    primary:  "#FF3B5C",
-    alt:      "#FF8C69",
-    bg:       "#fff1f2",
-    glow:     "#FF3B5C",
+    primary:  "#2563eb",
+    alt:      "#60a5fa",
+    bg:       "#eff6ff",
+    glow:     "#2563eb",
     glowOp:   0.28,
-    tint:     "rgba(255,59,92,0.18)",
-    darkBg:   "#1f0008",   // deep crimson-black
+    tint:     "rgba(37,99,235,0.18)",
+    darkBg:   "#000a1f",   // deep blue-black
   },
   laptops: {
     primary:  "#7C3AED",
@@ -87,13 +87,13 @@ export const CATEGORY_THEMES: Record<
     darkBg:   "#00101f",   // deep ocean-black
   },
   business: {
-    primary:  "#84CC16",
-    alt:      "#BEF264",
-    bg:       "#f7fee7",
-    glow:     "#65A30D",
+    primary:  "#374151",
+    alt:      "#94a3b8",
+    bg:       "#f8fafc",
+    glow:     "#374151",
     glowOp:   0.28,
-    tint:     "rgba(101,163,13,0.16)",
-    darkBg:   "#0d1a00",   // deep lime-black
+    tint:     "rgba(55,65,81,0.16)",
+    darkBg:   "#1a1a1a",   // deep grey-black
   },
   general: {
     primary:  "#0EA5E9",
