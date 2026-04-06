@@ -43,8 +43,8 @@ const slides = [
     description: "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
     cta: "Shop Appliances",
     link: "/products?category=appliances",
-    accent: "#059669",
-    bg: "#0a1a10",
+    accent: "#92400e",
+    bg: "#1a0f00",
   },
   {
     image: "/assets/carousel-5.jpg",
@@ -73,8 +73,8 @@ const slides = [
     description: "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
     cta: "Shop Furniture",
     link: "/products?category=furniture",
-    accent: "#92400e",
-    bg: "#1a100a",
+    accent: "#10B981",
+    bg: "#001a0d",
   },
   {
     image: "/assets/carousel-8.jpg",
