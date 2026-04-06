@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams, useRouter } from "next/navigation";
 import FlexiLayout from "@/components/layout/FlexiLayout/FlexiLayout";
 import { PRODUCTS_DATA } from "@/lib/products";
 import { CATEGORY_THEMES } from "@/components/ui/carousel";
@@ -500,13 +501,17 @@ const ProductCard = ({ product, index, themeColor }: { product: any; index: numb
 export default function ProductsPage() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [view, setView] = useState<"grid" | "list">("grid");
+  const searchParams = useSearchParams();
 
   // Sync with URL params
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const cat = params.get("category");
-    if (cat) setFilters(f => ({ ...f, category: cat }));
-  }, []);
+    const cat = searchParams.get("category");
+    if (cat) {
+      setFilters(f => ({ ...f, category: cat }));
+    } else {
+      setFilters(f => ({ ...f, category: "all" }));
+    }
+  }, [searchParams]);
 
   const activeCategory = useMemo(() => 
     categories.find(c => c.id === filters.category) || { id: 'all', name: 'All Products', e: '🛍️' }
@@ -556,8 +561,27 @@ export default function ProductsPage() {
     return count;
   }, [filters]);
 
-  const updateFilters = (f: Partial<Filters>) => setFilters(prev => ({ ...prev, ...f }));
-  const resetFilters = () => setFilters(DEFAULT_FILTERS);
+  const router = useRouter();
+  const updateFilters = (f: Partial<Filters>) => {
+    setFilters(prev => {
+      const next = { ...prev, ...f };
+      // Update URL if category changed
+      if (f.category) {
+        const params = new URLSearchParams(window.location.search);
+        if (f.category === "all") {
+          params.delete("category");
+        } else {
+          params.set("category", f.category);
+        }
+        router.push(`/products?${params.toString()}`, { scroll: false });
+      }
+      return next;
+    });
+  };
+  const resetFilters = () => {
+    setFilters(DEFAULT_FILTERS);
+    router.push("/products", { scroll: false });
+  };
 
   return (
     <FlexiLayout>
