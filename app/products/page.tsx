@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -498,7 +498,7 @@ const ProductCard = ({ product, index, themeColor }: { product: any; index: numb
 };
 
 /* ─── Main Page ──────────────────────────────────────── */
-export default function ProductsPage() {
+function ProductsPageContent() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [view, setView] = useState<"grid" | "list">("grid");
   const searchParams = useSearchParams();
@@ -754,5 +754,24 @@ export default function ProductsPage() {
         }
       `}</style>
     </FlexiLayout>
+  );
+}
+
+function ProductsPageLoading() {
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🛍️</div>
+        <p style={{ color: '#64748b', fontSize: '16px' }}>Loading products...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<ProductsPageLoading />}>
+      <ProductsPageContent />
+    </Suspense>
   );
 }
