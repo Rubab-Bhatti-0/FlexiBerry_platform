@@ -42,13 +42,13 @@ export const CATEGORY_THEMES: Record<
     darkBg:   "#1e0a00",   // deep burnt-orange black
   },
   appliances: {
-    primary:  "#C026D3",
-    alt:      "#E879F9",
-    bg:       "#fdf4ff",
-    glow:     "#A21CAF",
+    primary:  "#92400e",
+    alt:      "#b45309",
+    bg:       "#fffbeb",
+    glow:     "#78350f",
     glowOp:   0.26,
-    tint:     "rgba(192,38,211,0.18)",
-    darkBg:   "#1a0022",   // deep magenta-black
+    tint:     "rgba(146,64,14,0.18)",
+    darkBg:   "#1a0f00",   // deep brown-black
   },
   solar: {
     primary:  "#EAB308",

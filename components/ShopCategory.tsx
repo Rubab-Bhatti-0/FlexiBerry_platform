@@ -49,9 +49,9 @@ const categories: Category[] = [
     name: 'Appliances',
     items: 2,
     icon: Wind,
-    color: '#C026D3', // Magenta from CATEGORY_THEMES
-    bgColor: '#fdf4ff', // Magenta-50
-    iconBg: '#f3e8ff' // Magenta-100
+    color: '#92400e', // Brown from CATEGORY_THEMES
+    bgColor: '#fffbeb', // Brown-50
+    iconBg: '#fef3c7' // Brown-100
   },
   {
     id: 'solar-systems',
