@@ -305,7 +305,7 @@ export default function HomePage() {
                 <div style={{ fontSize:11.5, color:'#9ca3af', marginTop:3, lineHeight:1.4,
                                position:'relative', zIndex:1 }}>{cat.sub}</div>
               </Link>
-            )}}
+            )})}
           </div>
         </div>
       </section>
