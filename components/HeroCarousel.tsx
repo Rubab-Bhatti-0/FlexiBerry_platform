@@ -13,8 +13,8 @@ const slides = [
     description: "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
     cta: "Shop Smartphones",
     link: "/products?category=smartphones",
-    accent: "#FF6B6B",
-    bg: "#1a0a0a",
+    accent: "#2563eb",
+    bg: "#0a101a",
   },
   {
     image: "/assets/carousel-2.jpg",
@@ -23,8 +23,8 @@ const slides = [
     description: "MacBooks, Gaming Laptops & more on easy installment plans for every budget.",
     cta: "Shop Laptops",
     link: "/products?category=laptops",
-    accent: "#A78BFA",
-    bg: "#0f0a1e",
+    accent: "#7c3aed",
+    bg: "#100a1a",
   },
   {
     image: "/assets/carousel-3.jpg",
@@ -33,8 +33,8 @@ const slides = [
     description: "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
     cta: "Shop Motorcycles",
     link: "/products?category=bikes",
-    accent: "#FB923C",
-    bg: "#1a0d04",
+    accent: "#0891b2",
+    bg: "#0a1a1a",
   },
   {
     image: "/assets/carousel-4.jpg",
@@ -43,8 +43,8 @@ const slides = [
     description: "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
     cta: "Shop Appliances",
     link: "/products?category=appliances",
-    accent: "#F87171",
-    bg: "#1a0808",
+    accent: "#059669",
+    bg: "#0a1a10",
   },
   {
     image: "/assets/carousel-5.jpg",
@@ -53,8 +53,8 @@ const slides = [
     description: "Complete Solar Panel Systems — save on electricity bills with easy installments.",
     cta: "Shop Solar",
     link: "/products?category=solar",
-    accent: "#FBBF24",
-    bg: "#141004",
+    accent: "#d97706",
+    bg: "#1a140a",
   },
   {
     image: "/assets/carousel-6.jpg",
@@ -63,8 +63,8 @@ const slides = [
     description: "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
     cta: "Shop Bundles",
     link: "/products?category=jahez",
-    accent: "#F472B6",
-    bg: "#1a0812",
+    accent: "#be185d",
+    bg: "#1a0a10",
   },
   {
     image: "/assets/carousel-7.jpg",
@@ -73,8 +73,8 @@ const slides = [
     description: "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
     cta: "Shop Furniture",
     link: "/products?category=furniture",
-    accent: "#34D399",
-    bg: "#041410",
+    accent: "#92400e",
+    bg: "#1a100a",
   },
   {
     image: "/assets/carousel-8.jpg",
@@ -83,8 +83,8 @@ const slides = [
     description: "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
     cta: "Shop Cars",
     link: "/products?category=cars",
-    accent: "#38BDF8",
-    bg: "#041018",
+    accent: "#7c3aed",
+    bg: "#100a1a",
   },
   {
     image: "/assets/carousel-9.jpg",
@@ -93,8 +93,8 @@ const slides = [
     description: "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
     cta: "Shop B2B",
     link: "/products?category=business",
-    accent: "#A3E635",
-    bg: "#0a1204",
+    accent: "#374151",
+    bg: "#1a1a1a",
   },
 ];
 
