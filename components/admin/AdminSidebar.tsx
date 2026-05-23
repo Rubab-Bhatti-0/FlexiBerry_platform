@@ -36,6 +36,7 @@ export function AdminSidebar({ onLogout }: AdminSidebarProps) {
         { id: 'products', label: 'Products', icon: <ShoppingBag size={18} />, href: '/admin/products' },
         { id: 'orders', label: 'Orders', icon: <ShoppingCart size={18} />, href: '/admin/orders' },
         { id: 'installments', label: 'Installments', icon: <FileText size={18} />, href: '/admin/installments' },
+        { id: 'admins', label: 'Admin Management', icon: <Users size={18} />, href: '/admin/admins' },
         { id: 'buyers', label: 'Buyers', icon: <Users size={18} />, href: '/admin/buyers' },
         { id: 'user-history', label: 'User History', icon: <Activity size={18} />, href: '/admin/user-history' },
         { id: 'analytics', label: 'Analytics', icon: <Activity size={18} />, href: '/admin/analytics' },
