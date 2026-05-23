@@ -23,11 +23,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex min-h-screen bg-[#f0f4ff] dark:bg-[#0A0E1A]">
-      {/* Sidebar - RED DEBUG VERSION */}
-      <aside className="fixed top-0 left-0 w-64 h-screen bg-red-600 z-50 flex items-center justify-center text-white text-2xl font-bold">
-        SIDEBAR DEBUG
-      </aside>
-      
       {/* Sidebar component */}
       <AdminSidebar onLogout={handleLogout} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
