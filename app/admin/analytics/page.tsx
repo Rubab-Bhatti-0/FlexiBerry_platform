@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
@@ -90,36 +89,13 @@ export default function AdminAnalyticsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/">
-              <h1 className="text-2xl font-serif font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
-                FlexiBerry Analytics
-              </h1>
-            </Link>
-            <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm" className="border-slate-200">
-                <Download size={16} className="mr-2" /> Export Report
-              </Button>
-              <span className="text-sm font-medium text-slate-600">Admin</span>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <div className="space-y-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600/10 via-blue-600/10 to-purple-600/10 py-8 px-4 border-b border-slate-200/50">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-serif font-bold text-slate-900 mb-2">Platform Analytics</h1>
-          <p className="text-slate-600 font-medium">Comprehensive insights and performance metrics</p>
-        </div>
+      <div>
+        <h1 className="text-4xl font-serif font-bold text-slate-900 dark:text-white mb-2">Platform Analytics</h1>
+        <p className="text-slate-600 dark:text-slate-400 font-medium">Comprehensive insights and performance metrics</p>
       </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Time Range Filter */}
+      {/* Time Range Filter */}
         <div className="flex gap-4 mb-8">
           {(['week', 'month', 'year'] as const).map(range => (
             <Button
@@ -379,6 +355,6 @@ export default function AdminAnalyticsPage() {
           </Card>
         </div>
       </div>
-    </div>
-  );
+    )
+  )
 }

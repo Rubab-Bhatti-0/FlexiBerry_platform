@@ -23,10 +23,11 @@ import { Logo } from '@/components/logo'
 
 interface AdminSidebarProps {
   onLogout: () => void
+  sidebarOpen: boolean
+  setSidebarOpen: (open: boolean) => void
 }
 
-export function AdminSidebar({ onLogout }: AdminSidebarProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+export function AdminSidebar({ onLogout, sidebarOpen, setSidebarOpen }: AdminSidebarProps) {
   const pathname = usePathname()
 
   const navSections = [

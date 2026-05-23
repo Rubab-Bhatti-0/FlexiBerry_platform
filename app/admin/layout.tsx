@@ -26,7 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <ProtectedAdminRoute>
       <div className="flex min-h-screen bg-[#f0f4ff] dark:bg-[#0A0E1A]">
         {/* Sidebar */}
-        <AdminSidebar onLogout={handleLogout} />
+        <AdminSidebar onLogout={handleLogout} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         {/* Main Content */}
         <main className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} min-w-0 overflow-hidden`}>
