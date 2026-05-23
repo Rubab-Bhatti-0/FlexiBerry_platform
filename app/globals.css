@@ -413,3 +413,10 @@ button, a, input, select {
     @apply text-sm md:text-base;
   }
 }
+
+/* Desktop sidebar visibility fix */
+@media (min-width: 768px) {
+  aside[class*="translate-x"] {
+    transform: translateX(0) !important;
+  }
+}
