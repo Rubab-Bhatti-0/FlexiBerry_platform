@@ -239,3 +239,16 @@ export {
   CarouselPrevious,
   CarouselNext,
 }
+
+export const CATEGORY_THEMES = {
+  smartphones: { primary: '#3B82F6', bg: '#EFF6FF' },
+  laptops: { primary: '#8B5CF6', bg: '#F5F3FF' },
+  bikes: { primary: '#F97316', bg: '#FEF3C7' },
+  appliances: { primary: '#EC4899', bg: '#FCE7F3' },
+  solar: { primary: '#EAB308', bg: '#FEFCE8' },
+  furniture: { primary: '#10B981', bg: '#ECFDF5' },
+  jahez: { primary: '#6366F1', bg: '#EEF2FF' },
+  cars: { primary: '#D97706', bg: '#FEF3C7' },
+  business: { primary: '#14B8A6', bg: '#F0FDFA' },
+  general: { primary: '#6B7280', bg: '#F9FAFB' },
+}
