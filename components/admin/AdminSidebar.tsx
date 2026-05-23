@@ -71,8 +71,8 @@ export function AdminSidebar({ onLogout, sidebarOpen, setSidebarOpen }: AdminSid
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen w-72 md:w-64 flex flex-col sidebar-bg z-50 transition-transform duration-300 md:translate-x-0 shadow-2xl ${
-          !sidebarOpen ? '-translate-x-full' : 'translate-x-0'
+        className={`fixed top-0 left-0 h-screen w-72 md:w-64 flex flex-col sidebar-bg z-50 transition-transform duration-300 shadow-2xl md:translate-x-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Logo Section */}
@@ -169,9 +169,6 @@ export function AdminSidebar({ onLogout, sidebarOpen, setSidebarOpen }: AdminSid
       >
         {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
-
-      {/* Main Content Offset */}
-      <div className={`transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'ml-0'}`} />
     </>
   )
 }

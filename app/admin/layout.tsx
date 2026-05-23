@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <AdminSidebar onLogout={handleLogout} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         {/* Main Content */}
-        <main className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} min-w-0 overflow-hidden`}>
+        <main className="flex-1 flex flex-col min-w-0 md:ml-64 transition-all duration-300">
           {/* Navbar */}
           <AdminNavbar onMenuToggle={handleMenuToggle} />
 
