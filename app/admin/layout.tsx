@@ -26,8 +26,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <ProtectedAdminRoute>
       <div className="flex min-h-screen bg-[#f0f4ff] dark:bg-[#0A0E1A]">
         {/* Debug div - TESTING */}
-        <div className="fixed top-0 left-0 w-64 h-screen bg-red-600 z-40 flex items-center justify-center">
-          <span className="text-white text-2xl font-bold">SIDEBAR HERE</span>
+        <div className="fixed top-0 left-0 w-64 h-screen bg-red-600 z-[100] flex items-center justify-center">
+          <span className="text-white text-2xl font-bold">DEBUG SIDEBAR</span>
         </div>
         
         {/* Sidebar */}
