@@ -26,12 +26,39 @@ import {
   Users,
   ShieldCheck,
   DollarSign,
+  AlertCircle,
+  CheckCircle,
 } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { Logo } from '@/components/logo'
+
+// Toast notification component
+function Toast({ message, type = 'success', onClose }: { message: string; type?: 'success' | 'error' | 'info'; onClose: () => void }) {
+  React.useEffect(() => {
+    const timer = setTimeout(onClose, 3000)
+    return () => clearTimeout(timer)
+  }, [onClose])
+
+  const bgColor = type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+  const icon = type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />
+
+  return (
+    <motion.div
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 100, opacity: 0 }}
+      className={`${bgColor} text-white p-4 rounded-lg shadow-lg flex items-center gap-3`}
+    >
+      {icon}
+      <span className="font-medium">{message}</span>
+    </motion.div>
+  )
+}
 
 export default function AdminDashboard() {
   const { theme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
 
   React.useEffect(() => {
     setMounted(true)
@@ -155,6 +182,27 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-8">
+      {/* Toast Container */}
+      <div className="fixed bottom-6 right-6 z-50 space-y-4">
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
+      </div>
+
+      {/* Header with Logo */}
+      <div className="flex items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-4">
+          <Logo />
+          <div>
+            <h1 className="text-4xl font-serif font-bold text-slate-900 dark:text-white">Administration Panel</h1>
+            <p className="text-slate-600 dark:text-slate-400 font-medium">Monitor and manage the platform in real-time</p>
+          </div>
+        </div>
+      </div>
       {/* Header Section */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         <div>
@@ -299,19 +347,31 @@ export default function AdminDashboard() {
               <Zap size={14} className="text-amber-500" fill="currentColor" />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <button className="p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-blue-500/20 transition-all">
+              <button 
+                onClick={() => setToast({ message: 'Opening product creation form...', type: 'info' })}
+                className="p-4 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-blue-500/20 transition-all active:scale-95"
+              >
                 <ShoppingBag size={20} />
                 <span className="text-[10px] font-bold">Add Product</span>
               </button>
-              <button className="p-4 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-purple-500/20 transition-all">
+              <button 
+                onClick={() => setToast({ message: 'Loading KYC review requests...', type: 'info' })}
+                className="p-4 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-purple-500/20 transition-all active:scale-95"
+              >
                 <ShieldCheck size={20} />
                 <span className="text-[10px] font-bold">Review KYC</span>
               </button>
-              <button className="p-4 rounded-2xl bg-gradient-to-br from-green-600 to-green-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-green-500/20 transition-all">
+              <button 
+                onClick={() => setToast({ message: 'Fetching buyer list...', type: 'info' })}
+                className="p-4 rounded-2xl bg-gradient-to-br from-green-600 to-green-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-green-500/20 transition-all active:scale-95"
+              >
                 <Users size={20} />
                 <span className="text-[10px] font-bold">View Buyers</span>
               </button>
-              <button className="p-4 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-amber-500/20 transition-all">
+              <button 
+                onClick={() => setToast({ message: 'Loading all orders...', type: 'info' })}
+                className="p-4 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-700 text-white flex flex-col items-center justify-center gap-2 hover:shadow-lg hover:shadow-amber-500/20 transition-all active:scale-95"
+              >
                 <ShoppingCart size={20} />
                 <span className="text-[10px] font-bold">All Orders</span>
               </button>
