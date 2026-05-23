@@ -282,4 +282,134 @@
 }
 .stat-card:hover {
   transform: translateY(-4px);
+}@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: 'DM Sans', var(--font-instrument), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-bricolage), system-ui, -apple-system, sans-serif;
+  
+  --color-blue: #2563eb;
+  --color-purple: #7c3aed;
+  --color-teal: #14b8a6;
+  --color-amber: #fbbf24;
+  --color-red: #ef4444;
+  --color-green: #10b981;
+
+  /* Colors from the provided layout */
+  --sidebar-gradient-start: #0f172a;
+  --sidebar-gradient-end: #1e1b4b;
+  --main-bg: #f0f4ff;
+  --accent-gradient: linear-gradient(135deg, #2563eb, #7c3aed);
+}
+
+@layer base {
+  * {
+    @apply scroll-smooth;
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-[#f0f4ff] dark:bg-[#0A0E1A] text-gray-900 dark:text-[#E8EDF5] transition-all duration-300;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-[#0F1522];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-[#1C2438] rounded-full hover:bg-gray-400 dark:hover:bg-[#252E42];
+}
+
+/* Glassmorphism Cards - Matching the new aesthetic */
+.glass-card {
+  @apply bg-white dark:bg-[#161c2d]/50 backdrop-blur-xl border border-gray-100 dark:border-white/5 rounded-2xl shadow-sm dark:shadow-2xl;
+}
+
+/* Sidebar Styles from provided layout */
+.sidebar-bg {
+  @apply bg-gradient-to-b from-[#0f172a] to-[#1e1b4b] dark:from-[#080912] dark:to-[#0f172a];
+}
+
+.sidebar-item-active {
+  @apply bg-gradient-to-br from-blue-600/35 to-purple-600/25 border border-indigo-500/30 text-white shadow-lg;
+}
+
+.sidebar-item-inactive {
+  @apply text-white/55 hover:bg-white/5 hover:text-white;
+}
+
+.sidebar-badge-active {
+  @apply bg-white/25 text-white;
+}
+
+.sidebar-badge-inactive {
+  @apply bg-red-500/80 text-white;
+}
+
+/* Smooth Transitions */
+button, a, input, select {
+  @apply transition-all duration-200 ease-out;
+}
+
+/* Status Badges */
+.badge-success {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-green-100 dark:bg-green-500/10 text-green-700 dark:text-green-400;
+}
+
+.badge-pending {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400;
+}
+
+.badge-error {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400;
+}
+
+.badge-info {
+  @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400;
+}
+
+/* Responsive Utilities */
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Responsive container padding */
+  .container-responsive {
+    @apply px-4 md:px-6 lg:px-8 mx-auto w-full max-w-7xl;
+  }
+
+  /* Responsive grid for dashboard cards */
+  .dashboard-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6;
+  }
+
+  /* Mobile-first text sizes */
+  .text-responsive-h1 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold;
+  }
+  .text-responsive-h2 {
+    @apply text-xl md:text-2xl lg:text-3xl font-bold;
+  }
+  .text-responsive-body {
+    @apply text-sm md:text-base;
+  }
 }

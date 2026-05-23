@@ -1,559 +1,241 @@
-"use client";
+'use client'
 
-import { useState, useEffect, useCallback } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import * as React from 'react'
+import useEmblaCarousel, {
+  type UseEmblaCarouselType,
+} from 'embla-carousel-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 
-// ─────────────────────────────────────────────────────────────
-// SINGLE SOURCE OF TRUTH — all category colors live here.
-// FlexiLayout.tsx imports CATEGORY_THEMES from this file.
-// ─────────────────────────────────────────────────────────────
-export const CATEGORY_THEMES: Record<
-  string,
-  { primary: string; alt: string; bg: string; glow: string; glowOp: number; tint: string; darkBg: string }
-> = {
-  smartphones: {
-    primary:  "#2563eb",
-    alt:      "#60a5fa",
-    bg:       "#eff6ff",
-    glow:     "#2563eb",
-    glowOp:   0.28,
-    tint:     "rgba(37,99,235,0.18)",
-    darkBg:   "#000a1f",   // deep blue-black
-  },
-  laptops: {
-    primary:  "#7C3AED",
-    alt:      "#A78BFA",
-    bg:       "#f5f3ff",
-    glow:     "#6D28D9",
-    glowOp:   0.30,
-    tint:     "rgba(109,40,217,0.20)",
-    darkBg:   "#0e0025",   // deep violet-black
-  },
-  bikes: {
-    primary:  "#FF8C42",
-    alt:      "#FFB380",
-    bg:       "#fff5f0",
-    glow:     "#FF7722",
-    glowOp:   0.28,
-    tint:     "rgba(255,119,34,0.16)",
-    darkBg:   "#1a0a00",   // deep orange-black
-  },
-  appliances: {
-    primary:  "#92400e",
-    alt:      "#b45309",
-    bg:       "#fffbeb",
-    glow:     "#78350f",
-    glowOp:   0.26,
-    tint:     "rgba(146,64,14,0.18)",
-    darkBg:   "#1a0f00",   // deep brown-black
-  },
-  solar: {
-    primary:  "#EAB308",
-    alt:      "#FDE68A",
-    bg:       "#fefce8",
-    glow:     "#CA8A04",
-    glowOp:   0.28,
-    tint:     "rgba(202,138,4,0.18)",
-    darkBg:   "#1a1400",   // deep golden-black
-  },
-  jahez: {
-    primary:  "#EC4899",
-    alt:      "#F9A8D4",
-    bg:       "#fdf2f8",
-    glow:     "#DB2777",
-    glowOp:   0.26,
-    tint:     "rgba(219,39,119,0.18)",
-    darkBg:   "#1f001a",   // deep rose-black
-  },
-  furniture: {
-    primary:  "#10B981",
-    alt:      "#6EE7B7",
-    bg:       "#f0fdfa",
-    glow:     "#059669",
-    glowOp:   0.28,
-    tint:     "rgba(5,150,105,0.16)",
-    darkBg:   "#001a0d",   // deep emerald-black
-  },
-  cars: {
-    primary:  "#FF3B5C",
-    alt:      "#FF8C69",
-    bg:       "#fff1f2",
-    glow:     "#FF3B5C",
-    glowOp:   0.28,
-    tint:     "rgba(255,59,92,0.18)",
-    darkBg:   "#1f0008",   // deep crimson-black
-  },
-  business: {
-    primary:  "#374151",
-    alt:      "#94a3b8",
-    bg:       "#f8fafc",
-    glow:     "#374151",
-    glowOp:   0.28,
-    tint:     "rgba(55,65,81,0.16)",
-    darkBg:   "#1a1a1a",   // deep grey-black
-  },
-  general: {
-    primary:  "#0EA5E9",
-    alt:      "#7DD3FC",
-    bg:       "#ecfeff",
-    glow:     "#0284C7",
-    glowOp:   0.28,
-    tint:     "rgba(2,132,199,0.18)",
-    darkBg:   "#00101f",   // deep ocean-blue
-  },
-};
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 
-// ─────────────────────────────────────────────────────────────
-// SLIDE DEFINITIONS
-// image filenames must match what's actually in /public/
-// ─────────────────────────────────────────────────────────────
-interface Slide {
-  image: string;
-  titleLine1: string;
-  titleLine2: string;
-  description: string;
-  cta: string;
-  link: string;
-  themeKey: keyof typeof CATEGORY_THEMES;
-  gradientStops: string;
+type CarouselApi = UseEmblaCarouselType[1]
+type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
+type CarouselOptions = UseCarouselParameters[0]
+type CarouselPlugin = UseCarouselParameters[1]
+
+type CarouselProps = {
+  opts?: CarouselOptions
+  plugins?: CarouselPlugin
+  orientation?: 'horizontal' | 'vertical'
+  setApi?: (api: CarouselApi) => void
 }
 
-const slides: Slide[] = [
-  {
-    image:         "/carousel-1.jpg",
-    titleLine1:    "Buy Smart,",
-    titleLine2:    "Pay Easy",
-    description:   "Latest iPhones & Samsung Galaxy with 6–12 month installment plans. No credit card needed.",
-    cta:           "Shop Smartphones",
-    link:          "/products?category=smartphones",
-    themeKey:      "smartphones",
-    gradientStops: "0%,38%,55%,72%,88%",
-  },
-  {
-    image:         "/carousel-2.jpg",
-    titleLine1:    "Work Smarter,",
-    titleLine2:    "Pay Later",
-    description:   "MacBooks, Dell, HP & more — premium laptops on easy monthly plans.",
-    cta:           "Shop Laptops",
-    link:          "/products?category=laptops",
-    themeKey:      "laptops",
-    gradientStops: "0%,40%,56%,72%,90%",
-  },
-  {
-    image:         "/carousel-3.jpg",
-    titleLine1:    "Ride Your",
-    titleLine2:    "Dream Bike",
-    description:   "Premium Scotty Motorcycles & Bikes with easy EMI available for all models.",
-    cta:           "Shop Bikes",
-    link:          "/products?category=bikes",
-    themeKey:      "bikes",
-    gradientStops: "0%,36%,52%,68%,86%",
-  },
-  {
-    image:         "/carousel-4.jpg",
-    titleLine1:    "Home",
-    titleLine2:    "Essentials",
-    description:   "AC, LED TV, Fridge, Washing Machine & Oven — complete home solutions on installments.",
-    cta:           "Shop Appliances",
-    link:          "/products?category=appliances",
-    themeKey:      "appliances",
-    gradientStops: "0%,38%,55%,72%,90%",
-  },
-  {
-    image:         "/carousel-5.jpg",
-    titleLine1:    "Go",
-    titleLine2:    "Solar",
-    description:   "Complete Solar Panel Systems — save on electricity bills with easy installments.",
-    cta:           "Shop Solar",
-    link:          "/products?category=solar",
-    themeKey:      "solar",
-    gradientStops: "0%,38%,55%,72%,90%",
-  },
-  {
-    image:         "/carousel-6.jpg",
-    titleLine1:    "Complete",
-    titleLine2:    "Jahez Package",
-    description:   "Fridge + Furniture + Appliances + More — complete home bundle solutions.",
-    cta:           "Shop Jahez",
-    link:          "/products?category=jahez",
-    themeKey:      "jahez",
-    gradientStops: "0%,38%,55%,72%,90%",
-  },
-  {
-    image:         "/carousel-7.jpg",
-    titleLine1:    "Furnish Your",
-    titleLine2:    "Dream Home",
-    description:   "Luxury Furniture — complete bedroom, living room & dining sets on easy plans.",
-    cta:           "Shop Furniture",
-    link:          "/products?category=furniture",
-    themeKey:      "furniture",
-    gradientStops: "0%,38%,55%,72%,90%",
-  },
-  {
-    image:         "/carousel-8.jpg",
-    titleLine1:    "Drive Your",
-    titleLine2:    "Dream Car",
-    description:   "Toyota, Honda, Suzuki & More — flexible car financing options available now.",
-    cta:           "Shop Cars",
-    link:          "/products?category=cars",
-    themeKey:      "cars",
-    gradientStops: "0%,38%,55%,72%,90%",
-  },
-  {
-    image:         "/carousel-9.jpg",
-    titleLine1:    "Grow Your",
-    titleLine2:    "Business",
-    description:   "Business Raw Materials & Stock — B2B wholesale pricing with bulk discounts.",
-    cta:           "Shop B2B",
-    link:          "/products?category=business",
-    themeKey:      "business",
-    gradientStops: "0%,38%,55%,72%,90%",
-  },
-];
+type CarouselContextProps = {
+  carouselRef: ReturnType<typeof useEmblaCarousel>[0]
+  api: ReturnType<typeof useEmblaCarousel>[1]
+  scrollPrev: () => void
+  scrollNext: () => void
+  canScrollPrev: boolean
+  canScrollNext: boolean
+} & CarouselProps
 
-// ─────────────────────────────────────────────────────────────
-// Helper: build per-slide horizontal fade gradient using
-// the category's primary color — makes each slide visually
-// distinct instead of relying on near-black darkBg values.
-// ─────────────────────────────────────────────────────────────
-function buildHorizontalGradient(primary: string, stops: string): string {
-  const s = stops.split(",");
-  return [
-    `${primary}66 ${s[0]}`,   // 40% opacity at left edge
-    `${primary}44 ${s[1]}`,   // 27% opacity
-    `${primary}22 ${s[2]}`,   // 13% opacity
-    `${primary}0a ${s[3]}`,   // ~4% opacity
-    `transparent ${s[4]}`,    // fully transparent at right
-  ].join(", ");
+const CarouselContext = React.createContext<CarouselContextProps | null>(null)
+
+function useCarousel() {
+  const context = React.useContext(CarouselContext)
+
+  if (!context) {
+    throw new Error('useCarousel must be used within a <Carousel />')
+  }
+
+  return context
 }
 
-// ─────────────────────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────────────────────
-export default function HeroSection() {
-  const [current, setCurrent]     = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [isHovered, setIsHovered] = useState(false);
+function Carousel({
+  orientation = 'horizontal',
+  opts,
+  setApi,
+  plugins,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'div'> & CarouselProps) {
+  const [carouselRef, api] = useEmblaCarousel(
+    {
+      ...opts,
+      axis: orientation === 'horizontal' ? 'x' : 'y',
+    },
+    plugins,
+  )
+  const [canScrollPrev, setCanScrollPrev] = React.useState(false)
+  const [canScrollNext, setCanScrollNext] = React.useState(false)
 
-  const next = useCallback(() => {
-    setDirection(1);
-    setCurrent((p) => (p + 1) % slides.length);
-  }, []);
+  const onSelect = React.useCallback((api: CarouselApi) => {
+    if (!api) return
+    setCanScrollPrev(api.canScrollPrev())
+    setCanScrollNext(api.canScrollNext())
+  }, [])
 
-  const prev = useCallback(() => {
-    setDirection(-1);
-    setCurrent((p) => (p - 1 + slides.length) % slides.length);
-  }, []);
+  const scrollPrev = React.useCallback(() => {
+    api?.scrollPrev()
+  }, [api])
 
-  useEffect(() => {
-    if (isHovered) return;
-    const timer = setInterval(next, 5500);
-    return () => clearInterval(timer);
-  }, [next, isHovered]);
+  const scrollNext = React.useCallback(() => {
+    api?.scrollNext()
+  }, [api])
 
-  const slide     = slides[current];
-  const theme     = CATEGORY_THEMES[slide.themeKey];
-  const hGradient = buildHorizontalGradient(theme.primary, slide.gradientStops);
+  const handleKeyDown = React.useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        scrollPrev()
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        scrollNext()
+      }
+    },
+    [scrollPrev, scrollNext],
+  )
+
+  React.useEffect(() => {
+    if (!api || !setApi) return
+    setApi(api)
+  }, [api, setApi])
+
+  React.useEffect(() => {
+    if (!api) return
+    onSelect(api)
+    api.on('reInit', onSelect)
+    api.on('select', onSelect)
+
+    return () => {
+      api?.off('select', onSelect)
+    }
+  }, [api, onSelect])
 
   return (
-    <section
-      className="relative overflow-hidden select-none"
-      style={{
-        height: "clamp(400px, 52vw, 580px)",
-        backgroundColor: theme.darkBg,
-        transition: "background-color 0.85s cubic-bezier(0.4,0,0.2,1)",
+    <CarouselContext.Provider
+      value={{
+        carouselRef,
+        api: api,
+        opts,
+        orientation:
+          orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
+        scrollPrev,
+        scrollNext,
+        canScrollPrev,
+        canScrollNext,
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* LAYER 1 — Full-bleed image + masks */}
-      <AnimatePresence>
-        <motion.div
-          key={`bg-${current}`}
-          initial={{ opacity: 0, scale: 1.06 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.75, ease: "easeInOut" }}
-          className="absolute inset-0"
-          style={{ zIndex: 1 }}
-        >
-          <div className="absolute top-0 right-0 h-full w-[62%]">
-            <Image
-              src={slide.image}
-              alt={slide.titleLine2}
-              fill
-              priority={current === 0}
-              sizes="62vw"
-              className="object-cover object-center"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: theme.tint, mixBlendMode: "color" }}
-            />
-          </div>
-
-          {/* Horizontal fade */}
-          <div
-            className="absolute inset-0"
-            style={{ background: `linear-gradient(to right, ${hGradient})` }}
-          />
-          {/* Top vignette */}
-          <div
-            className="absolute inset-0"
-            style={{ background: `linear-gradient(to bottom, ${theme.darkBg}99 0%, transparent 18%)` }}
-          />
-          {/* Bottom vignette */}
-          <div
-            className="absolute inset-0"
-            style={{ background: `linear-gradient(to top, ${theme.darkBg}ee 0%, transparent 22%)` }}
-          />
-        </motion.div>
-      </AnimatePresence>
-
-      {/* LAYER 2 — Glow blobs */}
-      <motion.div
-        key={`glow1-${current}`}
-        animate={{ opacity: theme.glowOp }}
-        transition={{ duration: 1 }}
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          zIndex: 2, width: "44%", aspectRatio: "1",
-          top: "-28%", left: "-6%",
-          background: `radial-gradient(circle, ${theme.glow} 0%, transparent 70%)`,
-          filter: "blur(80px)",
-        }}
-      />
-      <motion.div
-        key={`glow2-${current}`}
-        animate={{ opacity: theme.glowOp * 0.55 }}
-        transition={{ duration: 1.2 }}
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          zIndex: 2, width: "30%", aspectRatio: "1",
-          bottom: "-15%", right: "10%",
-          background: `radial-gradient(circle, ${theme.alt} 0%, transparent 70%)`,
-          filter: "blur(100px)",
-        }}
-      />
-
-      {/* LAYER 3 — Grid texture */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          zIndex: 3,
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
-          `,
-          backgroundSize: "48px 48px",
-        }}
-      />
-
-      {/* LAYER 4 — Left accent line */}
-      <motion.div
-        key={`line-${current}`}
-        initial={{ scaleY: 0 }}
-        animate={{ scaleY: 1 }}
-        transition={{ duration: 0.55, ease: "easeOut" }}
-        className="absolute left-0 pointer-events-none"
-        style={{
-          zIndex: 4, top: "10%", width: 3, height: "80%",
-          background: `linear-gradient(to bottom, transparent, ${theme.primary}, transparent)`,
-          borderRadius: 2, transformOrigin: "top", opacity: 0.7,
-        }}
-      />
-
-      {/* LAYER 5 — Text content */}
-      <div className="relative h-full flex items-center" style={{ zIndex: 10 }}>
-        <div className="w-full px-6 md:px-12 lg:px-16">
-          <div style={{ maxWidth: 520 }}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`content-${current}`}
-                initial={{ opacity: 0, x: direction * -28 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: direction * 28 }}
-                transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="space-y-5"
-              >
-                {/* Category pill */}
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                  <span
-                    className="inline-flex items-center text-[0.65rem] font-black tracking-[0.18em] uppercase px-3 py-1 rounded-full"
-                    style={{
-                      background: `${theme.primary}22`,
-                      color: theme.primary,
-                      border: `1px solid ${theme.primary}44`,
-                    }}
-                  >
-                    {slide.cta}
-                  </span>
-                </motion.div>
-
-                {/* Headline */}
-                <div>
-                  <motion.h1
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.14 }}
-                    className="font-black text-white"
-                    style={{ fontSize: "clamp(2.1rem, 5vw, 4.6rem)", lineHeight: 1.03, letterSpacing: "-0.02em" }}
-                  >
-                    {slide.titleLine1}
-                  </motion.h1>
-
-                  <motion.h1
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="font-black"
-                    style={{
-                      fontSize: "clamp(2.1rem, 5vw, 4.6rem)",
-                      lineHeight: 1.03,
-                      letterSpacing: "-0.02em",
-                      color: theme.primary,
-                      textShadow: `0 0 20px ${theme.primary}88, 0 0 60px ${theme.primary}33`,
-                      transition: "color 0.5s, text-shadow 0.5s",
-                    }}
-                  >
-                    {slide.titleLine2}
-                  </motion.h1>
-                </div>
-
-                {/* Description */}
-                <motion.p
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.26 }}
-                  style={{
-                    color: "rgba(255,255,255,0.52)",
-                    fontSize: "clamp(0.78rem, 1.3vw, 0.92rem)",
-                    lineHeight: 1.75,
-                    maxWidth: 380,
-                  }}
-                >
-                  {slide.description}
-                </motion.p>
-
-                {/* CTA */}
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.32 }}
-                  className="flex items-center gap-3 pt-1 flex-wrap"
-                >
-                  <Link href={slide.link}>
-                    <button
-                      type="button"
-                      className="group relative flex items-center gap-2.5 font-bold text-sm px-7 py-3.5 rounded-2xl overflow-hidden text-white"
-                    >
-                      <span
-                        className="absolute inset-0"
-                        style={{
-                          background: `linear-gradient(135deg, ${theme.primary}, ${theme.alt})`,
-                          boxShadow: `0 8px 32px ${theme.primary}55`,
-                          transition: "opacity 0.3s",
-                        }}
-                      />
-                      <span
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)" }}
-                      />
-                      <span className="relative z-10 flex items-center gap-2">
-                        {slide.cta}
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </span>
-                    </button>
-                  </Link>
-
-                  <Link
-                    href={slide.link}
-                    className="text-xs font-semibold underline underline-offset-4 transition-opacity hover:opacity-80"
-                    style={{ color: "rgba(255,255,255,0.32)" }}
-                  >
-                    Learn more
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-
-      {/* LAYER 6 — Prev / Next arrows */}
-      {(
-        [
-          { fn: prev, Icon: ChevronLeft,  pos: "left-3"  },
-          { fn: next, Icon: ChevronRight, pos: "right-3" },
-        ] as const
-      ).map(({ fn, Icon, pos }) => (
-        <button
-          key={pos}
-          type="button"
-          onClick={fn}
-          aria-label={pos.startsWith("left") ? "Previous slide" : "Next slide"}
-          className={`absolute ${pos} top-1/2 -translate-y-1/2 h-9 w-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95`}
-          style={{
-            zIndex: 20,
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.12)",
-            backdropFilter: "blur(12px)",
-            color: "#fff",
-          }}
-        >
-          <Icon className="h-4 w-4" />
-        </button>
-      ))}
-
-      {/* LAYER 7 — Dot navigation */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-1.5 items-center" style={{ zIndex: 20 }}>
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Go to slide ${i + 1}`}
-            onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i); }}
-            className="rounded-full transition-all duration-300"
-            style={{
-              height: 5,
-              width: i === current ? 28 : 5,
-              background: i === current
-                ? `linear-gradient(90deg, ${theme.primary}, ${theme.alt})`
-                : "rgba(255,255,255,0.18)",
-              boxShadow: i === current ? `0 0 10px ${theme.primary}99` : "none",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* LAYER 8 — Slide counter */}
-      <div
-        className="absolute bottom-5 right-5 flex items-center gap-1 text-[10px] font-bold tabular-nums"
-        style={{ zIndex: 20, color: "rgba(255,255,255,0.25)" }}
+        onKeyDownCapture={handleKeyDown}
+        className={cn('relative', className)}
+        role="region"
+        aria-roledescription="carousel"
+        data-slot="carousel"
+        {...props}
       >
-        <span style={{ color: theme.primary, fontSize: 11 }}>{String(current + 1).padStart(2, "0")}</span>
-        <span>/</span>
-        <span>{String(slides.length).padStart(2, "0")}</span>
+        {children}
       </div>
+    </CarouselContext.Provider>
+  )
+}
 
-      {/* LAYER 9 — Auto-play progress bar */}
-      {!isHovered && (
-        <motion.div
-          key={`progress-${current}`}
-          className="absolute bottom-0 left-0 h-[2px]"
-          style={{
-            zIndex: 20,
-            background: `linear-gradient(90deg, ${theme.primary}, ${theme.alt})`,
-            boxShadow: `0 0 8px ${theme.primary}88`,
-          }}
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 5.5, ease: "linear" }}
-        />
+function CarouselContent({ className, ...props }: React.ComponentProps<'div'>) {
+  const { carouselRef, orientation } = useCarousel()
+
+  return (
+    <div
+      ref={carouselRef}
+      className="overflow-hidden"
+      data-slot="carousel-content"
+    >
+      <div
+        className={cn(
+          'flex',
+          orientation === 'horizontal' ? '-ml-4' : '-mt-4 flex-col',
+          className,
+        )}
+        {...props}
+      />
+    </div>
+  )
+}
+
+function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
+  const { orientation } = useCarousel()
+
+  return (
+    <div
+      role="group"
+      aria-roledescription="slide"
+      data-slot="carousel-item"
+      className={cn(
+        'min-w-0 shrink-0 grow-0 basis-full',
+        orientation === 'horizontal' ? 'pl-4' : 'pt-4',
+        className,
       )}
-    </section>
-  );
+      {...props}
+    />
+  )
+}
+
+function CarouselPrevious({
+  className,
+  variant = 'outline',
+  size = 'icon',
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+
+  return (
+    <Button
+      data-slot="carousel-previous"
+      variant={variant}
+      size={size}
+      className={cn(
+        'absolute size-8 rounded-full',
+        orientation === 'horizontal'
+          ? 'top-1/2 -left-12 -translate-y-1/2'
+          : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
+        className,
+      )}
+      disabled={!canScrollPrev}
+      onClick={scrollPrev}
+      {...props}
+    >
+      <ArrowLeft />
+      <span className="sr-only">Previous slide</span>
+    </Button>
+  )
+}
+
+function CarouselNext({
+  className,
+  variant = 'outline',
+  size = 'icon',
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { orientation, scrollNext, canScrollNext } = useCarousel()
+
+  return (
+    <Button
+      data-slot="carousel-next"
+      variant={variant}
+      size={size}
+      className={cn(
+        'absolute size-8 rounded-full',
+        orientation === 'horizontal'
+          ? 'top-1/2 -right-12 -translate-y-1/2'
+          : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
+        className,
+      )}
+      disabled={!canScrollNext}
+      onClick={scrollNext}
+      {...props}
+    >
+      <ArrowRight />
+      <span className="sr-only">Next slide</span>
+    </Button>
+  )
+}
+
+export {
+  type CarouselApi,
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
 }
