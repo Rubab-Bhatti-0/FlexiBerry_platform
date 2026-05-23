@@ -25,6 +25,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <ProtectedAdminRoute>
       <div className="flex min-h-screen bg-[#f0f4ff] dark:bg-[#0A0E1A]">
+        {/* Debug div */}
+        <div className="fixed top-0 left-0 w-64 h-screen bg-red-600 z-40" />
+        
         {/* Sidebar */}
         <AdminSidebar onLogout={handleLogout} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
