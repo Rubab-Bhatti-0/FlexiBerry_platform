@@ -71,7 +71,7 @@ export function AdminSidebar({ onLogout, sidebarOpen, setSidebarOpen }: AdminSid
 
       {/* Sidebar */}
       <aside
-        className="fixed top-0 left-0 h-screen w-64 flex flex-col sidebar-bg z-50 transition-transform duration-300 shadow-2xl translate-x-0"
+        className="fixed top-0 left-0 h-screen w-64 flex flex-col sidebar-bg z-50 transition-transform duration-300 shadow-2xl translate-x-0 bg-slate-900"
       >
         {/* Logo Section */}
         <div className="px-6 py-8 border-b border-white/5 relative overflow-hidden">
