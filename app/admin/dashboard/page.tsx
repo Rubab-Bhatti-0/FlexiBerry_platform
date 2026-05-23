@@ -32,7 +32,7 @@ import {
 import { useTheme } from 'next-themes'
 import { Logo } from '@/components/logo'
 
-// Toast notification component
+// Toast notification component with enhanced UI
 function Toast({ message, type = 'success', onClose }: { message: string; type?: 'success' | 'error' | 'info'; onClose: () => void }) {
   React.useEffect(() => {
     const timer = setTimeout(onClose, 3000)
