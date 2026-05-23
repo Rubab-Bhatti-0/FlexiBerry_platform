@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   LogOut,
   Zap,
+  RefreshCw,
 } from 'lucide-react'
 import { Logo } from '@/components/logo'
 
@@ -38,7 +39,9 @@ export function AdminSidebar({ onLogout }: AdminSidebarProps) {
         { id: 'installments', label: 'Installments', icon: <FileText size={18} />, href: '/admin/installments' },
         { id: 'admins', label: 'Admin Management', icon: <Users size={18} />, href: '/admin/admins' },
         { id: 'buyers', label: 'Buyers', icon: <Users size={18} />, href: '/admin/buyers' },
+        { id: 'users', label: 'All Users', icon: <Users size={18} />, href: '/admin/users' },
         { id: 'user-history', label: 'User History', icon: <Activity size={18} />, href: '/admin/user-history' },
+        { id: 'recovery', label: 'Account Recovery', icon: <RefreshCw size={18} />, href: '/admin/recovery' },
         { id: 'analytics', label: 'Analytics', icon: <Activity size={18} />, href: '/admin/analytics' },
         { id: 'messages', label: 'Messages', icon: <MessageSquare size={18} />, href: '/admin/messages' },
         { id: 'settings', label: 'Settings', icon: <Settings size={18} />, href: '/admin/settings' },
